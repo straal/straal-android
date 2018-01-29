@@ -1,0 +1,36 @@
+stages:
+  - prepare
+  - build
+  - test
+
+prepare:
+  stage: prepare
+  script:
+    - bundle
+  tags:
+    - android
+
+build:
+  stage: build
+  script:
+    - ./gradlew assemble --stacktrace --quiet
+  tags:
+    - android
+  artifacts:
+    expire_in: 6 hrs
+    paths:
+      - straal/build/outputs
+
+unitTest:
+  stage: test
+  script:
+    - ./gradlew check --stacktrace --quiet
+  tags:
+    - android
+  dependencies:
+    - build
+  artifacts:
+    when: on_failure
+    expire_in: 2 weeks
+    paths:
+      - straal/build/reports/tests
