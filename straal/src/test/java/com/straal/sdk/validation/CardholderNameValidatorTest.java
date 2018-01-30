@@ -38,9 +38,9 @@ class CardholderNameValidatorTest {
 
     @ParameterizedTest
     @MethodSource("names")
-    void validate(String name, EnumSet<ValidationError> expectedErrors) {
+    void validate(String name, EnumSet<ValidationResult> expectedErrors) {
         CreditCard card = createCreditCard(name);
-        EnumSet<ValidationError> errors = cardholderNameValidator.validate(card);
+        EnumSet<ValidationResult> errors = cardholderNameValidator.validate(card);
         assertEquals(expectedErrors, errors);
     }
 
@@ -50,14 +50,14 @@ class CardholderNameValidatorTest {
 
     static Stream<Arguments> names() {
         return Stream.of(
-                Arguments.of("", EnumSet.of(ValidationError.CARDHOLDER_NAME_TOO_SHORT)),
-                Arguments.of("A", EnumSet.of(ValidationError.CARDHOLDER_NAME_TOO_SHORT)),
-                Arguments.of("A A", EnumSet.of(ValidationError.CARDHOLDER_NAME_TOO_SHORT)),
-                Arguments.of("Ab A", EnumSet.of(ValidationError.CARDHOLDER_NAME_TOO_SHORT)),
-                Arguments.of("A Ab", EnumSet.of(ValidationError.CARDHOLDER_NAME_TOO_SHORT)),
-                Arguments.of("Ab Ab", ValidationError.emptySet()),
-                Arguments.of("Ab   Ab", ValidationError.emptySet()),
-                Arguments.of("Jan3 Sobieski", ValidationError.emptySet())
+                Arguments.of("", EnumSet.of(ValidationResult.CARDHOLDER_NAME_TOO_SHORT)),
+                Arguments.of("A", EnumSet.of(ValidationResult.CARDHOLDER_NAME_TOO_SHORT)),
+                Arguments.of("A A", EnumSet.of(ValidationResult.CARDHOLDER_NAME_TOO_SHORT)),
+                Arguments.of("Ab A", EnumSet.of(ValidationResult.CARDHOLDER_NAME_TOO_SHORT)),
+                Arguments.of("A Ab", EnumSet.of(ValidationResult.CARDHOLDER_NAME_TOO_SHORT)),
+                Arguments.of("Ab Ab", EnumSet.of(ValidationResult.VALID)),
+                Arguments.of("Ab   Ab", EnumSet.of(ValidationResult.VALID)),
+                Arguments.of("Jan3 Sobieski", EnumSet.of(ValidationResult.VALID))
         );
     }
 }

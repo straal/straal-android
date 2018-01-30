@@ -38,18 +38,18 @@ class CvvValidatorTest {
 
     @ParameterizedTest
     @MethodSource({"cvvNumbers"})
-    void validate(String cvv, EnumSet<ValidationError> expectedErrors) {
+    void validate(String cvv, EnumSet<ValidationResult> expectedErrors) {
         CreditCard card = new CreditCard("John Smith", "4444444444444448", cvv, new ExpiryDate(12, 2200));
-        EnumSet<ValidationError> errors = cvvValidator.validate(card);
+        EnumSet<ValidationResult> errors = cvvValidator.validate(card);
         assertEquals(expectedErrors, errors);
     }
 
     static Stream<Arguments> cvvNumbers() {
         return Stream.of(
-                Arguments.of("1a1", EnumSet.of(ValidationError.CVV_INVALID)),
-                Arguments.of("12", EnumSet.of(ValidationError.CVV_INCOMPLETE)),
-                Arguments.of("1a", EnumSet.of(ValidationError.CVV_INVALID, ValidationError.CVV_INCOMPLETE)),
-                Arguments.of("123", ValidationError.emptySet())
+                Arguments.of("1a1", EnumSet.of(ValidationResult.CVV_INVALID)),
+                Arguments.of("12", EnumSet.of(ValidationResult.CVV_INCOMPLETE)),
+                Arguments.of("1a", EnumSet.of(ValidationResult.CVV_INVALID, ValidationResult.CVV_INCOMPLETE)),
+                Arguments.of("123", EnumSet.of(ValidationResult.VALID))
         );
     }
 }

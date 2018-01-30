@@ -46,22 +46,22 @@ class ExpiryDateValidatorTest {
 
     @ParameterizedTest
     @MethodSource({"expiryDates"})
-    void validate(int month, int year, EnumSet<ValidationError> expectedErrors) {
+    void validate(int month, int year, EnumSet<ValidationResult> expectedErrors) {
         CreditCard card = new CreditCard("John Smith", "4444444444444448", "123", new ExpiryDate(month, year));
         ExpiryDateValidator expiryDateValidator = createExpiryDateValidator();
-        EnumSet<ValidationError> errors = expiryDateValidator.validate(card);
+        EnumSet<ValidationResult> errors = expiryDateValidator.validate(card);
         assertEquals(expectedErrors, errors);
     }
 
     static Stream<Arguments> expiryDates() {
         return Stream.of(
-                Arguments.of(0, 2020, EnumSet.of(ValidationError.EXPIRY_DATE_INVALID)),
-                Arguments.of(13, 2020, EnumSet.of(ValidationError.EXPIRY_DATE_INVALID)),
-                Arguments.of(10, 2000, EnumSet.of(ValidationError.CARD_EXPIRED)),
-                Arguments.of(2, 2010, EnumSet.of(ValidationError.CARD_EXPIRED)),
-                Arguments.of(0, 2010, EnumSet.of(ValidationError.EXPIRY_DATE_INVALID, ValidationError.CARD_EXPIRED)),
-                Arguments.of(12, 2012, ValidationError.emptySet()),
-                Arguments.of(3, 2010, ValidationError.emptySet())
+                Arguments.of(0, 2020, EnumSet.of(ValidationResult.EXPIRY_DATE_INVALID)),
+                Arguments.of(13, 2020, EnumSet.of(ValidationResult.EXPIRY_DATE_INVALID)),
+                Arguments.of(10, 2000, EnumSet.of(ValidationResult.CARD_EXPIRED)),
+                Arguments.of(2, 2010, EnumSet.of(ValidationResult.CARD_EXPIRED)),
+                Arguments.of(0, 2010, EnumSet.of(ValidationResult.EXPIRY_DATE_INVALID, ValidationResult.CARD_EXPIRED)),
+                Arguments.of(12, 2012, EnumSet.of(ValidationResult.VALID)),
+                Arguments.of(3, 2010, EnumSet.of(ValidationResult.VALID))
         );
     }
 

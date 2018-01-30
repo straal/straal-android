@@ -36,11 +36,11 @@ class ExpiryDateValidator implements CardValidator {
     }
 
     @Override
-    public EnumSet<ValidationError> validate(CreditCard creditCard) {
-        EnumSet<ValidationError> errors = ValidationError.emptySet();
-        if (!isMonthValid(creditCard)) errors.add(ValidationError.EXPIRY_DATE_INVALID);
-        if (isCardExpired(creditCard)) errors.add(ValidationError.CARD_EXPIRED);
-        return errors;
+    public EnumSet<ValidationResult> validate(CreditCard creditCard) {
+        EnumSet<ValidationResult> errors = ValidationResult.emptySet();
+        if (!isMonthValid(creditCard)) errors.add(ValidationResult.EXPIRY_DATE_INVALID);
+        if (isCardExpired(creditCard)) errors.add(ValidationResult.CARD_EXPIRED);
+        return (errors.isEmpty()) ? EnumSet.of(ValidationResult.VALID) : errors;
     }
 
     private boolean isMonthValid(CreditCard creditCard) {

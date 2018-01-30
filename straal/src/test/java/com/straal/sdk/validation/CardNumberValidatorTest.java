@@ -38,33 +38,33 @@ class CardNumberValidatorTest {
 
     @ParameterizedTest
     @MethodSource({"cardNumbers"})
-    void validate(String cardNumber, EnumSet<ValidationError> expectedErrors) {
+    void validate(String cardNumber, EnumSet<ValidationResult> expectedErrors) {
         CreditCard card = new CreditCard("John Smith", cardNumber, "123", new ExpiryDate(12, 2200));
-        EnumSet<ValidationError> errors = cardNumberValidator.validate(card);
+        EnumSet<ValidationResult> errors = cardNumberValidator.validate(card);
         assertEquals(expectedErrors, errors);
     }
 
     static Stream<Arguments> cardNumbers() {
         return Stream.of(
                 Arguments.of("444444444a444448", EnumSet.of(
-                        ValidationError.CARD_PATTERN_NOT_MATCHED,
-                        ValidationError.CARD_NUMBER_NOT_NUMERIC
+                        ValidationResult.CARD_PATTERN_NOT_MATCHED,
+                        ValidationResult.CARD_NUMBER_NOT_NUMERIC
                 )),
                 Arguments.of("444444444444", EnumSet.of(
-                        ValidationError.CARD_NUMBER_INCOMPLETE,
-                        ValidationError.LUHN_TEST_FAILED
+                        ValidationResult.CARD_NUMBER_INCOMPLETE,
+                        ValidationResult.LUHN_TEST_FAILED
                 )),
                 Arguments.of("44444444444444488", EnumSet.of(
-                        ValidationError.CARD_NUMBER_TOO_LONG,
-                        ValidationError.LUHN_TEST_FAILED
+                        ValidationResult.CARD_NUMBER_TOO_LONG,
+                        ValidationResult.LUHN_TEST_FAILED
                 )),
                 Arguments.of("4444444444444444", EnumSet.of(
-                        ValidationError.LUHN_TEST_FAILED
+                        ValidationResult.LUHN_TEST_FAILED
                 )),
                 Arguments.of("0111111111111111", EnumSet.of(
-                        ValidationError.CARD_PATTERN_NOT_MATCHED
+                        ValidationResult.CARD_PATTERN_NOT_MATCHED
                 )),
-                Arguments.of("4444444444444448", ValidationError.emptySet())
+                Arguments.of("4444444444444448", ValidationResult.emptySet())
         );
     }
 }

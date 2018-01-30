@@ -21,7 +21,8 @@ package com.straal.sdk.validation;
 
 import java.util.EnumSet;
 
-public enum ValidationError {
+public enum ValidationResult {
+    VALID,
     CARD_PATTERN_NOT_MATCHED,
     CARD_NUMBER_NOT_NUMERIC,
     CARD_NUMBER_INCOMPLETE,
@@ -33,7 +34,7 @@ public enum ValidationError {
     EXPIRY_DATE_INVALID,
     CARD_EXPIRED;
 
-    public static EnumSet<ValidationError> emptySet() {
-        return EnumSet.noneOf(ValidationError.class);
+    public static EnumSet<ValidationResult> emptySet() {
+        return EnumSet.noneOf(ValidationResult.class);
     }
 }

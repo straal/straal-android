@@ -26,10 +26,10 @@ import java.util.EnumSet;
 
 public class FullCardValidator implements CardValidator {
     @Override
-    public EnumSet<ValidationError> validate(CreditCard creditCard) {
+    public EnumSet<ValidationResult> validate(CreditCard creditCard) {
         CardBrand cardBrand = identify(creditCard);
-        if (cardBrand == null) return EnumSet.of(ValidationError.CARD_PATTERN_NOT_MATCHED);
-        EnumSet<ValidationError> errors = new CardholderNameValidator().validate(creditCard);
+        if (cardBrand == null) return EnumSet.of(ValidationResult.CARD_PATTERN_NOT_MATCHED);
+        EnumSet<ValidationResult> errors = new CardholderNameValidator().validate(creditCard);
         errors.addAll(new CardNumberValidator().validate(creditCard));
         errors.addAll(new ExpiryDateValidator().validate(creditCard));
         errors.addAll(new CvvValidator().validate(creditCard));
