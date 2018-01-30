@@ -64,7 +64,13 @@ class CardNumberValidatorTest {
                 Arguments.of("0111111111111111", EnumSet.of(
                         ValidationResult.CARD_PATTERN_NOT_MATCHED
                 )),
-                Arguments.of("4444444444444448", ValidationResult.emptySet())
+                Arguments.of("4444444444444448", EnumSet.of(
+                        ValidationResult.VALID
+                )),
+                Arguments.of("4111111111119", EnumSet.of(
+                        ValidationResult.CARD_NUMBER_INCOMPLETE,
+                        ValidationResult.VALID
+                ))
         );
     }
 }

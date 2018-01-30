@@ -27,20 +27,26 @@ import java.util.EnumSet;
 class CardNumberValidator implements CardValidator {
     @Override
     public EnumSet<ValidationResult> validate(CreditCard creditCard) {
-        EnumSet<ValidationResult> errors = ValidationResult.emptySet();
+        EnumSet<ValidationResult> results = ValidationResult.emptySet();
         String sanitizedNumber = sanitize(creditCard.number);
         CardBrand brand = creditCard.getBrand();
-        if (!sanitizedNumber.matches("\\d+")) errors.add(ValidationResult.CARD_NUMBER_NOT_NUMERIC);
+        if (!sanitizedNumber.matches("\\d+")) results.add(ValidationResult.CARD_NUMBER_NOT_NUMERIC);
         if (brand == CardBrand.UNKNOWN) {
-            errors.add(ValidationResult.CARD_PATTERN_NOT_MATCHED);
-            return errors;
+            results.add(ValidationResult.CARD_PATTERN_NOT_MATCHED);
+            return results;
         }
-        if (sanitizedNumber.length() < brand.numberLengths.first())
-            errors.add(ValidationResult.CARD_NUMBER_INCOMPLETE);
-        if (sanitizedNumber.length() > brand.numberLengths.last())
-            errors.add(ValidationResult.CARD_NUMBER_TOO_LONG);
-        if (!Luhn.validate(sanitizedNumber)) errors.add(ValidationResult.LUHN_TEST_FAILED);
-        return errors;
+        int lastLength = brand.numberLengths.last();
+        if (sanitizedNumber.length() < lastLength)
+            results.add(ValidationResult.CARD_NUMBER_INCOMPLETE);
+        if (sanitizedNumber.length() > lastLength)
+            results.add(ValidationResult.CARD_NUMBER_TOO_LONG);
+        if (!Luhn.validate(sanitizedNumber)) results.add(ValidationResult.LUHN_TEST_FAILED);
+        if (results.isEmpty() || isIncomplete(results)) results.add(ValidationResult.VALID);
+        return results;
+    }
+
+    private boolean isIncomplete(EnumSet<ValidationResult> results) {
+        return results.size() == 1 && results.contains(ValidationResult.CARD_NUMBER_INCOMPLETE);
     }
 
     private String sanitize(String name) {
