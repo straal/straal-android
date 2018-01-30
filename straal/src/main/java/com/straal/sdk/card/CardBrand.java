@@ -19,37 +19,53 @@
 
 package com.straal.sdk.card;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 /**
  * Enum representation of credit card types supported by this SDK.
  */
 public enum CardBrand {
-    VISA("Visa", "^4\\d+", "^(4\\d{15})$"),
-    MASTERCARD("MasterCard", "^5[1-5]\\d*", "^5[1-5]\\d{14}$"),
-    MAESTRO("Maestro", "^(5018|5020|5038|5612|5893|6304|6759|6761|6762|6763|0604|6390)\\d*", "^(5018|5020|5038|5612|5893|6304|6759|6761|6762|6763|0604|6390)\\d{8,15}$"),
-    AMEX("American Express", "^3[47]\\d*", "^3[47]\\d{13}$", "####,######,#####", 4),
-    UNKNOWN("Unknown", "\\d*", "\\d*", "", 0);
+    VISA_ELECTRON("Visa Electron", "^(4026|417500|4405|4508|4844|491(3|7))\\d*"),
+    SWITCH("Switch", "^(4903|4905|4911|4936|564182|633110|6333|6759)\\d*", Arrays.asList(16, 18, 19)),
+    VISA("Visa", "^4\\d+", Arrays.asList(13, 16)),
+    MASTERCARD("MasterCard", "^5[1-5]\\d*"),
+    AMEX("American Express", "^3[47]\\d*", Collections.singletonList(15), 4),
+    JBC("JBC", "^35(28|29|[3-8][0-9])\\d*"),
+    BANKCARD("Bankcard", "^5610|56022[1-5]\\d*"),
+    DINERS("Diners", "^(30[0-5]|309|36|38|39|54|55)\\d*", Arrays.asList(14, 16)),
+    DISCOVER("Discover", "^(65|64[4-9]|6011|622126|622925)\\d*"),
+    CUP("China UnionPay", "^(62|603367)\\d*", Arrays.asList(16, 17, 18, 19)),
+    INTER_PAYMENT("Inter Payment", "^636\\d*", Arrays.asList(16, 17, 18, 19)),
+    INSTA_PAYMENT("Insta Payment", "^63[7-9]\\d*"),
+    LASER("Laser", "^(6304|6706|6771|6709)\\d*", Arrays.asList(16, 17, 18, 19)),
+    DANKORT("Dankort", "^5019\\d*"),
+    MAESTRO("Maestro", "^(50|5[6-9]|6019|603220)\\d*", Arrays.asList(12, 13, 14, 15, 16, 17, 18, 19)),
+    SOLO("Solo", "^(6334|6767)\\d*", Arrays.asList(16, 18, 19)),
+    UATP("Universal Air Travel Plan", "^1\\d*", Collections.singletonList(15)),
+    UNKNOWN("Unknown", "\\d*", Collections.singletonList(0), 0);
 
     public final String name;
     public final Pattern identifyPattern;
-    public final Pattern fullPattern;
-    public final Pattern groupingPattern;
+    public final SortedSet<Integer> numberLengths;
     public final int cvvLength;
 
-    CardBrand(String name, String identifyPattern, String fullPattern) {
-        this(name, identifyPattern, fullPattern, "####,####,####,####", 3);
+    CardBrand(String name, String identifyPattern) {
+        this(name, identifyPattern, Collections.singletonList(16), 3);
     }
 
-    CardBrand(String name, String identifyPattern, String fullPattern, String groupingPattern, int cvvLength) {
+    CardBrand(String name, String identifyPattern, List<Integer> numberLengths) {
+        this(name, identifyPattern, numberLengths, 3);
+    }
+
+    CardBrand(String name, String identifyPattern, List<Integer> numberLengths, int cvvLength) {
         this.name = name;
         this.identifyPattern = Pattern.compile(identifyPattern);
-        this.fullPattern = Pattern.compile(fullPattern);
-        this.groupingPattern = Pattern.compile(groupingPattern);
+        this.numberLengths = new TreeSet<>(numberLengths);
         this.cvvLength = cvvLength;
-    }
-
-    public int numberLength() {
-        return groupingPattern.pattern().replace(",", "").length();
     }
 }

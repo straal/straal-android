@@ -50,20 +50,18 @@ class CardNumberValidatorTest {
                         ValidationError.CARD_PATTERN_NOT_MATCHED,
                         ValidationError.CARD_NUMBER_NOT_NUMERIC
                 )),
-                Arguments.of("444444444444444", EnumSet.of(
+                Arguments.of("444444444444", EnumSet.of(
                         ValidationError.CARD_NUMBER_INCOMPLETE,
-                        ValidationError.CARD_PATTERN_NOT_MATCHED,
                         ValidationError.LUHN_TEST_FAILED
                 )),
                 Arguments.of("44444444444444488", EnumSet.of(
                         ValidationError.CARD_NUMBER_TOO_LONG,
-                        ValidationError.CARD_PATTERN_NOT_MATCHED,
                         ValidationError.LUHN_TEST_FAILED
                 )),
                 Arguments.of("4444444444444444", EnumSet.of(
                         ValidationError.LUHN_TEST_FAILED
                 )),
-                Arguments.of("1111111111111111", EnumSet.of(
+                Arguments.of("0111111111111111", EnumSet.of(
                         ValidationError.CARD_PATTERN_NOT_MATCHED
                 )),
                 Arguments.of("4444444444444448", ValidationError.emptySet())

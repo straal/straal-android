@@ -35,13 +35,11 @@ class CardNumberValidator implements CardValidator {
             errors.add(ValidationError.CARD_PATTERN_NOT_MATCHED);
             return errors;
         }
-        if (sanitizedNumber.length() < brand.numberLength())
+        if (sanitizedNumber.length() < brand.numberLengths.first())
             errors.add(ValidationError.CARD_NUMBER_INCOMPLETE);
-        if (sanitizedNumber.length() > brand.numberLength())
+        if (sanitizedNumber.length() > brand.numberLengths.last())
             errors.add(ValidationError.CARD_NUMBER_TOO_LONG);
         if (!Luhn.validate(sanitizedNumber)) errors.add(ValidationError.LUHN_TEST_FAILED);
-        if (!brand.fullPattern.matcher(sanitizedNumber).matches())
-            errors.add(ValidationError.CARD_PATTERN_NOT_MATCHED);
         return errors;
     }
 
