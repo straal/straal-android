@@ -29,10 +29,20 @@ public class FullCardValidator implements CardValidator {
     public EnumSet<ValidationResult> validate(CreditCard creditCard) {
         CardBrand cardBrand = creditCard.getBrand();
         if (cardBrand == CardBrand.UNKNOWN) return EnumSet.of(ValidationResult.CARD_PATTERN_NOT_MATCHED);
-        EnumSet<ValidationResult> errors = new CardholderNameValidator().validate(creditCard);
-        errors.addAll(new CardNumberValidator().validate(creditCard));
-        errors.addAll(new ExpiryDateValidator().validate(creditCard));
-        errors.addAll(new CvvValidator().validate(creditCard));
-        return errors;
+        EnumSet<ValidationResult> results = new CardholderNameValidator().validate(creditCard);
+        EnumSet<ValidationResult> numberResults = new CardNumberValidator().validate(creditCard);
+        results.addAll(numberResults);
+        results.addAll(new ExpiryDateValidator().validate(creditCard));
+        results.addAll(new CvvValidator().validate(creditCard));
+        if (isFullResultInvalid(results, numberResults)) {
+            results.remove(ValidationResult.VALID);
+        }
+        return results;
+    }
+
+    private boolean isFullResultInvalid(EnumSet<ValidationResult> fullResults, EnumSet<ValidationResult> numberResults) {
+        return (!(fullResults.equals(EnumSet.of(ValidationResult.INCOMPLETE, ValidationResult.VALID))
+                || fullResults.equals(EnumSet.of(ValidationResult.VALID)))
+                || numberResults.equals(EnumSet.of(ValidationResult.INCOMPLETE)));
     }
 }
