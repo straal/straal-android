@@ -51,11 +51,16 @@ class CardNumberValidatorTest {
                         ValidationResult.LUHN_TEST_FAILED
                 )),
                 Arguments.of("444444444444", EnumSet.of(
-                        ValidationResult.CARD_NUMBER_INCOMPLETE,
+                        ValidationResult.INCOMPLETE,
                         ValidationResult.LUHN_TEST_FAILED
                 )),
                 Arguments.of("44444444444444488", EnumSet.of(
                         ValidationResult.CARD_NUMBER_TOO_LONG,
+                        ValidationResult.LUHN_TEST_FAILED
+                )),
+                Arguments.of("4444444444444448a", EnumSet.of(
+                        ValidationResult.CARD_NUMBER_TOO_LONG,
+                        ValidationResult.CARD_NUMBER_NOT_NUMERIC,
                         ValidationResult.LUHN_TEST_FAILED
                 )),
                 Arguments.of("4444444444444444", EnumSet.of(
@@ -69,8 +74,11 @@ class CardNumberValidatorTest {
                         ValidationResult.VALID
                 )),
                 Arguments.of("4111111111119", EnumSet.of(
-                        ValidationResult.CARD_NUMBER_INCOMPLETE,
+                        ValidationResult.INCOMPLETE,
                         ValidationResult.VALID
+                )),
+                Arguments.of("41111111111114", EnumSet.of(
+                        ValidationResult.INCOMPLETE
                 ))
         );
     }

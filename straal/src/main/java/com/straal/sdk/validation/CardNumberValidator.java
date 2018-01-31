@@ -23,6 +23,7 @@ import com.straal.sdk.card.CardBrand;
 import com.straal.sdk.card.CreditCard;
 
 import java.util.EnumSet;
+import java.util.SortedSet;
 
 class CardNumberValidator implements CardValidator {
     @Override
@@ -30,19 +31,25 @@ class CardNumberValidator implements CardValidator {
         EnumSet<ValidationResult> results = ValidationResult.emptySet();
         String sanitizedNumber = sanitize(creditCard.number);
         CardBrand brand = creditCard.getBrand();
-        if (!sanitizedNumber.matches("\\d+")) results.add(ValidationResult.CARD_NUMBER_NOT_NUMERIC);
         int lastLength = brand.numberLengths.last();
-        if (sanitizedNumber.length() < lastLength)
-            results.add(ValidationResult.CARD_NUMBER_INCOMPLETE);
-        if (sanitizedNumber.length() > lastLength)
+        int numberLength = sanitizedNumber.length();
+        if (!sanitizedNumber.matches("\\d+")) results.add(ValidationResult.CARD_NUMBER_NOT_NUMERIC);
+        if (numberLength < lastLength)
+            results.add(ValidationResult.INCOMPLETE);
+        if (numberLength > lastLength)
             results.add(ValidationResult.CARD_NUMBER_TOO_LONG);
         if (!Luhn.validate(sanitizedNumber)) results.add(ValidationResult.LUHN_TEST_FAILED);
-        if (results.isEmpty() || isIncomplete(results)) results.add(ValidationResult.VALID);
+        if (isFullResultValid(results) || isIncompleteResultValid(results, brand.numberLengths, numberLength))
+            results.add(ValidationResult.VALID);
         return results;
     }
 
-    private boolean isIncomplete(EnumSet<ValidationResult> results) {
-        return results.size() == 1 && results.contains(ValidationResult.CARD_NUMBER_INCOMPLETE);
+    private boolean isFullResultValid(EnumSet<ValidationResult> results) {
+        return results.isEmpty();
+    }
+
+    private boolean isIncompleteResultValid(EnumSet<ValidationResult> results, SortedSet<Integer> numberLengths, int numberLength) {
+        return (results.equals(EnumSet.of(ValidationResult.INCOMPLETE)) && numberLengths.contains(numberLength));
     }
 
     private String sanitize(String name) {
