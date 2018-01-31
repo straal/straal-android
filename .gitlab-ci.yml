@@ -34,3 +34,8 @@ unitTest:
     expire_in: 2 weeks
     paths:
       - straal/build/reports/tests
+
+integrationTest:
+  stage: test
+  script:
+    - "curl -X POST -F token=$TESTS_TRIGGER_TOKEN -F ref=$REF_NAME -F variables[commit_hash]=$CI_COMMIT_SHA $TESTS_URL"
