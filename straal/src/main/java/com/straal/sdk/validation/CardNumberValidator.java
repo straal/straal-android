@@ -31,10 +31,6 @@ class CardNumberValidator implements CardValidator {
         String sanitizedNumber = sanitize(creditCard.number);
         CardBrand brand = creditCard.getBrand();
         if (!sanitizedNumber.matches("\\d+")) results.add(ValidationResult.CARD_NUMBER_NOT_NUMERIC);
-        if (brand == CardBrand.UNKNOWN) {
-            results.add(ValidationResult.CARD_PATTERN_NOT_MATCHED);
-            return results;
-        }
         int lastLength = brand.numberLengths.last();
         if (sanitizedNumber.length() < lastLength)
             results.add(ValidationResult.CARD_NUMBER_INCOMPLETE);

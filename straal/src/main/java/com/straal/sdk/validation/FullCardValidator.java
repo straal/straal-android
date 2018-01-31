@@ -27,19 +27,12 @@ import java.util.EnumSet;
 public class FullCardValidator implements CardValidator {
     @Override
     public EnumSet<ValidationResult> validate(CreditCard creditCard) {
-        CardBrand cardBrand = identify(creditCard);
-        if (cardBrand == null) return EnumSet.of(ValidationResult.CARD_PATTERN_NOT_MATCHED);
+        CardBrand cardBrand = creditCard.getBrand();
+        if (cardBrand == CardBrand.UNKNOWN) return EnumSet.of(ValidationResult.CARD_PATTERN_NOT_MATCHED);
         EnumSet<ValidationResult> errors = new CardholderNameValidator().validate(creditCard);
         errors.addAll(new CardNumberValidator().validate(creditCard));
         errors.addAll(new ExpiryDateValidator().validate(creditCard));
         errors.addAll(new CvvValidator().validate(creditCard));
         return errors;
-    }
-
-    private CardBrand identify(CreditCard creditCard) {
-        for (CardBrand brand : CardBrand.values()) {
-            if (brand.identifyPattern.matcher(creditCard.number).matches()) return brand;
-        }
-        return null;
     }
 }
