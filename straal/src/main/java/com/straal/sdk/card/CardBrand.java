@@ -33,12 +33,12 @@ public enum CardBrand {
     SWITCH("Switch", "^(4903|4905|4911|4936|564182|633110|6333|6759)", Arrays.asList(16, 18, 19)),
     VISA("Visa", "^4", Arrays.asList(13, 16, 19)),
     MASTERCARD("MasterCard", "^(5[1-5]|2(22[1-9]|2[3-9][0-9]|[3-6]|7[0-1]|720))"),
-    AMEX("American Express", "^3[47]", Collections.singletonList(15), 4),
+    AMEX("American Express", "^3[47]", Collections.singletonList(15), 4, true),
     JBC("JBC", "^35(28|29|[3-8][0-9])", Arrays.asList(16, 17, 18, 19)),
     BANKCARD("Bankcard", "^5610|56022[1-5]"),
     DINERS("Diners", "^(30[0-5]|309|36|38|39|54|55)", Arrays.asList(14, 15, 16, 17, 18, 19)),
     DISCOVER("Discover", "^(65|64[4-9]|6011|622126|622925)", Arrays.asList(16, 17, 18, 19)),
-    CUP("China UnionPay", "^(62|603367)", Arrays.asList(16, 17, 18, 19)),
+    CUP("China UnionPay", "^(62|603367)", Arrays.asList(16, 17, 18, 19), 3, false),
     INTER_PAYMENT("Inter Payment", "^636", Arrays.asList(16, 17, 18, 19)),
     INSTA_PAYMENT("Insta Payment", "^63[7-9]"),
     LASER("Laser", "^(6304|6706|6771|6709)", Arrays.asList(16, 17, 18, 19)),
@@ -46,25 +46,27 @@ public enum CardBrand {
     MAESTRO("Maestro", "^(50|5[6-9]|6019|603220)", Arrays.asList(12, 13, 14, 15, 16, 17, 18, 19)),
     SOLO("Solo", "^(6334|6767)", Arrays.asList(16, 18, 19)),
     UATP("Universal Air Travel Plan", "^1", Collections.singletonList(15)),
-    UNKNOWN("Unknown", "", Collections.singletonList(0), 0);
+    UNKNOWN("Unknown", "", Collections.singletonList(0), 0, true);
 
     public final String name;
     public final String identifyPattern;
     public final SortedSet<Integer> numberLengths;
     public final int cvvLength;
+    public final boolean requiresLuhn;
 
     CardBrand(String name, String identifyPattern) {
-        this(name, identifyPattern, Collections.singletonList(16), 3);
+        this(name, identifyPattern, Collections.singletonList(16), 3, true);
     }
 
     CardBrand(String name, String identifyPattern, List<Integer> numberLengths) {
-        this(name, identifyPattern, numberLengths, 3);
+        this(name, identifyPattern, numberLengths, 3, true);
     }
 
-    CardBrand(String name, String identifyPattern, List<Integer> numberLengths, int cvvLength) {
+    CardBrand(String name, String identifyPattern, List<Integer> numberLengths, int cvvLength, boolean requiresLuhn) {
         this.name = name;
         this.identifyPattern = identifyPattern + ".*";
         this.numberLengths = new TreeSet<>(numberLengths);
         this.cvvLength = cvvLength;
+        this.requiresLuhn = requiresLuhn;
     }
 }

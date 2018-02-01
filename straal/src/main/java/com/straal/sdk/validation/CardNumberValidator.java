@@ -34,13 +34,12 @@ class CardNumberValidator implements CardValidator {
         int lastLength = brand.numberLengths.last();
         int numberLength = sanitizedNumber.length();
         if (!sanitizedNumber.matches("\\d+")) results.add(ValidationResult.CARD_NUMBER_NOT_NUMERIC);
-        if (numberLength < lastLength)
-            results.add(ValidationResult.CARD_NUMBER_INCOMPLETE);
-        if (numberLength > lastLength)
-            results.add(ValidationResult.CARD_NUMBER_TOO_LONG);
-        if (!Luhn.validate(sanitizedNumber)) results.add(ValidationResult.LUHN_TEST_FAILED);
-        if (isFullResultValid(results) || isIncompleteResultValid(results, brand.numberLengths, numberLength))
+        if (numberLength < lastLength) results.add(ValidationResult.CARD_NUMBER_INCOMPLETE);
+        if (numberLength > lastLength) results.add(ValidationResult.CARD_NUMBER_TOO_LONG);
+        if (!Luhn.validate(sanitizedNumber) && creditCard.getBrand().requiresLuhn) results.add(ValidationResult.LUHN_TEST_FAILED);
+        if (isFullResultValid(results) || isIncompleteResultValid(results, brand.numberLengths, numberLength)) {
             results.add(ValidationResult.VALID);
+        }
         return results;
     }
 

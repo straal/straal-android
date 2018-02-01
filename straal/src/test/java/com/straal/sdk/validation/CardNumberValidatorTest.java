@@ -34,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("CardNumberValidator")
 class CardNumberValidatorTest {
+    private static final String CHINA_UNION_INVALID_LUHN = "6250946000000017";
     private CardNumberValidator cardNumberValidator = new CardNumberValidator();
 
     @ParameterizedTest
@@ -65,6 +66,11 @@ class CardNumberValidatorTest {
                 )),
                 Arguments.of("4444444444444444444", EnumSet.of(
                         ValidationResult.LUHN_TEST_FAILED
+                )),
+                // China Union cards don't require Luhn check
+                Arguments.of(CHINA_UNION_INVALID_LUHN, EnumSet.of(
+                        ValidationResult.CARD_NUMBER_INCOMPLETE,
+                        ValidationResult.VALID
                 )),
                 Arguments.of("0111111111111111", EnumSet.of(
                         ValidationResult.CARD_NUMBER_TOO_LONG,
