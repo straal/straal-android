@@ -1,5 +1,5 @@
 /*
- * ValidationError.java
+ * ValidationResult.java
  * Created by Konrad Kowalewski on 26.01.18
  * Straal SDK for Android
  * Copyright 2018 Straal Sp. z o. o.
