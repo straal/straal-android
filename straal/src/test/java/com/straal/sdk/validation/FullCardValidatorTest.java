@@ -62,56 +62,56 @@ class FullCardValidatorTest {
                         "4111111111119",
                         VALID_CVV,
                         VALID_EXPIRY_DATE,
-                        EnumSet.of(ValidationResult.INCOMPLETE, ValidationResult.VALID)
+                        EnumSet.of(ValidationResult.CARD_NUMBER_INCOMPLETE, ValidationResult.VALID)
                 ),
                 Arguments.of(
                         VALID_CARDHOLDER_NAME,
                         "41111111111114",
                         VALID_CVV,
                         VALID_EXPIRY_DATE,
-                        EnumSet.of(ValidationResult.INCOMPLETE)
+                        EnumSet.of(ValidationResult.CARD_NUMBER_INCOMPLETE)
                 ),
                 Arguments.of(
                         new CardholderName("John", "S"),
                         "4111111111119",
                         VALID_CVV,
                         VALID_EXPIRY_DATE,
-                        EnumSet.of(ValidationResult.INCOMPLETE, ValidationResult.CARDHOLDER_NAME_TOO_SHORT)
+                        EnumSet.of(ValidationResult.CARD_NUMBER_INCOMPLETE, ValidationResult.CARDHOLDER_NAME_TOO_SHORT)
                 ),
                 Arguments.of(
                         VALID_CARDHOLDER_NAME,
                         "4111111111119",
                         "44",
                         VALID_EXPIRY_DATE,
-                        EnumSet.of(ValidationResult.INCOMPLETE, ValidationResult.CVV_INCOMPLETE)
+                        EnumSet.of(ValidationResult.CARD_NUMBER_INCOMPLETE, ValidationResult.CVV_INCOMPLETE)
                 ),
                 Arguments.of(
                         VALID_CARDHOLDER_NAME,
                         "4111111111119",
                         VALID_CVV,
                         new ExpiryDate(0, 2200),
-                        EnumSet.of(ValidationResult.INCOMPLETE, ValidationResult.EXPIRY_DATE_INVALID)
+                        EnumSet.of(ValidationResult.CARD_NUMBER_INCOMPLETE, ValidationResult.EXPIRY_DATE_INVALID)
                 ),
                 Arguments.of(
                         VALID_CARDHOLDER_NAME,
                         "4111111111119",
                         VALID_CVV,
                         new ExpiryDate(12, 1200),
-                        EnumSet.of(ValidationResult.INCOMPLETE, ValidationResult.CARD_EXPIRED)
+                        EnumSet.of(ValidationResult.CARD_NUMBER_INCOMPLETE, ValidationResult.CARD_EXPIRED)
                 ),
                 Arguments.of(
                         VALID_CARDHOLDER_NAME,
                         "41111111111193",
                         VALID_CVV,
                         VALID_EXPIRY_DATE,
-                        EnumSet.of(ValidationResult.INCOMPLETE, ValidationResult.LUHN_TEST_FAILED)
+                        EnumSet.of(ValidationResult.CARD_NUMBER_INCOMPLETE, ValidationResult.LUHN_TEST_FAILED)
                 ),
                 Arguments.of(
                         VALID_CARDHOLDER_NAME,
                         "4111111111119a",
                         VALID_CVV,
                         VALID_EXPIRY_DATE,
-                        EnumSet.of(ValidationResult.INCOMPLETE, ValidationResult.LUHN_TEST_FAILED, ValidationResult.CARD_NUMBER_NOT_NUMERIC)
+                        EnumSet.of(ValidationResult.CARD_NUMBER_INCOMPLETE, ValidationResult.LUHN_TEST_FAILED, ValidationResult.CARD_NUMBER_NOT_NUMERIC)
                 ),
                 Arguments.of(
                         VALID_CARDHOLDER_NAME,

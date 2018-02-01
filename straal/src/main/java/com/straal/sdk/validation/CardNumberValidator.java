@@ -35,7 +35,7 @@ class CardNumberValidator implements CardValidator {
         int numberLength = sanitizedNumber.length();
         if (!sanitizedNumber.matches("\\d+")) results.add(ValidationResult.CARD_NUMBER_NOT_NUMERIC);
         if (numberLength < lastLength)
-            results.add(ValidationResult.INCOMPLETE);
+            results.add(ValidationResult.CARD_NUMBER_INCOMPLETE);
         if (numberLength > lastLength)
             results.add(ValidationResult.CARD_NUMBER_TOO_LONG);
         if (!Luhn.validate(sanitizedNumber)) results.add(ValidationResult.LUHN_TEST_FAILED);
@@ -49,7 +49,7 @@ class CardNumberValidator implements CardValidator {
     }
 
     private boolean isIncompleteResultValid(EnumSet<ValidationResult> results, SortedSet<Integer> numberLengths, int numberLength) {
-        return (results.equals(EnumSet.of(ValidationResult.INCOMPLETE)) && numberLengths.contains(numberLength));
+        return (results.equals(EnumSet.of(ValidationResult.CARD_NUMBER_INCOMPLETE)) && numberLengths.contains(numberLength));
     }
 
     private String sanitize(String name) {
