@@ -46,7 +46,7 @@ class CardNumberValidatorTest {
 
     static Stream<Arguments> cardNumbers() {
         return Stream.of(
-                Arguments.of("444444444a444448", EnumSet.of(
+                Arguments.of("4444444444a44444448", EnumSet.of(
                         ValidationResult.CARD_NUMBER_NOT_NUMERIC,
                         ValidationResult.LUHN_TEST_FAILED
                 )),
@@ -54,23 +54,23 @@ class CardNumberValidatorTest {
                         ValidationResult.INCOMPLETE,
                         ValidationResult.LUHN_TEST_FAILED
                 )),
-                Arguments.of("44444444444444488", EnumSet.of(
+                Arguments.of("44444444444444444488", EnumSet.of(
                         ValidationResult.CARD_NUMBER_TOO_LONG,
                         ValidationResult.LUHN_TEST_FAILED
                 )),
-                Arguments.of("4444444444444448a", EnumSet.of(
+                Arguments.of("4444444444444444448a", EnumSet.of(
                         ValidationResult.CARD_NUMBER_TOO_LONG,
                         ValidationResult.CARD_NUMBER_NOT_NUMERIC,
                         ValidationResult.LUHN_TEST_FAILED
                 )),
-                Arguments.of("4444444444444444", EnumSet.of(
+                Arguments.of("4444444444444444444", EnumSet.of(
                         ValidationResult.LUHN_TEST_FAILED
                 )),
                 Arguments.of("0111111111111111", EnumSet.of(
                         ValidationResult.CARD_NUMBER_TOO_LONG,
                         ValidationResult.LUHN_TEST_FAILED
                 )),
-                Arguments.of("4444444444444448", EnumSet.of(
+                Arguments.of("4444444444444444442", EnumSet.of(
                         ValidationResult.VALID
                 )),
                 Arguments.of("4111111111119", EnumSet.of(

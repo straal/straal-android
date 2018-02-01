@@ -1,5 +1,5 @@
 /*
- * CardNumberValidatorTest.java
+ * FullCardValidatorTest.java
  * Created by Arkadiusz Różalski on 26.01.18
  * Straal SDK for Android Tests
  * Copyright 2018 Straal Sp. z o. o.
@@ -52,7 +52,7 @@ class FullCardValidatorTest {
         return Stream.of(
                 Arguments.of(
                         VALID_CARDHOLDER_NAME,
-                        "4444444444444448",
+                        "4444444444444444442",
                         VALID_CVV,
                         VALID_EXPIRY_DATE,
                         EnumSet.of(ValidationResult.VALID)
@@ -115,21 +115,21 @@ class FullCardValidatorTest {
                 ),
                 Arguments.of(
                         VALID_CARDHOLDER_NAME,
-                        "44444444444444481",
+                        "44444444444444444481",
                         VALID_CVV,
                         VALID_EXPIRY_DATE,
                         EnumSet.of(ValidationResult.CARD_NUMBER_TOO_LONG, ValidationResult.LUHN_TEST_FAILED)
                 ),
                 Arguments.of(
                         VALID_CARDHOLDER_NAME,
-                        "4444444444444448a",
+                        "4444444444444444448a",
                         VALID_CVV,
                         VALID_EXPIRY_DATE,
                         EnumSet.of(ValidationResult.CARD_NUMBER_TOO_LONG, ValidationResult.LUHN_TEST_FAILED, ValidationResult.CARD_NUMBER_NOT_NUMERIC)
                 ),
                 Arguments.of(
                         new CardholderName("John", "S"),
-                        "4444444444s444481",
+                        "4444444444444s444481",
                         "a4",
                         new ExpiryDate(0, 1200),
                         EnumSet.of(
