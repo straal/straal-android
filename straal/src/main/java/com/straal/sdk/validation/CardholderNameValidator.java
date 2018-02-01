@@ -29,7 +29,7 @@ class CardholderNameValidator implements CardValidator {
         int firstNameLength = creditCard.cardholderName.firstName.length();
         int lastNameLength = creditCard.cardholderName.lastName.length();
         if (firstNameLength < 2 || lastNameLength < 2)
-            return EnumSet.of(ValidationResult.CARDHOLDER_NAME_TOO_SHORT);
+            return EnumSet.of(ValidationResult.CARDHOLDER_NAME_INVALID);
         return EnumSet.of(ValidationResult.VALID);
     }
 }

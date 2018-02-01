@@ -76,7 +76,7 @@ class FullCardValidatorTest {
                         "4111111111119",
                         VALID_CVV,
                         VALID_EXPIRY_DATE,
-                        EnumSet.of(ValidationResult.CARD_NUMBER_INCOMPLETE, ValidationResult.CARDHOLDER_NAME_TOO_SHORT)
+                        EnumSet.of(ValidationResult.CARD_NUMBER_INCOMPLETE, ValidationResult.CARDHOLDER_NAME_INVALID)
                 ),
                 Arguments.of(
                         VALID_CARDHOLDER_NAME,
@@ -136,7 +136,7 @@ class FullCardValidatorTest {
                                 ValidationResult.CARD_NUMBER_NOT_NUMERIC,
                                 ValidationResult.CARD_NUMBER_TOO_LONG,
                                 ValidationResult.LUHN_TEST_FAILED,
-                                ValidationResult.CARDHOLDER_NAME_TOO_SHORT,
+                                ValidationResult.CARDHOLDER_NAME_INVALID,
                                 ValidationResult.CVV_INCOMPLETE,
                                 ValidationResult.CVV_INVALID,
                                 ValidationResult.EXPIRY_DATE_INVALID,

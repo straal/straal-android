@@ -21,20 +21,62 @@ package com.straal.sdk.validation;
 
 import java.util.EnumSet;
 
+/**
+ * Possible validation results that can be returned from card validators.
+ *
+ * @see CardValidator
+ */
 public enum ValidationResult {
+    /**
+     * Card is valid.
+     * Regardless of what other ValidationResult is present, this card can be used to make payments.
+     */
     VALID,
+    /**
+     * Card number doesn't match any known card brand.
+     *
+     * @see com.straal.sdk.card.CardBrand
+     */
     CARD_PATTERN_NOT_MATCHED,
+    /**
+     * Card number contains a non-numeric character.
+     */
     CARD_NUMBER_NOT_NUMERIC,
+    /**
+     * Card number may or must be longer, depending on what other results are returned.
+     * If VALID is also returned, there could be another valid number (for a given card brand) which is longer than the one being validated.
+     */
     CARD_NUMBER_INCOMPLETE,
+    /**
+     * Card number is too long for given card brand.
+     */
     CARD_NUMBER_TOO_LONG,
+    /**
+     * Card number doesn't pass the Luhn check.
+     */
     LUHN_TEST_FAILED,
-    CARDHOLDER_NAME_TOO_SHORT,
+    /**
+     * Cardholder name must have at least 2 characters in both first and last name.
+     */
+    CARDHOLDER_NAME_INVALID,
+    /**
+     * CVV/CVC code is invalid (contains non-numeric characters).
+     */
     CVV_INVALID,
+    /**
+     * CVV/CVC code is too short for given card brand.
+     */
     CVV_INCOMPLETE,
+    /**
+     * Expiry date doesn't represent a valid date.
+     */
     EXPIRY_DATE_INVALID,
+    /**
+     * Card already expired and cannot be used.
+     */
     CARD_EXPIRED;
 
-    public static EnumSet<ValidationResult> emptySet() {
+    static EnumSet<ValidationResult> emptySet() {
         return EnumSet.noneOf(ValidationResult.class);
     }
 }
