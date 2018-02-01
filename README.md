@@ -40,7 +40,8 @@ Straal for Android framework is implemented in Java and requires:
 - androidSdkVersion 17+
 - `android.permission.INTERNET`
 
-**IMPORTANT:** In order to build and use this SDK, you need to have the Java Cryptography Extension installed with an appropriate JCE Policy.
+**IMPORTANT:** In order to build and use this SDK you need to have the Java Cryptography Extension installed with an appropriate JCE Policy.
+Since JDK 6u181, 7u171, 8u161, 9b148 unlimited cryptographic policy is enabled by default ([see explanation](https://bugs.java.com/view_bug.do?bug_id=JDK-8170157)).
 
 ### Back end
 
@@ -75,7 +76,7 @@ class StraalPayment {
     private Map<String, String> headers;  // You have to authorize your user on cryptkeys endpoint using these headers!
     private Straal.Config config = new Straal.Config(MERCHANT_API_URL, headers);
     private Straal straal = new Straal(config);
-    
+
     // ...
 }
 ```
@@ -90,7 +91,7 @@ Once you have your `Straal` object, you can submit objects of type `StraalOperat
 ```java
 class StraalPayment {
     // ...
-    
+
     private void addCard() {
         // get card data from your UI
         String cardholderName = "John Smith";
@@ -101,14 +102,14 @@ class StraalPayment {
         CreditCard card = new CreditCard(cardholderName, cardNumber, cvv, expiryDate);
         // ...pass it to CreateCardOperation...
         CreateCardOperation operation = new CreateCardOperation(card);
-        // ...and submit operation to Straal object for execution 
+        // ...and submit operation to Straal object for execution
         straal.performAsync(
                 operation,
                 straalResponse -> handleSuccess(straalResponse),
                 straalException -> handleError(straalException)
         );
     }
-    
+
     // ...
 }
 ```
@@ -129,7 +130,7 @@ Then, the credit card data is encrypted, sent to Straal directly, processed by S
 ```java
 class StraalPayment {
     // ...
-    
+
     private void makePayment() {
         // first, create credit card as before...
         CreditCard card = new CreditCard(cardholderName, cardNumber, cvv, expiryDate);
@@ -142,7 +143,7 @@ class StraalPayment {
                 straalException -> handleError(straalException)
         );
     }
-    
+
     // ...
 }
 ```
