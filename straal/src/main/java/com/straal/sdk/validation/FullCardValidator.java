@@ -26,6 +26,12 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
+/**
+ * A card validator which checks all criteria for validating a card.
+ * See ValidationResult for all types of possible results.
+ *
+ * @see ValidationResult
+ */
 public class FullCardValidator implements CardValidator {
     @Override
     public EnumSet<ValidationResult> validate(CreditCard creditCard) {
@@ -33,8 +39,8 @@ public class FullCardValidator implements CardValidator {
         if (cardBrand == CardBrand.UNKNOWN) return EnumSet.of(ValidationResult.CARD_PATTERN_NOT_MATCHED);
         EnumSet<ValidationResult> finalResult = ValidationResult.emptySet();
         List<EnumSet<ValidationResult>> criteriaList = validateAllCriteria(creditCard);
-        combineAllCriteriaIntoFinal(finalResult, criteriaList);
-        removeValidIfAnyCriteriaInvalid(finalResult, criteriaList);
+        combineAllResultsIntoFinal(finalResult, criteriaList);
+        removeValidIfAnyCriterionInvalid(finalResult, criteriaList);
         return finalResult;
     }
 
@@ -46,13 +52,13 @@ public class FullCardValidator implements CardValidator {
         return Arrays.asList(nameResults, numberResults, expiryResults, cvvResults);
     }
 
-    private void combineAllCriteriaIntoFinal(EnumSet<ValidationResult> finalResult, List<EnumSet<ValidationResult>> resultsList) {
+    private void combineAllResultsIntoFinal(EnumSet<ValidationResult> finalResult, List<EnumSet<ValidationResult>> resultsList) {
         for (EnumSet<ValidationResult> resultEnumSet : resultsList) {
             finalResult.addAll(resultEnumSet);
         }
     }
 
-    private void removeValidIfAnyCriteriaInvalid(EnumSet<ValidationResult> finalResult, List<EnumSet<ValidationResult>> resultsList) {
+    private void removeValidIfAnyCriterionInvalid(EnumSet<ValidationResult> finalResult, List<EnumSet<ValidationResult>> resultsList) {
         for (EnumSet<ValidationResult> resultEnumSet : resultsList) {
             if (!resultEnumSet.contains(ValidationResult.VALID)) finalResult.remove(ValidationResult.VALID);
         }
