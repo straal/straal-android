@@ -73,8 +73,7 @@ class CardNumberValidatorTest {
                         ValidationResult.VALID
                 )),
                 Arguments.of("0111111111111111", EnumSet.of(
-                        ValidationResult.CARD_NUMBER_TOO_LONG,
-                        ValidationResult.LUHN_TEST_FAILED
+                        ValidationResult.CARD_PATTERN_NOT_MATCHED
                 )),
                 Arguments.of("4444444444444444442", EnumSet.of(
                         ValidationResult.VALID

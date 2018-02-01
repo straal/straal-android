@@ -28,11 +28,12 @@ import java.util.SortedSet;
 class CardNumberValidator implements CardValidator {
     @Override
     public EnumSet<ValidationResult> validate(CreditCard creditCard) {
-        EnumSet<ValidationResult> results = ValidationResult.emptySet();
         String sanitizedNumber = sanitize(creditCard.number);
         CardBrand brand = creditCard.getBrand();
         int lastLength = brand.numberLengths.last();
         int numberLength = sanitizedNumber.length();
+        if (brand == CardBrand.UNKNOWN) return EnumSet.of(ValidationResult.CARD_PATTERN_NOT_MATCHED);
+        EnumSet<ValidationResult> results = ValidationResult.emptySet();
         if (!sanitizedNumber.matches("\\d+")) results.add(ValidationResult.CARD_NUMBER_NOT_NUMERIC);
         if (numberLength < lastLength) results.add(ValidationResult.CARD_NUMBER_INCOMPLETE);
         if (numberLength > lastLength) results.add(ValidationResult.CARD_NUMBER_TOO_LONG);

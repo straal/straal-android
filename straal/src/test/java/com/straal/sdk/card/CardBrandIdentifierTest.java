@@ -129,7 +129,6 @@ class CardBrandIdentifierTest {
         return Stream.of(
                 Arguments.of("51", CardBrand.MASTERCARD),
                 Arguments.of("44", CardBrand.VISA),
-                Arguments.of("44and_nope", CardBrand.VISA),
                 Arguments.of("34", CardBrand.AMEX),
                 Arguments.of("37", CardBrand.AMEX)
         );
@@ -137,6 +136,7 @@ class CardBrandIdentifierTest {
 
     static Stream<Arguments> invalidCardNumbers() {
         return Stream.of(
+                Arguments.of("44and_nope", CardBrand.VISA),
                 Arguments.of("nope", CardBrand.UNKNOWN),
                 Arguments.of("", CardBrand.UNKNOWN)
         );

@@ -27,8 +27,9 @@ import java.util.EnumSet;
 class CvvValidator implements CardValidator {
     @Override
     public EnumSet<ValidationResult> validate(CreditCard creditCard) {
-        EnumSet<ValidationResult> errors = ValidationResult.emptySet();
         CardBrand brand = creditCard.getBrand();
+        if (brand == CardBrand.UNKNOWN) return EnumSet.of(ValidationResult.CARD_PATTERN_NOT_MATCHED);
+        EnumSet<ValidationResult> errors = ValidationResult.emptySet();
         if (!creditCard.cvv.matches("\\d+")) errors.add(ValidationResult.CVV_INVALID);
         if (!(creditCard.cvv.length() == brand.cvvLength))
             errors.add(ValidationResult.CVV_INCOMPLETE);

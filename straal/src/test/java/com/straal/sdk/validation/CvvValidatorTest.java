@@ -23,6 +23,7 @@ import com.straal.sdk.card.CreditCard;
 import com.straal.sdk.card.ExpiryDate;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -37,11 +38,18 @@ class CvvValidatorTest {
     private CvvValidator cvvValidator = new CvvValidator();
 
     @ParameterizedTest
-    @MethodSource({"cvvNumbers"})
+    @MethodSource("cvvNumbers")
     void validate(String cvv, EnumSet<ValidationResult> expectedErrors) {
         CreditCard card = new CreditCard("John Smith", "4444444444444448", cvv, new ExpiryDate(12, 2200));
         EnumSet<ValidationResult> errors = cvvValidator.validate(card);
         assertEquals(expectedErrors, errors);
+    }
+
+    @Test
+    void shouldReturnPatternNotMatchedForUnknownCard() {
+        CreditCard card = new CreditCard("John Smith", "0444444444444448", "123", new ExpiryDate(12, 2200));
+        EnumSet<ValidationResult> errors = cvvValidator.validate(card);
+        assertEquals(EnumSet.of(ValidationResult.CARD_PATTERN_NOT_MATCHED), errors);
     }
 
     static Stream<Arguments> cvvNumbers() {
