@@ -15,58 +15,63 @@
 
 - [Features](#features)
 - [Requirements](#requirements)
-    - [Backend](#backend)
+    - [Back end](#back-end)
 - [Installation](#installation)
 - [Usage](#usage)
-	- [Initial configuration](#initial-configuration)
-	- [Operations](#operations)
-		- [Create card](#create-a-card)
-		- [Create transaction with card](#create-transaction-with-a-card)
+    - [Initial configuration](#initial-configuration)
+    - [Operations](#operations)
+        - [Create card](#create-a-card)
+        - [Create a transaction with a card](#create-a-transaction-with-a-card)
 - [Validation](#validation)
 - [Support](#support)
 - [License](#license)
 
 ## Features
+
 > Straal for Android is a helper library to make it easier
-  to make API requests directly from merchant's mobile Android App.
-  It utilizes client-side encryption and sends data
+  to make API requests directly from merchant's mobile Android app.
+  It utilises client-side encryption and sends data
   over HTTPS to make secure requests creating transactions and adding cards.
 
 ## Requirements
+
 Straal for Android framework is implemented in Java and requires:
+
 - androidSdkVersion 17+
-- ```android.permission.INTERNET```
+- `android.permission.INTERNET`
 
-**IMPORTANT:** In order to successfully build and use this SDK you need to have the Java Cryptography Extension installed with an appropriate JCE Policy.
+**IMPORTANT:** In order to build and use this SDK, you need to have the Java Cryptography Extension installed with an appropriate JCE Policy.
 
-### Backend
+### Back end
 
-You also need a backend service which will handle payment information and issue `CryptKeys` for the app. For more see [here](https://api-reference.straal.com).
+You also need a back-end service which will handle payment information and create `CryptKeys` for the app. For more see [Straal API Reference](https://api-reference.straal.com).
 
-You backend service needs to implement **at least one endpoint** at *https://_base_url_/straal/v1/cryptkeys*. This endpoint is used by this SDK to fetch cryptkeys that encrypt sensitive user data.
+Your back-end service needs to implement **at least one endpoint** at `https://_base_url_/straal/v1/cryptkeys`. This endpoint is used by this SDK to fetch `CryptKeys` that encrypt sensitive user data.
 
-> It is your backend's job to authorize the user and reject the cryptkey fetch if need be.
+> It is your back end's job to authorize the user and reject the `CryptKey` fetch if necessary.
 
 ## Installation
 
-Currently you can integrate Straal into your Android project by:
-- adding this repo as a git submodule into your project
-- downloading this repo, building an AAR file and adding it to libs/ folder in your project
+Currently, you can integrate Straal into your Android project by:
+
+- adding this repository as a git submodule into your project
+- downloading this repository, building an AAR file and adding it to the `libs` folder in your project
 
 ## Usage
 
-To use [Straal](https://straal.com/) for Android you need an Android App (in which you want to accept payments), as well as your own backend service.
+To use [Straal](https://straal.com/) for Android, you need your own back-end service and an Android app which you want to use to accept payments.
 
-This SDK lets you implement a secure payment process in your app. User's sensitive data (as credit card numbers) is sent directly from mobile application, so no card data will hit your servers, which results in improved security and fewer PCI compliance requirements.
+This SDK lets you implement a secure payment process into your app. Your user's sensitive data (such as credit card numbers) is sent **directly** from the mobile application, so no card data will hit your servers. It results in improved security and fewer PCI compliance requirements.
 
-The security of this process is ensured by a `CryptKey` mechanism. Your merchant backend service is responsible for **authorizing** the app user for a specific CryptKey operation. This is done via `headers` in configuration.
+The security of this process is ensured by a `CryptKey` mechanism. Your merchant back-end service is responsible for **authorizing** the app user for a specific `CryptKey` operation. This is done via `headers` in configuration.
 
 ### Initial configuration
 
-First, create a `Straal.Config` object (which contains your Merchant URL and **authorization headers**). Then create your `Straal` object using the configuration.
+First, create a `Straal.Config` object (which contains your Merchant URL and **authorization headers**). Then, create your `Straal` object using the configuration.
+
 ```java
 class StraalPayment {
-    private static final String MERCHANT_API_URL = "https://my-merchant-backend-url.com";
+    private static final String MERCHANT_API_URL = "https://my-merchant-back-end-url.com";
     private Map<String, String> headers;  // You have to authorize your user on cryptkeys endpoint using these headers!
     private Straal.Config config = new Straal.Config(MERCHANT_API_URL, headers);
     private Straal straal = new Straal(config);
@@ -74,12 +79,14 @@ class StraalPayment {
     // ...
 }
 ```
-> Note: Once your app needs to change the authorization headers (user logs out or in), you need to create a new Straal object. Neither Straal nor Straal.Configuration objects are meant to be reused or changed.
+> Note: Once your app needs to change the authorization headers (user logs out or in), you need to create a new `Straal` object. Neither `Straal` nor `Straal.Configuration` objects are meant to be reused or changed.
 
 Once you have your `Straal` object, you can submit objects of type `StraalOperation` to it.
+
 ### Operations
 
 #### Create a card
+
 ```java
 class StraalPayment {
     // ...
@@ -105,7 +112,7 @@ class StraalPayment {
     // ...
 }
 ```
-> Note what happens under the hood when you call this last method. First, your merchant backend is fetched on `cryptkeys` endpoint with this `POST` request:
+> Note what happens under the hood when you call this last method. First, your merchant back end is fetched on `cryptkeys` endpoint with this `POST` request:
 
 ```json
 {
@@ -113,10 +120,12 @@ class StraalPayment {
 }
 ```
 
-Your backend's job is to authenticate this request (using headers passed to `Straal.Config`), append this json with `customer_uuid` key-value pair and forward it to Straal using [this method](https://api-reference.straal.com/#resources-cryptkeys-create-a-cryptkey).
+Your back end's job is to authenticate this request (using headers passed to `Straal.Config`), append this JSON with `customer_uuid` key-value pair and forward it to Straal using [this method](https://api-reference.straal.com/#resources-cryptkeys-create-a-cryptkey).
 
 Then, the credit card data is encrypted, sent to Straal directly, processed by Straal, and responded to.
-#### Create transaction with a card
+
+#### Create a transaction with a card
+
 ```java
 class StraalPayment {
     // ...
@@ -138,7 +147,7 @@ class StraalPayment {
 }
 ```
 
-> Again, we first fetch your `cryptkeys` endpoint to fetch a crypt key. This time with JSON like this:
+> Again, we first fetch your `cryptkeys` endpoint to fetch a `CryptKey`. This time with JSON:
 
 ```json
 {
@@ -151,7 +160,7 @@ class StraalPayment {
 }
 ```
 
-> It is your backend's responsibility to verify the transaction's amount (possibly pairing it with an order using `reference`) and to authorize the user using request headers.
+> It is your back end's responsibility to verify the transaction's amount (possibly pairing it with an order using `reference`) and to authorize the user using request headers.
 
 ## Validation
 
