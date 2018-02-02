@@ -24,7 +24,10 @@ import com.straal.sdk.card.CreditCard;
 
 import java.util.EnumSet;
 
-class CvvValidator implements CardValidator {
+/**
+ * Card validator which checks all CVV criteria.
+ */
+public class CvvValidator implements CardValidator {
     @Override
     public EnumSet<ValidationResult> validate(CreditCard creditCard) {
         CardBrand brand = creditCard.getBrand();

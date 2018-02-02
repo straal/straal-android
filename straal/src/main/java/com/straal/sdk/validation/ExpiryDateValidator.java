@@ -24,14 +24,21 @@ import com.straal.sdk.card.CreditCard;
 import java.util.Calendar;
 import java.util.EnumSet;
 
-class ExpiryDateValidator implements CardValidator {
+/**
+ * Card validator which checks expiry date.
+ * It uses Calendar instance to compare current date wth the one being validated.
+ */
+public class ExpiryDateValidator implements CardValidator {
     private final Calendar calendar;
 
     ExpiryDateValidator(Calendar calendar) {
         this.calendar = calendar;
     }
 
-    ExpiryDateValidator() {
+    /**
+     * Initialises this object with default Calendar instance for comparing dates.
+     */
+    public ExpiryDateValidator() {
         this(Calendar.getInstance());
     }
 
