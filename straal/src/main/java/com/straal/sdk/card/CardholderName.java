@@ -24,36 +24,35 @@ package com.straal.sdk.card;
  * Remember that both first name and last name must be at least 2 characters long.
  */
 public class CardholderName {
-    public final String firstName;
-    public final String lastName;
+    private final String fullName;
 
     /**
      * @param firstName cardholder's first name
      * @param lastName  cardholder's last name
      */
     public CardholderName(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this(unwrapNull(firstName) + " " + unwrapNull(lastName));
     }
 
     /**
      * @param fullName cardholder's first name and last name separated by space (as written on the card).
      */
     public CardholderName(String fullName) {
-        String[] strings = fullName.split(" +");
-        if (strings.length == 1) {
-            this.firstName = strings[0];
-            this.lastName = "";
-            return;
-        }
-        this.firstName = strings[0];
-        this.lastName = strings[1];
+        this.fullName = sanitize(fullName);
     }
 
     /**
-     * @return cardholder's first name and last name separated by space
+     * @return sanitized cardholder's full name
      */
     public String getFullName() {
-        return firstName + " " + lastName;
+        return fullName;
+    }
+
+    private static String sanitize(String fullName) {
+        return unwrapNull(fullName).replaceAll(" +", " ").trim();
+    }
+
+    private static String unwrapNull(String string) {
+        return string == null ? "" : string;
     }
 }

@@ -51,13 +51,14 @@ class CardholderNameValidatorTest {
     static Stream<Arguments> names() {
         return Stream.of(
                 Arguments.of("", EnumSet.of(ValidationResult.CARDHOLDER_NAME_INVALID)),
+                Arguments.of("     ", EnumSet.of(ValidationResult.CARDHOLDER_NAME_INVALID)),
                 Arguments.of("A", EnumSet.of(ValidationResult.CARDHOLDER_NAME_INVALID)),
                 Arguments.of("A A", EnumSet.of(ValidationResult.CARDHOLDER_NAME_INVALID)),
+                Arguments.of("A    A", EnumSet.of(ValidationResult.CARDHOLDER_NAME_INVALID)),
                 Arguments.of("Ab A", EnumSet.of(ValidationResult.CARDHOLDER_NAME_INVALID)),
-                Arguments.of("A Ab", EnumSet.of(ValidationResult.CARDHOLDER_NAME_INVALID)),
                 Arguments.of("Ab Ab", EnumSet.of(ValidationResult.VALID)),
                 Arguments.of("Ab   Ab", EnumSet.of(ValidationResult.VALID)),
-                Arguments.of("Jan3 Sobieski", EnumSet.of(ValidationResult.VALID))
+                Arguments.of("Jan 3 Sobieski", EnumSet.of(ValidationResult.VALID))
         );
     }
 }

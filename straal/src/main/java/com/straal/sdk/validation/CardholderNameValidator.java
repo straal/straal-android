@@ -31,9 +31,7 @@ import java.util.EnumSet;
 public class CardholderNameValidator implements CardValidator {
     @Override
     public EnumSet<ValidationResult> validate(CreditCard creditCard) {
-        int firstNameLength = creditCard.cardholderName.firstName.length();
-        int lastNameLength = creditCard.cardholderName.lastName.length();
-        if (firstNameLength < 2 || lastNameLength < 2)
+        if (creditCard.cardholderName.getFullName().length() < 5)
             return EnumSet.of(ValidationResult.CARDHOLDER_NAME_INVALID);
         return EnumSet.of(ValidationResult.VALID);
     }
