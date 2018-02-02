@@ -47,6 +47,8 @@ class CardholderNameTest {
                 Arguments.of("", ""),
                 Arguments.of("  ", ""),
                 Arguments.of("Ab Cd", "Ab Cd"),
+                Arguments.of("Ab\tCd", "Ab Cd"),
+                Arguments.of("Ab\nCd", "Ab Cd"),
                 Arguments.of("Greg O'Hare", "Greg O'Hare"),
                 Arguments.of("Margarita Tequila-Tortilla", "Margarita Tequila-Tortilla"),
                 Arguments.of(" Ab Cd  ", "Ab Cd"),

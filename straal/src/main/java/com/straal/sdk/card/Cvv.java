@@ -29,6 +29,6 @@ public class Cvv {
      * @param value string cvv representation
      */
     public Cvv(String value) {
-        this.value = value;
+        this.value = StringUtils.unwrapNull(value);
     }
 }
