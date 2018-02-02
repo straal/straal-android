@@ -33,7 +33,7 @@ import java.util.List;
  *
  * @see ValidationResult
  */
-class CardNumberValidator implements CardValidator {
+public class CardNumberValidator implements CardValidator {
     @Override
     public EnumSet<ValidationResult> validate(CreditCard creditCard) {
         String sanitizedNumber = sanitize(creditCard.number);
