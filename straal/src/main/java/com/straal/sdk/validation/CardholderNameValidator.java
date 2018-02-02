@@ -23,7 +23,12 @@ import com.straal.sdk.card.CreditCard;
 
 import java.util.EnumSet;
 
-class CardholderNameValidator implements CardValidator {
+/**
+ * Validates cardholder's name.
+ *
+ * @see com.straal.sdk.card.CardholderName
+ */
+public class CardholderNameValidator implements CardValidator {
     @Override
     public EnumSet<ValidationResult> validate(CreditCard creditCard) {
         int firstNameLength = creditCard.cardholderName.firstName.length();

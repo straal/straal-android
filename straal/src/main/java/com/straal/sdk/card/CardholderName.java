@@ -50,6 +50,9 @@ public class CardholderName {
         this.lastName = strings[1];
     }
 
+    /**
+     * @return cardholder's first name and last name separated by space
+     */
     public String getFullName() {
         return firstName + " " + lastName;
     }
