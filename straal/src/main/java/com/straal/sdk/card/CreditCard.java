@@ -25,10 +25,6 @@ public class CreditCard {
     public final Cvv cvv;
     public final ExpiryDate expiryDate;
 
-    public CreditCard(String cardholderFullName, String number, String cvv, ExpiryDate expiryDate) {
-        this(new CardholderName(cardholderFullName), new CardNumber(number), new Cvv(cvv), expiryDate);
-    }
-
     public CreditCard(CardholderName cardholderName, CardNumber number, Cvv cvv, ExpiryDate expiryDate) {
         this.cardholderName = cardholderName;
         this.number = number;

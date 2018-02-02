@@ -19,7 +19,10 @@
 
 package com.straal.sdk.validation;
 
+import com.straal.sdk.card.CardNumber;
+import com.straal.sdk.card.CardholderName;
 import com.straal.sdk.card.CreditCard;
+import com.straal.sdk.card.Cvv;
 import com.straal.sdk.card.ExpiryDate;
 
 import org.junit.jupiter.api.DisplayName;
@@ -40,7 +43,7 @@ class CardNumberValidatorTest {
     @ParameterizedTest
     @MethodSource({"cardNumbers"})
     void validate(String cardNumber, EnumSet<ValidationResult> expectedErrors) {
-        CreditCard card = new CreditCard("John Smith", cardNumber, "123", new ExpiryDate(12, 2200));
+        CreditCard card = new CreditCard(new CardholderName("John Smith"), new CardNumber(cardNumber), new Cvv("123"), new ExpiryDate(12, 2200));
         EnumSet<ValidationResult> errors = cardNumberValidator.validate(card);
         assertEquals(expectedErrors, errors);
     }

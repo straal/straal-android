@@ -30,7 +30,7 @@ class CardBrandIdentifierTest {
     @ParameterizedTest
     @MethodSource({"validCardNumbers", "incompleteCardNumbers", "invalidCardNumbers"})
     void identify(String cardNumber, CardBrand brand) {
-        CreditCard card = new CreditCard("JJ Abrams", cardNumber, "123", new ExpiryDate(12, 2200));
+        CreditCard card = new CreditCard(new CardholderName("John Smith"), new CardNumber(cardNumber), new Cvv("123"), new ExpiryDate(12, 2200));
         Assertions.assertEquals(brand, CardBrandIdentifier.identify(card));
     }
 

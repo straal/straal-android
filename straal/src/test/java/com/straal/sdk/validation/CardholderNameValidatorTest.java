@@ -19,7 +19,10 @@
 
 package com.straal.sdk.validation;
 
+import com.straal.sdk.card.CardNumber;
+import com.straal.sdk.card.CardholderName;
 import com.straal.sdk.card.CreditCard;
+import com.straal.sdk.card.Cvv;
 import com.straal.sdk.card.ExpiryDate;
 
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +48,7 @@ class CardholderNameValidatorTest {
     }
 
     private CreditCard createCreditCard(String cardholderName) {
-        return new CreditCard(cardholderName, "4444444444444448", "123", new ExpiryDate(12, 2200));
+        return new CreditCard(new CardholderName(cardholderName), new CardNumber("4444444444444448"), new Cvv("123"), new ExpiryDate(12, 2200));
     }
 
     static Stream<Arguments> names() {

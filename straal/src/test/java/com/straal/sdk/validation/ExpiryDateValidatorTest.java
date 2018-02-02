@@ -19,7 +19,10 @@
 
 package com.straal.sdk.validation;
 
+import com.straal.sdk.card.CardNumber;
+import com.straal.sdk.card.CardholderName;
 import com.straal.sdk.card.CreditCard;
+import com.straal.sdk.card.Cvv;
 import com.straal.sdk.card.ExpiryDate;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +50,7 @@ class ExpiryDateValidatorTest {
     @ParameterizedTest
     @MethodSource({"expiryDates"})
     void validate(int month, int year, EnumSet<ValidationResult> expectedErrors) {
-        CreditCard card = new CreditCard("John Smith", "4444444444444448", "123", new ExpiryDate(month, year));
+        CreditCard card = new CreditCard(new CardholderName("John Smith"), new CardNumber("4444444444444448"), new Cvv("123"), new ExpiryDate(month, year));
         ExpiryDateValidator expiryDateValidator = createExpiryDateValidator();
         EnumSet<ValidationResult> errors = expiryDateValidator.validate(card);
         assertEquals(expectedErrors, errors);
