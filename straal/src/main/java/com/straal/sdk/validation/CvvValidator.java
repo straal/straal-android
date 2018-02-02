@@ -33,8 +33,8 @@ public class CvvValidator implements CardValidator {
         CardBrand brand = creditCard.getBrand();
         if (brand == CardBrand.UNKNOWN) return EnumSet.of(ValidationResult.CARD_PATTERN_NOT_MATCHED);
         EnumSet<ValidationResult> errors = ValidationResult.emptySet();
-        if (!creditCard.cvv.matches("\\d+")) errors.add(ValidationResult.CVV_INVALID);
-        if (!(creditCard.cvv.length() == brand.cvvLength))
+        if (!creditCard.cvv.value.matches("\\d+")) errors.add(ValidationResult.CVV_INVALID);
+        if (!(creditCard.cvv.value.length() == brand.cvvLength))
             errors.add(ValidationResult.CVV_INCOMPLETE);
         return (errors.isEmpty()) ? EnumSet.of(ValidationResult.VALID) : errors;
     }

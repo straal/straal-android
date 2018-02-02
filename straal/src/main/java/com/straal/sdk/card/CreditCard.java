@@ -22,14 +22,14 @@ package com.straal.sdk.card;
 public class CreditCard {
     public final CardholderName cardholderName;
     public final CardNumber number;
-    public final String cvv;
+    public final Cvv cvv;
     public final ExpiryDate expiryDate;
 
     public CreditCard(String cardholderFullName, String number, String cvv, ExpiryDate expiryDate) {
-        this(new CardholderName(cardholderFullName), new CardNumber(number), cvv, expiryDate);
+        this(new CardholderName(cardholderFullName), new CardNumber(number), new Cvv(cvv), expiryDate);
     }
 
-    public CreditCard(CardholderName cardholderName, CardNumber number, String cvv, ExpiryDate expiryDate) {
+    public CreditCard(CardholderName cardholderName, CardNumber number, Cvv cvv, ExpiryDate expiryDate) {
         this.cardholderName = cardholderName;
         this.number = number;
         this.cvv = cvv;
