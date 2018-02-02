@@ -22,15 +22,17 @@ package com.straal.sdk.validation;
 import com.straal.sdk.card.CardBrand;
 import com.straal.sdk.card.CreditCard;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.SortedSet;
+import java.util.LinkedList;
+import java.util.List;
 
 class CardNumberValidator implements CardValidator {
     @Override
     public EnumSet<ValidationResult> validate(CreditCard creditCard) {
         String sanitizedNumber = sanitize(creditCard.number);
         CardBrand brand = creditCard.getBrand();
-        int lastLength = brand.numberLengths.last();
+        int lastLength = getLongestNumberLength(brand);
         int numberLength = sanitizedNumber.length();
         if (brand == CardBrand.UNKNOWN) return EnumSet.of(ValidationResult.CARD_PATTERN_NOT_MATCHED);
         EnumSet<ValidationResult> results = ValidationResult.emptySet();
@@ -38,7 +40,7 @@ class CardNumberValidator implements CardValidator {
         if (numberLength < lastLength) results.add(ValidationResult.CARD_NUMBER_INCOMPLETE);
         if (numberLength > lastLength) results.add(ValidationResult.CARD_NUMBER_TOO_LONG);
         if (!Luhn.validate(sanitizedNumber) && creditCard.getBrand().requiresLuhn) results.add(ValidationResult.LUHN_TEST_FAILED);
-        if (isFullResultValid(results) || isIncompleteResultValid(results, brand.numberLengths, numberLength)) {
+        if (isFullResultValid(results) || isIncompleteResultValid(results, getNumberLengths(brand.groupings), numberLength)) {
             results.add(ValidationResult.VALID);
         }
         return results;
@@ -48,8 +50,25 @@ class CardNumberValidator implements CardValidator {
         return results.isEmpty();
     }
 
-    private boolean isIncompleteResultValid(EnumSet<ValidationResult> results, SortedSet<Integer> numberLengths, int numberLength) {
+    private boolean isIncompleteResultValid(EnumSet<ValidationResult> results, List<Integer> numberLengths, int numberLength) {
         return (results.equals(EnumSet.of(ValidationResult.CARD_NUMBER_INCOMPLETE)) && numberLengths.contains(numberLength));
+    }
+
+    private int getLongestNumberLength(CardBrand brand) {
+        List<Integer> lastGrouping = brand.groupings.getLast();
+        return  sumGrouping(lastGrouping);
+    }
+
+    private int sumGrouping(List<Integer> grouping) {
+        int result = 0;
+        for (int item: grouping) result += item;
+        return result;
+    }
+
+    private List<Integer> getNumberLengths(LinkedList<List<Integer>> groupings) {
+        List<Integer> lengths = new ArrayList<>();
+        for (List<Integer> grouping: groupings) lengths.add(sumGrouping(grouping));
+        return lengths;
     }
 
     private String sanitize(String name) {
