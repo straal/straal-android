@@ -23,7 +23,6 @@ import com.straal.sdk.card.CreditCard;
 import com.straal.sdk.card.ExpiryDate;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -35,29 +34,36 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("CvvValidator")
 class CvvValidatorTest {
+    private static final String VALID_VISA_CARD_NUMBER = "4444444444444448";
+    private static final String VALID_AMEX_CARD_NUMBER = "378282246310005";
+    private static final String INVALID_CARD_NUMBER = "0444444444444448";
+    private static final String VALID_VISA_CVV = "444";
+    private static final String VALID__AMEX_CVV = "4444";
     private CvvValidator cvvValidator = new CvvValidator();
 
     @ParameterizedTest
-    @MethodSource("cvvNumbers")
-    void validate(String cvv, EnumSet<ValidationResult> expectedErrors) {
-        CreditCard card = new CreditCard("John Smith", "4444444444444448", cvv, new ExpiryDate(12, 2200));
+    @MethodSource("creditCardData")
+    void validate(String cvv, String number, EnumSet<ValidationResult> expectedErrors) {
+        CreditCard card = new CreditCard("John Smith", number, cvv, new ExpiryDate(12, 2200));
         EnumSet<ValidationResult> errors = cvvValidator.validate(card);
         assertEquals(expectedErrors, errors);
     }
 
-    @Test
-    void shouldReturnPatternNotMatchedForUnknownCard() {
-        CreditCard card = new CreditCard("John Smith", "0444444444444448", "123", new ExpiryDate(12, 2200));
-        EnumSet<ValidationResult> errors = cvvValidator.validate(card);
-        assertEquals(EnumSet.of(ValidationResult.CARD_PATTERN_NOT_MATCHED), errors);
-    }
-
-    static Stream<Arguments> cvvNumbers() {
+    static Stream<Arguments> creditCardData() {
         return Stream.of(
-                Arguments.of("1a1", EnumSet.of(ValidationResult.CVV_INVALID)),
-                Arguments.of("12", EnumSet.of(ValidationResult.CVV_INCOMPLETE)),
-                Arguments.of("1a", EnumSet.of(ValidationResult.CVV_INVALID, ValidationResult.CVV_INCOMPLETE)),
-                Arguments.of("123", EnumSet.of(ValidationResult.VALID))
+                Arguments.of("1a1", VALID_VISA_CARD_NUMBER, EnumSet.of(ValidationResult.CVV_INVALID)),
+                Arguments.of("12", VALID_VISA_CARD_NUMBER, EnumSet.of(ValidationResult.CVV_INCOMPLETE)),
+                Arguments.of("1234", VALID_VISA_CARD_NUMBER, EnumSet.of(ValidationResult.CVV_INCOMPLETE)),
+                Arguments.of("1a", VALID_VISA_CARD_NUMBER, EnumSet.of(ValidationResult.CVV_INVALID, ValidationResult.CVV_INCOMPLETE)),
+                Arguments.of("1a11", VALID_VISA_CARD_NUMBER, EnumSet.of(ValidationResult.CVV_INVALID, ValidationResult.CVV_INCOMPLETE)),
+                Arguments.of(VALID_VISA_CVV, VALID_VISA_CARD_NUMBER, EnumSet.of(ValidationResult.VALID)),
+                Arguments.of(VALID_VISA_CVV, INVALID_CARD_NUMBER, EnumSet.of(ValidationResult.CARD_PATTERN_NOT_MATCHED)),
+                Arguments.of("1a11", VALID_AMEX_CARD_NUMBER, EnumSet.of(ValidationResult.CVV_INVALID)),
+                Arguments.of("12", VALID_AMEX_CARD_NUMBER, EnumSet.of(ValidationResult.CVV_INCOMPLETE)),
+                Arguments.of("12341", VALID_AMEX_CARD_NUMBER, EnumSet.of(ValidationResult.CVV_INCOMPLETE)),
+                Arguments.of("1a", VALID_AMEX_CARD_NUMBER, EnumSet.of(ValidationResult.CVV_INVALID, ValidationResult.CVV_INCOMPLETE)),
+                Arguments.of("1a111", VALID_AMEX_CARD_NUMBER, EnumSet.of(ValidationResult.CVV_INVALID, ValidationResult.CVV_INCOMPLETE)),
+                Arguments.of(VALID__AMEX_CVV, VALID_AMEX_CARD_NUMBER, EnumSet.of(ValidationResult.VALID))
         );
     }
 }
