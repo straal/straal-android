@@ -24,14 +24,18 @@ import com.straal.sdk.card.CreditCard;
 
 import java.util.EnumSet;
 
-class CvvValidator implements CardValidator {
+/**
+ * Card validator which checks all CVV criteria.
+ */
+public class CvvValidator implements CardValidator {
     @Override
-    public EnumSet<ValidationError> validate(CreditCard creditCard) {
-        EnumSet<ValidationError> errors = ValidationError.emptySet();
+    public EnumSet<ValidationResult> validate(CreditCard creditCard) {
         CardBrand brand = creditCard.getBrand();
-        if (!creditCard.cvv.matches("\\d+")) errors.add(ValidationError.CVV_INVALID);
-        if (!(creditCard.cvv.length() == brand.cvvLength))
-            errors.add(ValidationError.CVV_INCOMPLETE);
-        return errors;
+        if (brand == CardBrand.UNKNOWN) return EnumSet.of(ValidationResult.CARD_PATTERN_NOT_MATCHED);
+        EnumSet<ValidationResult> errors = ValidationResult.emptySet();
+        if (!creditCard.cvv.value.matches("\\d+")) errors.add(ValidationResult.CVV_INVALID);
+        if (!(creditCard.cvv.value.length() == brand.cvvLength))
+            errors.add(ValidationResult.CVV_INCOMPLETE);
+        return (errors.isEmpty()) ? EnumSet.of(ValidationResult.VALID) : errors;
     }
 }

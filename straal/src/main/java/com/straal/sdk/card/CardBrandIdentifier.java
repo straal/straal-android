@@ -25,7 +25,7 @@ final class CardBrandIdentifier {
 
     static CardBrand identify(CreditCard creditCard) {
         for (CardBrand brand : CardBrand.values()) {
-            if (brand.identifyPattern.matcher(creditCard.number).matches()) return brand;
+            if (creditCard.number.sanitized().matches(brand.identifyPattern)) return brand;
         }
         return CardBrand.UNKNOWN;
     }

@@ -1,6 +1,6 @@
 /*
- * ValidationError.java
- * Created by Konrad Kowalewski on 26.01.18
+ * Cvv.java
+ * Created by Arkadiusz Różalski on 02.02.18
  * Straal SDK for Android
  * Copyright 2018 Straal Sp. z o. o.
  *
@@ -17,23 +17,18 @@
  * limitations under the License.
  */
 
-package com.straal.sdk.validation;
+package com.straal.sdk.card;
 
-import java.util.EnumSet;
+/**
+ * Wrapper class for card's verification value.
+ */
+public class Cvv {
+    public final String value;
 
-public enum ValidationError {
-    CARD_PATTERN_NOT_MATCHED,
-    CARD_NUMBER_NOT_NUMERIC,
-    CARD_NUMBER_INCOMPLETE,
-    CARD_NUMBER_TOO_LONG,
-    LUHN_TEST_FAILED,
-    CARDHOLDER_NAME_TOO_SHORT,
-    CVV_INVALID,
-    CVV_INCOMPLETE,
-    EXPIRY_DATE_INVALID,
-    CARD_EXPIRED;
-
-    public static EnumSet<ValidationError> emptySet() {
-        return EnumSet.noneOf(ValidationError.class);
+    /**
+     * @param value string cvv representation
+     */
+    public Cvv(String value) {
+        this.value = StringUtils.unwrapNull(value);
     }
 }

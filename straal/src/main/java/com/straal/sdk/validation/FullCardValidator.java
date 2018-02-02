@@ -22,24 +22,45 @@ package com.straal.sdk.validation;
 import com.straal.sdk.card.CardBrand;
 import com.straal.sdk.card.CreditCard;
 
+import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.List;
 
+/**
+ * A card validator which checks all criteria for validating a card.
+ * See ValidationResult for all types of possible results.
+ *
+ * @see ValidationResult
+ */
 public class FullCardValidator implements CardValidator {
     @Override
-    public EnumSet<ValidationError> validate(CreditCard creditCard) {
-        CardBrand cardBrand = identify(creditCard);
-        if (cardBrand == null) return EnumSet.of(ValidationError.CARD_PATTERN_NOT_MATCHED);
-        EnumSet<ValidationError> errors = new CardholderNameValidator().validate(creditCard);
-        errors.addAll(new CardNumberValidator().validate(creditCard));
-        errors.addAll(new ExpiryDateValidator().validate(creditCard));
-        errors.addAll(new CvvValidator().validate(creditCard));
-        return errors;
+    public EnumSet<ValidationResult> validate(CreditCard creditCard) {
+        CardBrand cardBrand = creditCard.getBrand();
+        if (cardBrand == CardBrand.UNKNOWN) return EnumSet.of(ValidationResult.CARD_PATTERN_NOT_MATCHED);
+        EnumSet<ValidationResult> finalResult = ValidationResult.emptySet();
+        List<EnumSet<ValidationResult>> criteriaList = validateAllCriteria(creditCard);
+        combineAllResultsIntoFinal(finalResult, criteriaList);
+        removeValidIfAnyCriterionInvalid(finalResult, criteriaList);
+        return finalResult;
     }
 
-    private CardBrand identify(CreditCard creditCard) {
-        for (CardBrand brand : CardBrand.values()) {
-            if (brand.identifyPattern.matcher(creditCard.number).matches()) return brand;
+    private List<EnumSet<ValidationResult>> validateAllCriteria(CreditCard creditCard) {
+        EnumSet<ValidationResult> nameResults = new CardholderNameValidator().validate(creditCard);
+        EnumSet<ValidationResult> numberResults = new CardNumberValidator().validate(creditCard);
+        EnumSet<ValidationResult> expiryResults = new ExpiryDateValidator().validate(creditCard);
+        EnumSet<ValidationResult> cvvResults = new CvvValidator().validate(creditCard);
+        return Arrays.asList(nameResults, numberResults, expiryResults, cvvResults);
+    }
+
+    private void combineAllResultsIntoFinal(EnumSet<ValidationResult> finalResult, List<EnumSet<ValidationResult>> resultsList) {
+        for (EnumSet<ValidationResult> resultEnumSet : resultsList) {
+            finalResult.addAll(resultEnumSet);
         }
-        return null;
+    }
+
+    private void removeValidIfAnyCriterionInvalid(EnumSet<ValidationResult> finalResult, List<EnumSet<ValidationResult>> resultsList) {
+        for (EnumSet<ValidationResult> resultEnumSet : resultsList) {
+            if (!resultEnumSet.contains(ValidationResult.VALID)) finalResult.remove(ValidationResult.VALID);
+        }
     }
 }

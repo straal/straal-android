@@ -19,29 +19,56 @@
 
 package com.straal.sdk.card;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.stream.Stream;
 
+@DisplayName("CardholderName")
 class CardholderNameTest {
-    @Test
-    void shouldConvertEmptyFullNameToEmpty() {
-        CardholderName cardholderName = new CardholderName("");
-        assertEquals("", cardholderName.firstName);
-        assertEquals("", cardholderName.lastName);
+    @ParameterizedTest
+    @MethodSource("fullNames")
+    void shouldProperlySanitizeFullNameInput(String fullName, String sanitizedFullName) {
+        Assertions.assertEquals(sanitizedFullName, new CardholderName(fullName).getFullName());
     }
 
-    @Test
-    void shouldConvertNoSurnameToEmpty() {
-        CardholderName cardholderName = new CardholderName("Jar");
-        assertEquals("Jar", cardholderName.firstName);
-        assertEquals("", cardholderName.lastName);
+    @ParameterizedTest
+    @MethodSource("firstAndLastNames")
+    void shouldProperlySanitizePartialNameInput(String firstName, String lastName, String sanitizedFullName) {
+        Assertions.assertEquals(sanitizedFullName, new CardholderName(firstName, lastName).getFullName());
     }
 
-    @Test
-    void shouldRetainValidNames() {
-        CardholderName cardholderName = new CardholderName("Jar Jar");
-        assertEquals("Jar", cardholderName.firstName);
-        assertEquals("Jar", cardholderName.lastName);
+    static Stream<Arguments> fullNames() {
+        return Stream.of(
+                Arguments.of(null, ""),
+                Arguments.of("", ""),
+                Arguments.of("  ", ""),
+                Arguments.of("Ab Cd", "Ab Cd"),
+                Arguments.of("Ab\tCd", "Ab Cd"),
+                Arguments.of("Ab\nCd", "Ab Cd"),
+                Arguments.of("Greg O'Hare", "Greg O'Hare"),
+                Arguments.of("Margarita Tequila-Tortilla", "Margarita Tequila-Tortilla"),
+                Arguments.of(" Ab Cd  ", "Ab Cd"),
+                Arguments.of(" 電电電 ", "電电電"),
+                Arguments.of("Ab     Cd", "Ab Cd"),
+                Arguments.of("  Ab     Cd   ", "Ab Cd"),
+                Arguments.of("Ab Cd C", "Ab Cd C")
+        );
+    }
+
+    static Stream<Arguments> firstAndLastNames() {
+        return Stream.of(
+                Arguments.of(null, null, ""),
+                Arguments.of(null, "B", "B"),
+                Arguments.of("Ab", "Cd", "Ab Cd"),
+                Arguments.of("電电", "電电", "電电 電电"),
+                Arguments.of("Ab Cd", "Ef", "Ab Cd Ef"),
+                Arguments.of("J.", "Gonzales", "J. Gonzales"),
+                Arguments.of("Ab   Cd  ", "Ef", "Ab Cd Ef"),
+                Arguments.of("   Ab   ", "  Cd   ", "Ab Cd")
+        );
     }
 }

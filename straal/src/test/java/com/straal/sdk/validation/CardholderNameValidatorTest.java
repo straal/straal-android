@@ -19,7 +19,10 @@
 
 package com.straal.sdk.validation;
 
+import com.straal.sdk.card.CardNumber;
+import com.straal.sdk.card.CardholderName;
 import com.straal.sdk.card.CreditCard;
+import com.straal.sdk.card.Cvv;
 import com.straal.sdk.card.ExpiryDate;
 
 import org.junit.jupiter.api.DisplayName;
@@ -38,26 +41,27 @@ class CardholderNameValidatorTest {
 
     @ParameterizedTest
     @MethodSource("names")
-    void validate(String name, EnumSet<ValidationError> expectedErrors) {
+    void validate(String name, EnumSet<ValidationResult> expectedErrors) {
         CreditCard card = createCreditCard(name);
-        EnumSet<ValidationError> errors = cardholderNameValidator.validate(card);
+        EnumSet<ValidationResult> errors = cardholderNameValidator.validate(card);
         assertEquals(expectedErrors, errors);
     }
 
     private CreditCard createCreditCard(String cardholderName) {
-        return new CreditCard(cardholderName, "4444444444444448", "123", new ExpiryDate(12, 2200));
+        return new CreditCard(new CardholderName(cardholderName), new CardNumber("4444444444444448"), new Cvv("123"), new ExpiryDate(12, 2200));
     }
 
     static Stream<Arguments> names() {
         return Stream.of(
-                Arguments.of("", EnumSet.of(ValidationError.CARDHOLDER_NAME_TOO_SHORT)),
-                Arguments.of("A", EnumSet.of(ValidationError.CARDHOLDER_NAME_TOO_SHORT)),
-                Arguments.of("A A", EnumSet.of(ValidationError.CARDHOLDER_NAME_TOO_SHORT)),
-                Arguments.of("Ab A", EnumSet.of(ValidationError.CARDHOLDER_NAME_TOO_SHORT)),
-                Arguments.of("A Ab", EnumSet.of(ValidationError.CARDHOLDER_NAME_TOO_SHORT)),
-                Arguments.of("Ab Ab", ValidationError.emptySet()),
-                Arguments.of("Ab   Ab", ValidationError.emptySet()),
-                Arguments.of("Jan3 Sobieski", ValidationError.emptySet())
+                Arguments.of("", EnumSet.of(ValidationResult.CARDHOLDER_NAME_INVALID)),
+                Arguments.of("     ", EnumSet.of(ValidationResult.CARDHOLDER_NAME_INVALID)),
+                Arguments.of("A", EnumSet.of(ValidationResult.CARDHOLDER_NAME_INVALID)),
+                Arguments.of("A A", EnumSet.of(ValidationResult.CARDHOLDER_NAME_INVALID)),
+                Arguments.of("A    A", EnumSet.of(ValidationResult.CARDHOLDER_NAME_INVALID)),
+                Arguments.of("Ab A", EnumSet.of(ValidationResult.CARDHOLDER_NAME_INVALID)),
+                Arguments.of("Ab Ab", EnumSet.of(ValidationResult.VALID)),
+                Arguments.of("Ab   Ab", EnumSet.of(ValidationResult.VALID)),
+                Arguments.of("Jan 3 Sobieski", EnumSet.of(ValidationResult.VALID))
         );
     }
 }

@@ -23,6 +23,10 @@ import com.straal.sdk.card.CreditCard;
 
 import java.util.EnumSet;
 
-interface CardValidator {
-    EnumSet<ValidationError> validate(CreditCard creditCard);
+public interface CardValidator {
+    /**
+     * @param creditCard credit card object you want to validate
+     * @return a set of ValidationResults which are true for a given card
+     */
+    EnumSet<ValidationResult> validate(CreditCard creditCard);
 }

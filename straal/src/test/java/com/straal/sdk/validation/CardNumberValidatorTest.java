@@ -19,7 +19,10 @@
 
 package com.straal.sdk.validation;
 
+import com.straal.sdk.card.CardNumber;
+import com.straal.sdk.card.CardholderName;
 import com.straal.sdk.card.CreditCard;
+import com.straal.sdk.card.Cvv;
 import com.straal.sdk.card.ExpiryDate;
 
 import org.junit.jupiter.api.DisplayName;
@@ -34,39 +37,57 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("CardNumberValidator")
 class CardNumberValidatorTest {
+    private static final String CHINA_UNION_INVALID_LUHN = "6250946000000017";
     private CardNumberValidator cardNumberValidator = new CardNumberValidator();
 
     @ParameterizedTest
     @MethodSource({"cardNumbers"})
-    void validate(String cardNumber, EnumSet<ValidationError> expectedErrors) {
-        CreditCard card = new CreditCard("John Smith", cardNumber, "123", new ExpiryDate(12, 2200));
-        EnumSet<ValidationError> errors = cardNumberValidator.validate(card);
+    void validate(String cardNumber, EnumSet<ValidationResult> expectedErrors) {
+        CreditCard card = new CreditCard(new CardholderName("John Smith"), new CardNumber(cardNumber), new Cvv("123"), new ExpiryDate(12, 2200));
+        EnumSet<ValidationResult> errors = cardNumberValidator.validate(card);
         assertEquals(expectedErrors, errors);
     }
 
     static Stream<Arguments> cardNumbers() {
         return Stream.of(
-                Arguments.of("444444444a444448", EnumSet.of(
-                        ValidationError.CARD_PATTERN_NOT_MATCHED,
-                        ValidationError.CARD_NUMBER_NOT_NUMERIC
+                Arguments.of("4444444444a44444448", EnumSet.of(
+                        ValidationResult.CARD_NUMBER_NOT_NUMERIC,
+                        ValidationResult.LUHN_TEST_FAILED
                 )),
-                Arguments.of("444444444444444", EnumSet.of(
-                        ValidationError.CARD_NUMBER_INCOMPLETE,
-                        ValidationError.CARD_PATTERN_NOT_MATCHED,
-                        ValidationError.LUHN_TEST_FAILED
+                Arguments.of("444444444444", EnumSet.of(
+                        ValidationResult.CARD_NUMBER_INCOMPLETE,
+                        ValidationResult.LUHN_TEST_FAILED
                 )),
-                Arguments.of("44444444444444488", EnumSet.of(
-                        ValidationError.CARD_NUMBER_TOO_LONG,
-                        ValidationError.CARD_PATTERN_NOT_MATCHED,
-                        ValidationError.LUHN_TEST_FAILED
+                Arguments.of("44444444444444444488", EnumSet.of(
+                        ValidationResult.CARD_NUMBER_TOO_LONG,
+                        ValidationResult.LUHN_TEST_FAILED
                 )),
-                Arguments.of("4444444444444444", EnumSet.of(
-                        ValidationError.LUHN_TEST_FAILED
+                Arguments.of("4444444444444444448a", EnumSet.of(
+                        ValidationResult.CARD_NUMBER_TOO_LONG,
+                        ValidationResult.CARD_NUMBER_NOT_NUMERIC,
+                        ValidationResult.LUHN_TEST_FAILED
                 )),
-                Arguments.of("1111111111111111", EnumSet.of(
-                        ValidationError.CARD_PATTERN_NOT_MATCHED
+                Arguments.of("4444444444444444444", EnumSet.of(
+                        ValidationResult.LUHN_TEST_FAILED
                 )),
-                Arguments.of("4444444444444448", ValidationError.emptySet())
+                // China Union cards don't require Luhn check
+                Arguments.of(CHINA_UNION_INVALID_LUHN, EnumSet.of(
+                        ValidationResult.CARD_NUMBER_INCOMPLETE,
+                        ValidationResult.VALID
+                )),
+                Arguments.of("0111111111111111", EnumSet.of(
+                        ValidationResult.CARD_PATTERN_NOT_MATCHED
+                )),
+                Arguments.of("4444444444444444442", EnumSet.of(
+                        ValidationResult.VALID
+                )),
+                Arguments.of("4111111111119", EnumSet.of(
+                        ValidationResult.CARD_NUMBER_INCOMPLETE,
+                        ValidationResult.VALID
+                )),
+                Arguments.of("41111111111114", EnumSet.of(
+                        ValidationResult.CARD_NUMBER_INCOMPLETE
+                ))
         );
     }
 }

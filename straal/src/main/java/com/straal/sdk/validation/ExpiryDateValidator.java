@@ -24,23 +24,30 @@ import com.straal.sdk.card.CreditCard;
 import java.util.Calendar;
 import java.util.EnumSet;
 
-class ExpiryDateValidator implements CardValidator {
+/**
+ * Card validator which checks expiry date.
+ * It uses Calendar instance to compare current date wth the one being validated.
+ */
+public class ExpiryDateValidator implements CardValidator {
     private final Calendar calendar;
 
     ExpiryDateValidator(Calendar calendar) {
         this.calendar = calendar;
     }
 
-    ExpiryDateValidator() {
+    /**
+     * Initialises this object with default Calendar instance for comparing dates.
+     */
+    public ExpiryDateValidator() {
         this(Calendar.getInstance());
     }
 
     @Override
-    public EnumSet<ValidationError> validate(CreditCard creditCard) {
-        EnumSet<ValidationError> errors = ValidationError.emptySet();
-        if (!isMonthValid(creditCard)) errors.add(ValidationError.EXPIRY_DATE_INVALID);
-        if (isCardExpired(creditCard)) errors.add(ValidationError.CARD_EXPIRED);
-        return errors;
+    public EnumSet<ValidationResult> validate(CreditCard creditCard) {
+        EnumSet<ValidationResult> errors = ValidationResult.emptySet();
+        if (!isMonthValid(creditCard)) errors.add(ValidationResult.EXPIRY_DATE_INVALID);
+        if (isCardExpired(creditCard)) errors.add(ValidationResult.CARD_EXPIRED);
+        return (errors.isEmpty()) ? EnumSet.of(ValidationResult.VALID) : errors;
     }
 
     private boolean isMonthValid(CreditCard creditCard) {

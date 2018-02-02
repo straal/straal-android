@@ -23,29 +23,38 @@ import com.straal.sdk.card.CardBrand;
 import com.straal.sdk.card.CreditCard;
 
 import java.util.EnumSet;
+import java.util.SortedSet;
 
-class CardNumberValidator implements CardValidator {
+/**
+ * Validates credit card's number with criteria based on identified brand.
+ * See ValidationResult for list of possible results.
+ *
+ * @see ValidationResult
+ */
+public class CardNumberValidator implements CardValidator {
     @Override
-    public EnumSet<ValidationError> validate(CreditCard creditCard) {
-        EnumSet<ValidationError> errors = ValidationError.emptySet();
-        String sanitizedNumber = sanitize(creditCard.number);
+    public EnumSet<ValidationResult> validate(CreditCard creditCard) {
+        String sanitizedNumber = creditCard.number.sanitized();
         CardBrand brand = creditCard.getBrand();
-        if (!sanitizedNumber.matches("\\d+")) errors.add(ValidationError.CARD_NUMBER_NOT_NUMERIC);
-        if (brand == CardBrand.UNKNOWN) {
-            errors.add(ValidationError.CARD_PATTERN_NOT_MATCHED);
-            return errors;
+        int lastLength = brand.getNumberLengths().last();
+        int numberLength = sanitizedNumber.length();
+        if (brand == CardBrand.UNKNOWN) return EnumSet.of(ValidationResult.CARD_PATTERN_NOT_MATCHED);
+        EnumSet<ValidationResult> results = ValidationResult.emptySet();
+        if (!sanitizedNumber.matches("\\d+")) results.add(ValidationResult.CARD_NUMBER_NOT_NUMERIC);
+        if (numberLength < lastLength) results.add(ValidationResult.CARD_NUMBER_INCOMPLETE);
+        if (numberLength > lastLength) results.add(ValidationResult.CARD_NUMBER_TOO_LONG);
+        if (!Luhn.validate(sanitizedNumber) && creditCard.getBrand().requiresLuhn) results.add(ValidationResult.LUHN_TEST_FAILED);
+        if (isFullResultValid(results) || isIncompleteResultValid(results, brand.getNumberLengths(), numberLength)) {
+            results.add(ValidationResult.VALID);
         }
-        if (sanitizedNumber.length() < brand.numberLength())
-            errors.add(ValidationError.CARD_NUMBER_INCOMPLETE);
-        if (sanitizedNumber.length() > brand.numberLength())
-            errors.add(ValidationError.CARD_NUMBER_TOO_LONG);
-        if (!Luhn.validate(sanitizedNumber)) errors.add(ValidationError.LUHN_TEST_FAILED);
-        if (!brand.fullPattern.matcher(sanitizedNumber).matches())
-            errors.add(ValidationError.CARD_PATTERN_NOT_MATCHED);
-        return errors;
+        return results;
     }
 
-    private String sanitize(String name) {
-        return name.replace(" ", "").replace("-", "");
+    private boolean isFullResultValid(EnumSet<ValidationResult> results) {
+        return results.isEmpty();
+    }
+
+    private boolean isIncompleteResultValid(EnumSet<ValidationResult> results, SortedSet<Integer> numberLengths, int numberLength) {
+        return (results.equals(EnumSet.of(ValidationResult.CARD_NUMBER_INCOMPLETE)) && numberLengths.contains(numberLength));
     }
 }
