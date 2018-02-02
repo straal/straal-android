@@ -38,7 +38,7 @@ class CvvValidatorTest {
     private static final String VALID_AMEX_CARD_NUMBER = "378282246310005";
     private static final String INVALID_CARD_NUMBER = "0444444444444448";
     private static final String VALID_VISA_CVV = "444";
-    private static final String VALID__AMEX_CVV = "4444";
+    private static final String VALID_AMEX_CVV = "4444";
     private CvvValidator cvvValidator = new CvvValidator();
 
     @ParameterizedTest
@@ -63,7 +63,7 @@ class CvvValidatorTest {
                 Arguments.of("12341", VALID_AMEX_CARD_NUMBER, EnumSet.of(ValidationResult.CVV_INCOMPLETE)),
                 Arguments.of("1a", VALID_AMEX_CARD_NUMBER, EnumSet.of(ValidationResult.CVV_INVALID, ValidationResult.CVV_INCOMPLETE)),
                 Arguments.of("1a111", VALID_AMEX_CARD_NUMBER, EnumSet.of(ValidationResult.CVV_INVALID, ValidationResult.CVV_INCOMPLETE)),
-                Arguments.of(VALID__AMEX_CVV, VALID_AMEX_CARD_NUMBER, EnumSet.of(ValidationResult.VALID))
+                Arguments.of(VALID_AMEX_CVV, VALID_AMEX_CARD_NUMBER, EnumSet.of(ValidationResult.VALID))
         );
     }
 }
