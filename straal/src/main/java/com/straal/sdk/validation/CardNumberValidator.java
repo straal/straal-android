@@ -27,6 +27,12 @@ import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Validates credit card's number with criteria based on identified brand.
+ * See ValidationResult for list of possible results.
+ *
+ * @see ValidationResult
+ */
 class CardNumberValidator implements CardValidator {
     @Override
     public EnumSet<ValidationResult> validate(CreditCard creditCard) {
