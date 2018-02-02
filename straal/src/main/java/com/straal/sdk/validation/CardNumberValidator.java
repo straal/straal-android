@@ -34,7 +34,7 @@ import java.util.SortedSet;
 public class CardNumberValidator implements CardValidator {
     @Override
     public EnumSet<ValidationResult> validate(CreditCard creditCard) {
-        String sanitizedNumber = sanitize(creditCard.number);
+        String sanitizedNumber = creditCard.number.sanitized();
         CardBrand brand = creditCard.getBrand();
         int lastLength = brand.getNumberLengths().last();
         int numberLength = sanitizedNumber.length();
@@ -56,9 +56,5 @@ public class CardNumberValidator implements CardValidator {
 
     private boolean isIncompleteResultValid(EnumSet<ValidationResult> results, SortedSet<Integer> numberLengths, int numberLength) {
         return (results.equals(EnumSet.of(ValidationResult.CARD_NUMBER_INCOMPLETE)) && numberLengths.contains(numberLength));
-    }
-
-    private String sanitize(String name) {
-        return name.replace(" ", "").replace("-", "");
     }
 }

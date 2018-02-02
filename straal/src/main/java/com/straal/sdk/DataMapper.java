@@ -38,7 +38,7 @@ class DataMapper {
     static Map<String, Object> mapCreditCard(CreditCard cardWithName) {
         Map<String, Object> result = new HashMap<>();
         result.put("name", cardWithName.cardholderName.getFullName());
-        result.put("number", cardWithName.number);
+        result.put("number", cardWithName.number.sanitized());
         result.put("cvv", cardWithName.cvv);
         result.put("expiry_month", cardWithName.expiryDate.month);
         result.put("expiry_year", cardWithName.expiryDate.year);

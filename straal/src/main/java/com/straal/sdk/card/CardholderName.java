@@ -31,7 +31,7 @@ public class CardholderName {
      * @param lastName  cardholder's last name
      */
     public CardholderName(String firstName, String lastName) {
-        this(unwrapNull(firstName) + " " + unwrapNull(lastName));
+        this(StringUtils.unwrapNull(firstName) + " " + StringUtils.unwrapNull(lastName));
     }
 
     /**
@@ -49,10 +49,6 @@ public class CardholderName {
     }
 
     private static String sanitize(String fullName) {
-        return unwrapNull(fullName).replaceAll(" +", " ").trim();
-    }
-
-    private static String unwrapNull(String string) {
-        return string == null ? "" : string;
+        return StringUtils.unwrapNull(fullName).replaceAll(" +", " ").trim();
     }
 }

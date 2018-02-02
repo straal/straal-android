@@ -19,6 +19,7 @@
 
 package com.straal.sdk.validation;
 
+import com.straal.sdk.card.CardNumber;
 import com.straal.sdk.card.CardholderName;
 import com.straal.sdk.card.CreditCard;
 import com.straal.sdk.card.ExpiryDate;
@@ -43,7 +44,7 @@ class FullCardValidatorTest {
     @ParameterizedTest
     @MethodSource({"creditCardData"})
     void validate(CardholderName name, String number, String cvv, ExpiryDate expiryDate, EnumSet<ValidationResult> expectedResults) {
-        CreditCard creditCard = new CreditCard(name, number, cvv, expiryDate);
+        CreditCard creditCard = new CreditCard(name, new CardNumber(number), cvv, expiryDate);
         EnumSet<ValidationResult> results = fullCardValidator.validate(creditCard);
         assertEquals(expectedResults, results);
     }
@@ -72,7 +73,7 @@ class FullCardValidatorTest {
                         EnumSet.of(ValidationResult.CARD_NUMBER_INCOMPLETE)
                 ),
                 Arguments.of(
-                        new CardholderName("John", "S"),
+                        new CardholderName("Jo", "S"),
                         "4111111111119",
                         VALID_CVV,
                         VALID_EXPIRY_DATE,
@@ -128,7 +129,7 @@ class FullCardValidatorTest {
                         EnumSet.of(ValidationResult.CARD_NUMBER_TOO_LONG, ValidationResult.LUHN_TEST_FAILED, ValidationResult.CARD_NUMBER_NOT_NUMERIC)
                 ),
                 Arguments.of(
-                        new CardholderName("John", "S"),
+                        new CardholderName("Jo", "S"),
                         "4444444444444s444481",
                         "a4",
                         new ExpiryDate(0, 1200),
