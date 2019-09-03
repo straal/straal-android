@@ -1,6 +1,6 @@
 /*
- * JsonResponseCallable.java
- * Created by Konrad Kowalewski on 26.01.18
+ * MapToAuth3dsContextCallable.java
+ * Created by Arkadiusz Różalski on 03.09.19
  * Straal SDK for Android
  * Copyright 2018 Straal Sp. z o. o.
  *
@@ -19,32 +19,29 @@
 
 package com.straal.sdk;
 
+import com.straal.sdk.data.RedirectUrls;
 import com.straal.sdk.http.HttpResponse;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.straal.sdk.response.Auth3dsContext;
 
 import java.util.concurrent.Callable;
 
-
-class JsonResponseCallable implements Callable<JSONObject> {
+class MapToAuth3dsContextCallable implements Callable<Auth3dsContext> {
     private final Callable<HttpResponse> responseCallable;
+    private final RedirectUrls redirectUrls;
 
-    JsonResponseCallable(Callable<HttpResponse> responseCallable) {
+    MapToAuth3dsContextCallable(Callable<HttpResponse> responseCallable, RedirectUrls redirectUrls) {
         this.responseCallable = responseCallable;
+        this.redirectUrls = redirectUrls;
     }
 
-    JsonResponseCallable(HttpResponse httpResponse) {
+    MapToAuth3dsContextCallable(HttpResponse httpResponse, RedirectUrls redirectUrls) {
         this.responseCallable = SimpleSourceCallable.of(httpResponse);
+        this.redirectUrls = redirectUrls;
     }
 
     @Override
-    public JSONObject call() throws Exception {
-        HttpResponse response = responseCallable.call();
-        return parseToJson(response.body);
-    }
-
-    private JSONObject parseToJson(String responseBody) throws JSONException {
-        return new JSONObject(responseBody);
+    public Auth3dsContext call() throws Exception {
+        String locationUrl = responseCallable.call().headerFields.get("Location").get(0);
+        return new Auth3dsContext(locationUrl, redirectUrls);
     }
 }

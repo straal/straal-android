@@ -29,6 +29,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
@@ -48,7 +50,7 @@ class KeyResponseCallableTest {
         int ttl = 1;
         long createdAt = 1;
         String responseBody = "{\"id\":" + id + ",\"permission\":" + permission + ",\"key\":" + key + ",\"ttl\":" + ttl + ",\"created_at\":" + createdAt + "}";
-        when(httpResponseCallable.call()).thenReturn(new HttpResponse(200, responseBody));
+        when(httpResponseCallable.call()).thenReturn(new HttpResponse(200, responseBody, Collections.emptyMap()));
         keyResponseCallable = createKeyResponseCallable();
         KeyResponse response = keyResponseCallable.call();
         assertEquals(id, response.id);
@@ -65,7 +67,7 @@ class KeyResponseCallableTest {
         @DisplayName("json is invalid")
         @Test
         void invalidJson() throws Exception {
-            when(httpResponseCallable.call()).thenReturn(new HttpResponse(200, "invalid json"));
+            when(httpResponseCallable.call()).thenReturn(new HttpResponse(200, "invalid json", Collections.emptyMap()));
             keyResponseCallable = createKeyResponseCallable();
             assertThrows(JSONException.class, keyResponseCallable::call);
         }
@@ -73,7 +75,7 @@ class KeyResponseCallableTest {
         @DisplayName("json has wrong data")
         @Test
         void invalidDataInJson() throws Exception {
-            when(httpResponseCallable.call()).thenReturn(new HttpResponse(200, "{\"a\":\"A\"}"));
+            when(httpResponseCallable.call()).thenReturn(new HttpResponse(200, "{\"a\":\"A\"}", Collections.emptyMap()));
             keyResponseCallable = createKeyResponseCallable();
             assertThrows(ResponseParseException.class, keyResponseCallable::call);
         }

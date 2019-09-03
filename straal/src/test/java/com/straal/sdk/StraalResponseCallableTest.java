@@ -27,6 +27,8 @@ import org.json.JSONException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
@@ -42,7 +44,7 @@ class StraalResponseCallableTest {
     void returnResponse() throws Exception {
         int code = 200;
         String requestId = "sample request id";
-        HttpResponse response = new HttpResponse(code, "{\"request_id\":" + requestId + "}");
+        HttpResponse response = new HttpResponse(code, "{\"request_id\":" + requestId + "}", Collections.emptyMap());
         when(httpResponseCallable.call()).thenReturn(response);
         straalResponseCallable = createStraalResponseCallable();
         StraalEncryptedResponse straalResponse = straalResponseCallable.call();
@@ -52,7 +54,7 @@ class StraalResponseCallableTest {
     @DisplayName("should throw json exception on invalid json")
     @Test
     void throwParseException() throws Exception {
-        when(httpResponseCallable.call()).thenReturn(new HttpResponse(200, "invalid body"));
+        when(httpResponseCallable.call()).thenReturn(new HttpResponse(200, "invalid body", Collections.emptyMap()));
         straalResponseCallable = createStraalResponseCallable();
         assertThrows(JSONException.class, straalResponseCallable::call);
     }
@@ -60,7 +62,7 @@ class StraalResponseCallableTest {
     @DisplayName("should throw parse exception when json has wrong data")
     @Test
     void invalidDataInJson() throws Exception {
-        when(httpResponseCallable.call()).thenReturn(new HttpResponse(200, "{\"a\":\"A\"}"));
+        when(httpResponseCallable.call()).thenReturn(new HttpResponse(200, "{\"a\":\"A\"}", Collections.emptyMap()));
         straalResponseCallable = createStraalResponseCallable();
         assertThrows(ResponseParseException.class, straalResponseCallable::call);
     }

@@ -1,6 +1,6 @@
 /*
- * StraalPermissions.java
- * Created by Arkadiusz Różalski on 26.01.18
+ * Auth3dsContext.java
+ * Created by Arkadiusz Różalski on 03.09.19
  * Straal SDK for Android
  * Copyright 2018 Straal Sp. z o. o.
  *
@@ -17,13 +17,18 @@
  * limitations under the License.
  */
 
-package com.straal.sdk;
+package com.straal.sdk.response;
 
-/**
- * Contains all permission constants required by Straal API.
- */
-public class StraalPermissions {
-    public static final String CREATE_CARD_PERMISSION = "v1.cards.create";
-    public static final String CREATE_TRANSACTION_WITH_CARD = "v1.transactions.create_with_card";
-    public static final String AUTHENTICATION_3DS = "v1.customers.authentications_3ds.init_3ds";
+import com.straal.sdk.data.RedirectUrls;
+
+public class Auth3dsContext {
+    public final String locationUrl;
+    public final String successUrl;
+    public final String failureUrl;
+
+    public Auth3dsContext(String locationUrl, RedirectUrls urls) {
+        this.locationUrl = locationUrl;
+        this.successUrl = urls.successUrl;
+        this.failureUrl = urls.failureUrl;
+    }
 }

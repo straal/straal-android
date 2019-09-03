@@ -1,6 +1,6 @@
 /*
- * StraalPermissions.java
- * Created by Arkadiusz Różalski on 26.01.18
+ * StraalEncrypted3dsResponse.java
+ * Created by Arkadiusz Różalski on 03.09.19
  * Straal SDK for Android
  * Copyright 2018 Straal Sp. z o. o.
  *
@@ -17,13 +17,13 @@
  * limitations under the License.
  */
 
-package com.straal.sdk;
+package com.straal.sdk.response;
 
-/**
- * Contains all permission constants required by Straal API.
- */
-public class StraalPermissions {
-    public static final String CREATE_CARD_PERMISSION = "v1.cards.create";
-    public static final String CREATE_TRANSACTION_WITH_CARD = "v1.transactions.create_with_card";
-    public static final String AUTHENTICATION_3DS = "v1.customers.authentications_3ds.init_3ds";
+public class StraalEncrypted3dsResponse extends StraalEncryptedResponse {
+    public final Auth3dsContext auth3dsContext;
+
+    public StraalEncrypted3dsResponse(String requestId, Auth3dsContext auth3dsContext) {
+        super(requestId);
+        this.auth3dsContext = auth3dsContext;
+    }
 }

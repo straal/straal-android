@@ -1,6 +1,6 @@
 /*
- * StraalPermissions.java
- * Created by Arkadiusz Różalski on 26.01.18
+ * RedirectUrls.java
+ * Created by Arkadiusz Różalski on 03.09.19
  * Straal SDK for Android
  * Copyright 2018 Straal Sp. z o. o.
  *
@@ -17,13 +17,14 @@
  * limitations under the License.
  */
 
-package com.straal.sdk;
+package com.straal.sdk.data;
 
-/**
- * Contains all permission constants required by Straal API.
- */
-public class StraalPermissions {
-    public static final String CREATE_CARD_PERMISSION = "v1.cards.create";
-    public static final String CREATE_TRANSACTION_WITH_CARD = "v1.transactions.create_with_card";
-    public static final String AUTHENTICATION_3DS = "v1.customers.authentications_3ds.init_3ds";
+public class RedirectUrls {
+    public final String successUrl;
+    public final String failureUrl;
+
+    public RedirectUrls(String successUrl, String failureUrl) {
+        this.successUrl = successUrl;
+        this.failureUrl = failureUrl;
+    }
 }

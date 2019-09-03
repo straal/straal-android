@@ -20,12 +20,20 @@
 package com.straal.sdk;
 
 import com.straal.sdk.card.CreditCard;
+import com.straal.sdk.data.RedirectUrls;
 import com.straal.sdk.data.Transaction;
 
 import java.util.HashMap;
 import java.util.Map;
 
 class DataMapper {
+
+    static Map<String, Object> map3DSecureTransaction(Transaction transaction, RedirectUrls redirectUrls) {
+        Map<String, Object> result = mapTransaction(transaction);
+        result.put("success_url", redirectUrls.successUrl);
+        result.put("failure_url", redirectUrls.failureUrl);
+        return result;
+    }
 
     static Map<String, Object> mapTransaction(Transaction transaction) {
         Map<String, Object> result = new HashMap<>();
