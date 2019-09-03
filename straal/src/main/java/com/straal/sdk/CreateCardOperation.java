@@ -20,9 +20,11 @@
 package com.straal.sdk;
 
 import com.straal.sdk.card.CreditCard;
+import com.straal.sdk.response.StraalEncryptedResponse;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * A Straal encrypted operation, which will create a new credit card in Straal.
@@ -30,7 +32,7 @@ import java.util.Map;
  * @see StraalOperation
  * @see <a href="https://api-reference.straal.com/#resources-cards-create-a-card-using-cryptkey">'Create card' in Straal API docs</a>
  */
-public class CreateCardOperation extends StraalEncryptedOperation {
+public class CreateCardOperation extends StraalEncryptedBaseOperation<StraalEncryptedResponse> {
     public final CreditCard card;
 
     /**
@@ -51,5 +53,10 @@ public class CreateCardOperation extends StraalEncryptedOperation {
         Map<String, Object> map = new HashMap<>();
         map.put("permission", permission);
         return map;
+    }
+
+    @Override
+    protected Callable<StraalEncryptedResponse> getStraalResponseCallable(HttpCallable httpCallable) {
+        return new StraalResponseCallable(new JsonResponseCallable(httpCallable));
     }
 }
