@@ -21,7 +21,9 @@ package com.straal.sdk.response;
 
 import com.straal.sdk.data.RedirectUrls;
 
-public class Auth3dsContext {
+import java.io.Serializable;
+
+public class Auth3dsContext implements Serializable {
     public final String locationUrl;
     public final String successUrl;
     public final String failureUrl;
