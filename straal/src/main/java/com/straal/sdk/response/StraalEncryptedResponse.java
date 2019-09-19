@@ -22,7 +22,7 @@ package com.straal.sdk.response;
 /**
  * This response is returned from every encrypted Straal operation.
  *
- * @see com.straal.sdk.StraalEncryptedOperation
+ * @see com.straal.sdk.StraalEncryptedBaseOperation
  */
 public class StraalEncryptedResponse implements StraalResponse {
     /**
