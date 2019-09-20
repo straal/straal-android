@@ -22,9 +22,9 @@ package com.straal.sdk;
 import com.straal.sdk.data.RedirectUrls;
 import com.straal.sdk.exceptions.ResponseParseException;
 import com.straal.sdk.http.HttpResponse;
-import com.straal.sdk.response.Auth3dsContext;
 import com.straal.sdk.response.StraalEncrypted3dsResponse;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
 class Straal3dsResponseCallable implements Callable<StraalEncrypted3dsResponse> {
@@ -39,10 +39,11 @@ class Straal3dsResponseCallable implements Callable<StraalEncrypted3dsResponse> 
     @Override
     public StraalEncrypted3dsResponse call() throws Exception {
         HttpResponse response = responseCallable.call();
-        Auth3dsContext auth3dsContext = new MapToAuth3dsContextCallable(response, redirectUrls).call();
         try {
+            List<String> locations = response.headerFields.get("Location");
+            String locationUrl = (locations != null) ? locations.get(0) : "";
             String requestId = new JsonResponseCallable(response).call().getString("request_id");
-            return new StraalEncrypted3dsResponse(requestId, auth3dsContext);
+            return new StraalEncrypted3dsResponse(requestId, redirectUrls, locationUrl);
         } catch (Exception e) {
             throw new ResponseParseException("Response from Straal API didn't contain expected data", e);
         }

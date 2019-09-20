@@ -19,6 +19,8 @@
 
 package com.straal.sdk.response;
 
+import com.straal.sdk.data.RedirectUrls;
+
 /**
  * This response is returned from init 3ds operation.
  *
@@ -26,12 +28,17 @@ package com.straal.sdk.response;
  */
 public class StraalEncrypted3dsResponse extends StraalEncryptedResponse {
     /**
-     * This is structure which contains redirect urls to complete the 3D-Secure verification process
+     * User will be redirected back to one of the speficied URLs (successUrl or failureUrl) depending on the outcome of the 3D-Secure verification.
      */
-    public final Auth3dsContext auth3dsContext;
+    public final RedirectUrls redirectUrls;
+    /**
+     * Redirect url used to complete the 3D-Secure verification process
+     */
+    public final String locationUrl;
 
-    public StraalEncrypted3dsResponse(String requestId, Auth3dsContext auth3dsContext) {
+    public StraalEncrypted3dsResponse(String requestId, RedirectUrls redirectUrls, String locationUrl) {
         super(requestId);
-        this.auth3dsContext = auth3dsContext;
+        this.redirectUrls = redirectUrls;
+        this.locationUrl = locationUrl;
     }
 }
