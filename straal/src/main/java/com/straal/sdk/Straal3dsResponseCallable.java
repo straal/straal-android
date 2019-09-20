@@ -27,7 +27,6 @@ import com.straal.sdk.response.StraalEncrypted3dsResponse;
 
 import java.util.concurrent.Callable;
 
-//TODO refactor it!!!
 class Straal3dsResponseCallable implements Callable<StraalEncrypted3dsResponse> {
     private final Callable<HttpResponse> responseCallable;
     private final RedirectUrls redirectUrls;

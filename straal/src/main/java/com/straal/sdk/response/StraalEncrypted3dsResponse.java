@@ -19,7 +19,15 @@
 
 package com.straal.sdk.response;
 
+/**
+ * This response is returned from init 3ds operation.
+ *
+ * @see com.straal.sdk.response.StraalEncryptedResponse
+ */
 public class StraalEncrypted3dsResponse extends StraalEncryptedResponse {
+    /**
+     * This is structure which contains redirect urls to complete the 3D-Secure verification process
+     */
     public final Auth3dsContext auth3dsContext;
 
     public StraalEncrypted3dsResponse(String requestId, Auth3dsContext auth3dsContext) {

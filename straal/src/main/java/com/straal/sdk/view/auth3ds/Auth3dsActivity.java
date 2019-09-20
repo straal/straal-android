@@ -10,6 +10,9 @@ import androidx.annotation.Nullable;
 
 import com.straal.sdk.response.Auth3dsContext;
 
+/**
+ * An activity which handles 3D-Secure verification process and based on its outcome or user action (back button) finishes with one of available results: AUTH_3DS_SUCCESS, AUTH_3DS_FAILURE, AUTH_3DS_CANCEL. The result should be handled in onActivityResult method from host activity
+ */
 public class Auth3dsActivity extends Activity implements OnAuth3dsCompleteListener {
 
     private static String AUTH_3DS_CONTEXT_KEY = "auth_3ds_context";
@@ -54,13 +57,28 @@ public class Auth3dsActivity extends Activity implements OnAuth3dsCompleteListen
         webView.loadUrl(auth3dsContext.locationUrl);
     }
 
+    /**
+     * Starts auth 3ds activity for result
+     * @param activity host activity
+     * @param auth3dsContext data class which contains redirect urls to complete the 3D-Secure verification process
+     * @param requestCode request code to start activity for result
+     */
     public static void startForResult(Activity activity, Auth3dsContext auth3dsContext, int requestCode) {
         Intent startingIntent = new Intent(activity, Auth3dsActivity.class);
         startingIntent.putExtra(AUTH_3DS_CONTEXT_KEY, auth3dsContext);
         activity.startActivityForResult(startingIntent, requestCode);
     }
 
+    /**
+     * Authentication 3D-Secure success result
+     */
     public static final int AUTH_3DS_SUCCESS = 100;
+    /**
+     * Authentication 3D-Secure failure result
+     */
     public static final int AUTH_3DS_FAILURE = 101;
+    /**
+     * Authentication 3D-Secure cancel result (e.g. pressed back button)
+     */
     public static final int AUTH_3DS_CANCEL = 102;
 }

@@ -23,11 +23,18 @@ import com.straal.sdk.data.RedirectUrls;
 
 import java.io.Serializable;
 
+/**
+ * Data class which contains redirect urls to complete the 3D-Secure verification process
+ */
 public class Auth3dsContext implements Serializable {
     public final String locationUrl;
     public final String successUrl;
     public final String failureUrl;
 
+    /**
+     * @param locationUrl redirect url used to complete the 3D-Secure verification process
+     * @param urls redirect urls used when 3D-Secure verification process is finished
+     */
     public Auth3dsContext(String locationUrl, RedirectUrls urls) {
         this.locationUrl = locationUrl;
         this.successUrl = urls.successUrl;

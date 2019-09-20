@@ -28,11 +28,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+/**
+ * A Straal encrypted operation, which will initialize 3D-Secure process for a transaction using a credit card that will be registered in Straal.
+ *
+ * @see StraalOperation
+ * @see <a href="https://api-reference.straal.com/#resources-3d-secure-authentications-initialize-3d-secure-process-with-a-cryptkey">'Initialize 3D-Secure' with transaction and card in Straal API docs</a>
+ */
 public class Init3dsOperation extends StraalEncryptedBaseOperation<StraalEncrypted3dsResponse> {
     public final Transaction transaction;
     public final CreditCard card;
     public final RedirectUrls redirectUrls;
 
+    /**
+     * @param transaction transaction you want to perform
+     * @param creditCard  data (usually typed by the user) of the credit card to be created
+     * @param redirectUrls  after the 3D-Secure verification is finished, user will be redirected back to one of the speficied URLs (successUrl or failureUrl) depending on the outcome of the 3D-Secure verification
+     */
     public Init3dsOperation(Transaction transaction, CreditCard creditCard, RedirectUrls redirectUrls) {
         super(StraalPermissions.AUTHENTICATION_3DS);
         this.transaction = transaction;
