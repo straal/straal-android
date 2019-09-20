@@ -1,6 +1,6 @@
 package com.straal.sdk.card;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 final class StringUtils {
     private StringUtils() {
