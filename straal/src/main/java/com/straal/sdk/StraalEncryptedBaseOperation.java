@@ -1,6 +1,6 @@
 /*
- * StraalEncryptedOperation.java
- * Created by Konrad Kowalewski on 26.01.18
+ * StraalEncryptedBaseOperation.java
+ * Created by Arkadiusz Różalski on 03.09.19
  * Straal SDK for Android
  * Copyright 2018 Straal Sp. z o. o.
  *
@@ -23,14 +23,15 @@ import com.straal.sdk.http.HttpClient;
 import com.straal.sdk.response.StraalEncryptedResponse;
 
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * Base class for all <a href="https://api-reference.straal.com/#resources-cryptkeys-create-a-cryptkey">encrypted</a> Straal operations.
  * See {@link StraalOperation} for usage instructions.
  *
- * @see com.straal.sdk.response.StraalEncryptedResponse
+ * @see StraalEncryptedResponse
  */
-public abstract class StraalEncryptedOperation extends StraalOperation<StraalEncryptedResponse> {
+public abstract class StraalEncryptedBaseOperation<T extends StraalEncryptedResponse> extends StraalOperation<T> {
     private static final String CRYPT_KEY_ENDPOINT = "/straal/v1/cryptkeys";
     private static final String STRAAL_ENCRYPTED_ENDPOINT = "/encrypted";
     /**
@@ -38,7 +39,7 @@ public abstract class StraalEncryptedOperation extends StraalOperation<StraalEnc
      */
     public final String permission;
 
-    StraalEncryptedOperation(String permission) {
+    StraalEncryptedBaseOperation(String permission) {
         this.permission = permission;
     }
 
@@ -46,13 +47,15 @@ public abstract class StraalEncryptedOperation extends StraalOperation<StraalEnc
 
     protected abstract Map<String, Object> getStraalRequestPayload();
 
+    protected abstract Callable<T> getStraalResponseCallable(HttpCallable httpCallable) throws Exception;
+
     @Override
-    StraalEncryptedResponse perform(Straal.Config config) throws Exception {
+    T perform(Straal.Config config) throws Exception {
         MapToJsonCallable cryptKeyRequest = new MapToJsonCallable(getCryptKeyPayload());
         KeyResponseCallable cryptKeyResponse = new KeyResponseCallable(new JsonResponseCallable(new HttpCallable(cryptKeyRequest, createMerchantHttpClient(config), CRYPT_KEY_ENDPOINT)));
         StraalCrypterCallable straalCrypterCallable = new StraalCrypterCallable(cryptKeyResponse);
         EncryptCallable encryptCallable = new EncryptCallable(straalCrypterCallable, new MapToJsonCallable(getStraalRequestPayload()));
-        StraalResponseCallable straalRequest = new StraalResponseCallable(new JsonResponseCallable(new HttpCallable(encryptCallable, createStraalHttpClient(), STRAAL_ENCRYPTED_ENDPOINT)));
+        Callable<T> straalRequest = getStraalResponseCallable(new HttpCallable(encryptCallable, createStraalHttpClient(), STRAAL_ENCRYPTED_ENDPOINT));
         return straalRequest.call();
     }
 

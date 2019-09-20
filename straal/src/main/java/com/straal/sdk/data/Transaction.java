@@ -19,7 +19,7 @@
 
 package com.straal.sdk.data;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  * Data class for details of transaction to be performed.

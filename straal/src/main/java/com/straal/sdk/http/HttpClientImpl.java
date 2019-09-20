@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 
 public class HttpClientImpl implements HttpClient {
@@ -65,6 +66,7 @@ public class HttpClientImpl implements HttpClient {
 
     private HttpResponse createResponse(HttpURLConnection httpURLConnection) throws IOException {
         int responseCode = httpURLConnection.getResponseCode();
+        Map<String, List<String>> headerFields = httpURLConnection.getHeaderFields();
         InputStream inputStream = HttpResponse.isSuccessful(responseCode) ? httpURLConnection.getInputStream() : httpURLConnection.getErrorStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         StringBuilder response = new StringBuilder();
@@ -73,6 +75,6 @@ public class HttpClientImpl implements HttpClient {
             response.append(currentLine);
         }
         reader.close();
-        return new HttpResponse(responseCode, response.toString());
+        return new HttpResponse(responseCode, response.toString(), headerFields);
     }
 }

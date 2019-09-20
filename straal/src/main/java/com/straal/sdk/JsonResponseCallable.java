@@ -34,6 +34,10 @@ class JsonResponseCallable implements Callable<JSONObject> {
         this.responseCallable = responseCallable;
     }
 
+    JsonResponseCallable(HttpResponse httpResponse) {
+        this.responseCallable = SimpleSourceCallable.of(httpResponse);
+    }
+
     @Override
     public JSONObject call() throws Exception {
         HttpResponse response = responseCallable.call();

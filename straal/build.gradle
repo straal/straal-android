@@ -2,21 +2,17 @@ buildscript {
     repositories {
         jcenter()
     }
-    dependencies {
-        classpath "de.mannodermaus.gradle.plugins:android-junit5:1.0.22"
-    }
 }
 
 apply plugin: 'com.android.library'
-apply plugin: "de.mannodermaus.android-junit5"
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     resourcePrefix "strl_"
 
     defaultConfig {
         minSdkVersion 17
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 2
         versionName "0.2.0"
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
@@ -31,18 +27,20 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.android.support:appcompat-v7:27.0.2"
-    testCompile 'junit:junit:4.12'
-    testCompile "org.json:json:20171018"
-    testCompile 'org.mockito:mockito-core:2.10.0'
-    testImplementation junit5.unitTests()
-    testImplementation junit5.parameterized()
-    testCompileOnly junit5.unitTestsRuntime()
-    androidTestCompile "com.android.support:support-annotations:27.0.2"
-    androidTestCompile 'com.android.support.test:runner:1.0.1'
-    androidTestCompile 'com.android.support.test:rules:1.0.1'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "androidx.annotation:annotation:1.1.0"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.4.0"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:5.4.0"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.4.0"
+    testImplementation "org.json:json:20171018"
+    testImplementation 'org.mockito:mockito-core:3.0.0'
 }

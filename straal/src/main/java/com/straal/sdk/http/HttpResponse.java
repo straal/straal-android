@@ -19,13 +19,18 @@
 
 package com.straal.sdk.http;
 
+import java.util.List;
+import java.util.Map;
+
 public class HttpResponse {
     public final int code;
     public final String body;
+    public final Map<String, List<String>> headerFields;
 
-    public HttpResponse(int code, String body) {
+    public HttpResponse(int code, String body, Map<String, List<String>> headerFields) {
         this.code = code;
         this.body = body;
+        this.headerFields = headerFields;
     }
 
     public static Boolean isSuccessful(int code) {

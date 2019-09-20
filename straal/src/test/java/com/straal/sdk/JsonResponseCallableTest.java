@@ -26,6 +26,8 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
@@ -38,7 +40,7 @@ class JsonResponseCallableTest {
     @DisplayName("should return JSON object when valid json")
     @Test
     void parseValidJson() throws Exception {
-        HttpResponse response = new HttpResponse(200, "{\"request_id\":\"alphanumeric123\"}");
+        HttpResponse response = new HttpResponse(200, "{\"request_id\":\"alphanumeric123\"}", Collections.emptyMap());
         when(httpCallable.call()).thenReturn(response);
         JSONObject jsonObject = new JsonResponseCallable(httpCallable).call();
         assertEquals(1, jsonObject.length());
@@ -48,7 +50,7 @@ class JsonResponseCallableTest {
     @DisplayName("should throw exception when malformed JSON")
     @Test
     void throwOnInvalidJson() throws Exception {
-        HttpResponse response = new HttpResponse(200, "invalid json");
+        HttpResponse response = new HttpResponse(200, "invalid json", Collections.emptyMap());
         when(httpCallable.call()).thenReturn(response);
         assertThrows(JSONException.class, new JsonResponseCallable(httpCallable)::call);
     }

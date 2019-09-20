@@ -33,7 +33,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.EnumSet;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("FullCardValidator")
 class FullCardValidatorTest {

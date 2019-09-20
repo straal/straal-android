@@ -2,4 +2,8 @@
     package="com.straal.sdk">
     <uses-permission android:name="android.permission.INTERNET"/>
 
+    <application>
+        <activity android:name=".view.auth3ds.Auth3dsActivity"/>
+    </application>
+
 </manifest>
