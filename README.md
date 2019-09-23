@@ -22,6 +22,7 @@
     - [Operations](#operations)
         - [Create card](#create-a-card)
         - [Create a transaction with a card](#create-a-transaction-with-a-card)
+        - [Init 3D-Secure](#init-3d-secure)
 - [Validation](#validation)
 - [Support](#support)
 - [License](#license)
@@ -162,6 +163,66 @@ class StraalPayment {
 ```
 
 > It is your back end's responsibility to verify the transaction's amount (possibly pairing it with an order using `reference`) and to authorize the user using request headers.
+
+#### Init 3D-Secure
+
+```java
+class StraalPayment extends AppCompatActivity {
+    // ...
+
+    private void makePayment() {
+        // first, create credit card as before...
+        CreditCard card = new CreditCard(cardholderName, cardNumber, cvv, expiryDate);
+        // create transaction object with your order's details
+        Transaction transaction = new Transaction(999, CurrencyCode.USD, "order:bI124dP2an");
+        RedirectUrls redirectUrls = RedirectUrls("https://sdk.straal.com/success", "https://sdk.straal.com/failure")
+        Init3dsOperation operation = new Init3dsOperation(transaction, card, redirectUrls);
+        straal.performAsync(
+                operation,
+                //open auth 3ds activity to handle 3D-Secure verification process
+                straalResponse -> Auth3dsActivity.startForResult(this, straalResponse, AUTH_3DS_REQUEST_CODE),
+                straalException -> handleError(straalException)
+        );
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == AUTH_3DS_REQUEST_CODE) {
+            switch (resultCode) {
+                case Auth3dsActivity.AUTH_3DS_SUCCESS: { 
+                    //handle success 
+                }
+                case Auth3dsActivity.AUTH_3DS_FAILURE: { 
+                    //handle failure 
+                }
+                case Auth3dsActivity.AUTH_3DS_CANCEL: { 
+                    //handle cancel 
+                }
+            }
+        }
+    }
+
+    static int AUTH_3DS_REQUEST_CODE = 123
+
+    // ...
+}
+```
+
+> Again, we first fetch your `cryptkeys` endpoint to fetch a `CryptKey`. This time with JSON:
+
+```json
+{
+  "permission": "v1.customers.authentications_3ds.init_3ds",
+  "transaction": {
+    "amount": 999,
+    "currency": "usd",
+    "reference": "order:bI124dP2an",
+    "success_url": "https://your.website.url/success",
+    "failure_url": "https://your.website.url/failure",
+  }
+}
+```
 
 ## Validation
 
