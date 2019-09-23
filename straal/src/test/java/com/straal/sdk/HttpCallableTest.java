@@ -28,9 +28,11 @@ import com.straal.sdk.http.HttpResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.util.Collections;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -44,7 +46,7 @@ class HttpCallableTest {
     @DisplayName("should return http response")
     @Test
     void returnResponse() throws Exception {
-        HttpResponse response = new HttpResponse(200, "success");
+        HttpResponse response = new HttpResponse(200, "success", Collections.emptyMap());
         when(httpClient.post(any(), any())).thenReturn(response);
         httpCallable = createHttpCallable();
         HttpResponse outputResponse = httpCallable.call();
@@ -65,7 +67,7 @@ class HttpCallableTest {
     void unauthorizedException() throws Exception {
         int code = 401;
         String message = "sample unauthorized message";
-        when(httpClient.post(any(), any())).thenReturn(new HttpResponse(code, message));
+        when(httpClient.post(any(), any())).thenReturn(new HttpResponse(code, message, Collections.emptyMap()));
         httpCallable = createHttpCallable();
         HttpException exception = assertThrows(UnauthorizedException.class, httpCallable::call);
         assertEquals(code, exception.code);
@@ -77,7 +79,7 @@ class HttpCallableTest {
     void httpException() throws Exception {
         int code = 402;
         String message = "sample error message";
-        when(httpClient.post(any(), any())).thenReturn(new HttpResponse(code, message));
+        when(httpClient.post(any(), any())).thenReturn(new HttpResponse(code, message, Collections.emptyMap()));
         httpCallable = createHttpCallable();
         HttpException exception = assertThrows(HttpException.class, httpCallable::call);
         assertEquals(code, exception.code);

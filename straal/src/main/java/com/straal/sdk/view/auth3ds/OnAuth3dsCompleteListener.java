@@ -1,6 +1,6 @@
 /*
- * StraalEncryptedResponse.java
- * Created by Konrad Kowalewski on 26.01.18
+ * OnAuth3dsCompleteListener.java
+ * Created by Arkadiusz Różalski on 03.09.19
  * Straal SDK for Android
  * Copyright 2018 Straal Sp. z o. o.
  *
@@ -17,20 +17,9 @@
  * limitations under the License.
  */
 
-package com.straal.sdk.response;
+package com.straal.sdk.view.auth3ds;
 
-/**
- * This response is returned from every encrypted Straal operation.
- *
- * @see com.straal.sdk.StraalEncryptedBaseOperation
- */
-public class StraalEncryptedResponse implements StraalResponse {
-    /**
-     * This is the request ID returned from Straal API. It should match the one passed to your backend service.
-     */
-    public final String requestId;
-
-    public StraalEncryptedResponse(String requestId) {
-        this.requestId = requestId;
-    }
+interface OnAuth3dsCompleteListener {
+    void onSuccess();
+    void onFailure();
 }

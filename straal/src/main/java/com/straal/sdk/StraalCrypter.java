@@ -19,7 +19,7 @@
 
 package com.straal.sdk;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.straal.sdk.exceptions.EncryptionException;
 
@@ -47,7 +47,7 @@ class StraalCrypter {
     }
 
     String encryptString(String msg)
-            throws EncryptionException,IllegalStateException {
+            throws EncryptionException, IllegalStateException {
         if (msg == null) {
             return null;
         }

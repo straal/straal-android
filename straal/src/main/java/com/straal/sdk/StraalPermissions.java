@@ -25,4 +25,5 @@ package com.straal.sdk;
 public class StraalPermissions {
     public static final String CREATE_CARD_PERMISSION = "v1.cards.create";
     public static final String CREATE_TRANSACTION_WITH_CARD = "v1.transactions.create_with_card";
+    public static final String AUTHENTICATION_3DS = "v1.customers.authentications_3ds.init_3ds";
 }
