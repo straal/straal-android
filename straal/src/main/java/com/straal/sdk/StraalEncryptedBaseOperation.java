@@ -32,7 +32,6 @@ import java.util.concurrent.Callable;
  * @see StraalEncryptedResponse
  */
 public abstract class StraalEncryptedBaseOperation<T extends StraalEncryptedResponse> extends StraalOperation<T> {
-    private static final String CRYPT_KEY_ENDPOINT = "/straal/v1/cryptkeys";
     private static final String STRAAL_ENCRYPTED_ENDPOINT = "/encrypted";
     /**
      * Straal permission defining this operation.
@@ -52,7 +51,7 @@ public abstract class StraalEncryptedBaseOperation<T extends StraalEncryptedResp
     @Override
     T perform(Straal.Config config) throws Exception {
         MapToJsonCallable cryptKeyRequest = new MapToJsonCallable(getCryptKeyPayload());
-        KeyResponseCallable cryptKeyResponse = new KeyResponseCallable(new JsonResponseCallable(new HttpCallable(cryptKeyRequest, createMerchantHttpClient(config), CRYPT_KEY_ENDPOINT)));
+        KeyResponseCallable cryptKeyResponse = new KeyResponseCallable(new JsonResponseCallable(new HttpCallable(cryptKeyRequest, createMerchantHttpClient(config), config.cryptKeyEndpoint)));
         StraalCrypterCallable straalCrypterCallable = new StraalCrypterCallable(cryptKeyResponse);
         EncryptCallable encryptCallable = new EncryptCallable(straalCrypterCallable, new MapToJsonCallable(getStraalRequestPayload()));
         Callable<T> straalRequest = getStraalResponseCallable(new HttpCallable(encryptCallable, createStraalHttpClient(), STRAAL_ENCRYPTED_ENDPOINT));
