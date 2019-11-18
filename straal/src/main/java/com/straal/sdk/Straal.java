@@ -99,10 +99,7 @@ public final class Straal {
          * @param merchantRequestHeaders map of key-value pairs that will be added as headers to every HTTP request to your backend service
          */
         public Config(String merchantBaseUrl, Map<String, String> merchantRequestHeaders) {
-            this.merchantBaseUrl = trimTrailingSlashes(merchantBaseUrl);
-            this.merchantApiHeaders = new HashMap<>(merchantRequestHeaders);
-            this.merchantApiHeaders.putAll(versioningHeaders());
-            this.cryptKeyEndpoint = DEFAULT_CRYPT_KEY_ENDPOINT;
+            this(merchantBaseUrl, DEFAULT_CRYPT_KEY_ENDPOINT, merchantRequestHeaders);
         }
 
         /**
