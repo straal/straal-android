@@ -86,10 +86,12 @@ public final class Straal {
      * @see Straal#Straal(Config config)
      */
     public static class Config {
+        static final String DEFAULT_CRYPT_KEY_ENDPOINT = "/straal/v1/cryptkeys";
         static final String API_BASE_URL = "https://api.straal.com/v1";
         static final Map<String, String> API_HTTP_HEADERS = versioningHeaders();
         static final String PLATFORM = "android";
         public final String merchantBaseUrl;
+        public final String cryptKeyEndpoint;
         public final Map<String, String> merchantApiHeaders;
 
         /**
@@ -97,9 +99,19 @@ public final class Straal {
          * @param merchantRequestHeaders map of key-value pairs that will be added as headers to every HTTP request to your backend service
          */
         public Config(String merchantBaseUrl, Map<String, String> merchantRequestHeaders) {
+            this(merchantBaseUrl, DEFAULT_CRYPT_KEY_ENDPOINT, merchantRequestHeaders);
+        }
+
+        /**
+         * @param merchantBaseUrl        base URL (without trailing slash) of your backend service that uses Straal SDK and provides crypt key endpoint
+         * @param cryptKeyEndpoint       crypt key endpoint (with initial slash) of your backend service that uses Straal SDK
+         * @param merchantRequestHeaders map of key-value pairs that will be added as headers to every HTTP request to your backend service
+         */
+        public Config(String merchantBaseUrl, String cryptKeyEndpoint, Map<String, String> merchantRequestHeaders) {
             this.merchantBaseUrl = trimTrailingSlashes(merchantBaseUrl);
             this.merchantApiHeaders = new HashMap<>(merchantRequestHeaders);
             this.merchantApiHeaders.putAll(versioningHeaders());
+            this.cryptKeyEndpoint = cryptKeyEndpoint;
         }
 
         private static String trimTrailingSlashes(String text) {
