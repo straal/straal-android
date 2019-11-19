@@ -105,22 +105,22 @@ public enum CardBrand {
     )),
     UNKNOWN("Unknown", "", Collections.singletonList(Collections.singletonList(0)), 0, true);
 
-    public final String name;
+    public final String brand;
     public final String identifyPattern;
     public final List<List<Integer>> groupings;
     public final int cvvLength;
     public final boolean requiresLuhn;
 
-    CardBrand(String name, String identifyPattern) {
-        this(name, identifyPattern, Collections.singletonList(Arrays.asList(4, 4, 4, 4)), 3, true);
+    CardBrand(String brand, String identifyPattern) {
+        this(brand, identifyPattern, Collections.singletonList(Arrays.asList(4, 4, 4, 4)), 3, true);
     }
 
-    CardBrand(String name, String identifyPattern, List<List<Integer>> groupings) {
-        this(name, identifyPattern, groupings, 3, true);
+    CardBrand(String brand, String identifyPattern, List<List<Integer>> groupings) {
+        this(brand, identifyPattern, groupings, 3, true);
     }
 
-    CardBrand(String name, String identifyPattern, List<List<Integer>> groupings, int cvvLength, boolean requiresLuhn) {
-        this.name = name;
+    CardBrand(String brand, String identifyPattern, List<List<Integer>> groupings, int cvvLength, boolean requiresLuhn) {
+        this.brand = brand;
         this.identifyPattern = identifyPattern + ".*";
         this.groupings = groupings;
         this.cvvLength = cvvLength;
