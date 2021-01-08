@@ -27,6 +27,7 @@ import com.straal.sdk.response.StraalEncrypted3dsResponse;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+@Deprecated
 class Straal3dsResponseCallable implements Callable<StraalEncrypted3dsResponse> {
     private final Callable<HttpResponse> responseCallable;
     private final RedirectUrls redirectUrls;

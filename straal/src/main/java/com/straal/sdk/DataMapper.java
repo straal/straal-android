@@ -28,6 +28,29 @@ import java.util.Map;
 
 class DataMapper {
 
+    static Map<String, Object> map3DSecure2(RedirectUrls redirectUrls) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("success_url", redirectUrls.successUrl);
+        result.put("failure_url", redirectUrls.failureUrl);
+        result.put("threeds_v2", map3DSecure2Params());
+        return result;
+    }
+
+    private static Map<String, Object> map3DSecure2Params() {
+        Map<String, Object> threeds_v2 = new HashMap<>();
+        threeds_v2.put("browser", browser());
+        return threeds_v2;
+    }
+
+    private static Map<String, Object> browser() {
+        Map<String, Object> browser = new HashMap<>();
+        browser.put("accept_header", "*/*");
+        browser.put("language", "pl-PL"); //todo somehow obtain real tag. Available only on api 21+
+        browser.put("user_agent", "Mozilla/5.0 (Linux; Android 10)");
+        return browser;
+    }
+
+    @Deprecated
     static Map<String, Object> map3DSecureTransaction(Transaction transaction, RedirectUrls redirectUrls) {
         Map<String, Object> result = mapTransaction(transaction);
         result.put("success_url", redirectUrls.successUrl);

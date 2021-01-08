@@ -20,8 +20,9 @@
 package com.straal.sdk;
 
 import com.straal.sdk.card.CreditCard;
+import com.straal.sdk.data.RedirectUrls;
 import com.straal.sdk.data.Transaction;
-import com.straal.sdk.response.StraalEncryptedResponse;
+import com.straal.sdk.response.StraalEncrypted3ds2Response;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,23 +34,26 @@ import java.util.concurrent.Callable;
  * @see StraalOperation
  * @see <a href="https://api-reference.straal.com/#resources-transactions-create-a-transaction-with-a-card-using-cryptkey">'Create transaction' with card in Straal API docs</a>
  */
-public class CreateTransactionWithCardOperation extends StraalEncryptedBaseOperation<StraalEncryptedResponse> {
+public class CreateTransactionWithCardOperation extends StraalEncryptedBaseOperation<StraalEncrypted3ds2Response> {
     public final Transaction transaction;
     public final CreditCard card;
+    public final RedirectUrls redirectUrls;
 
     /**
-     * @param transaction        transaction you want to perform
-     * @param creditCard data (usually typed by the user) of the credit card to be created
+     * @param transaction  transaction you want to perform
+     * @param creditCard   data (usually typed by the user) of the credit card to be created
+     * @param redirectUrls after the 3D-Secure verification is finished, user will be redirected back to one of the speficied URLs (successUrl or failureUrl) depending on the outcome of the 3D-Secure verification
      */
-    public CreateTransactionWithCardOperation(Transaction transaction, CreditCard creditCard) {
+    public CreateTransactionWithCardOperation(Transaction transaction, CreditCard creditCard, RedirectUrls redirectUrls) {
         super(StraalPermissions.CREATE_TRANSACTION_WITH_CARD);
         this.transaction = transaction;
         this.card = creditCard;
+        this.redirectUrls = redirectUrls;
     }
 
     @Override
     protected Map<String, Object> getStraalRequestPayload() {
-        return DataMapper.mapCreditCard(card);
+        return DataMapper.map3DSecure2CreditCard(card);
     }
 
     @Override
@@ -57,11 +61,12 @@ public class CreateTransactionWithCardOperation extends StraalEncryptedBaseOpera
         Map<String, Object> map = new HashMap<>();
         map.put("permission", permission);
         map.put("transaction", DataMapper.mapTransaction(transaction));
+        map.put("authentication_3ds", DataMapper.map3DSecure2(redirectUrls));
         return map;
     }
 
     @Override
-    protected Callable<StraalEncryptedResponse> getStraalResponseCallable(HttpCallable httpCallable) {
-        return new StraalResponseCallable(new JsonResponseCallable(httpCallable));
+    protected Callable<StraalEncrypted3ds2Response> getStraalResponseCallable(HttpCallable httpCallable) {
+        return new Straal3ds2ResponseCallable(httpCallable, redirectUrls);
     }
 }
