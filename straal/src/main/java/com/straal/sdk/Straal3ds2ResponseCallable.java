@@ -41,12 +41,23 @@ class Straal3ds2ResponseCallable implements Callable<StraalEncrypted3ds2Response
     public StraalEncrypted3ds2Response call() throws Exception {
         HttpResponse response = responseCallable.call();
         try {
-            List<String> locations = response.headerFields.get("Location");
-            String locationUrl = (locations != null) ? locations.get(0) : "";
-            String requestId = new JsonResponseCallable(response).call().getString("request_id");
+            String locationUrl = getLocation(response);
+            String requestId = getRequestId(response);
             return new StraalEncrypted3ds2Response(requestId, redirectUrls, locationUrl);
         } catch (Exception e) {
             throw new ResponseParseException("Response from Straal API didn't contain expected data", e);
         }
+    }
+
+    private String getLocation(HttpResponse response) {
+        List<String> locations = response.headerFields.get("Location");
+        if (HttpResponse.isSuccessful(response.code)) {
+            return (locations != null) ? locations.get(0) : redirectUrls.successUrl;
+        }
+        return "";
+    }
+
+    private String getRequestId(HttpResponse response) throws Exception {
+        return new JsonResponseCallable(response).call().getString("request_id");
     }
 }
