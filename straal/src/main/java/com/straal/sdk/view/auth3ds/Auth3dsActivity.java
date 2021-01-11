@@ -42,12 +42,13 @@ public class Auth3dsActivity extends AppCompatActivity implements OnAuth3dsCompl
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        WebView webView = new WebView(this);
-        setContentView(webView);
         String locationUrl = getIntent().getStringExtra(AUTH_3DS_LOCATION_URL_KEY);
         String successUrl = getIntent().getStringExtra(AUTH_3DS_SUCCESS_URL_KEY);
         String failureUrl = getIntent().getStringExtra(AUTH_3DS_FAILURE_URL_KEY);
+        if (locationUrl.equals(successUrl)) finishWithResult(AUTH_3DS_SUCCESS);
+        super.onCreate(savedInstanceState);
+        WebView webView = new WebView(this);
+        setContentView(webView);
         configureWebView(webView, locationUrl, successUrl, failureUrl);
     }
 
@@ -84,9 +85,10 @@ public class Auth3dsActivity extends AppCompatActivity implements OnAuth3dsCompl
 
     /**
      * Starts auth 3ds activity for result
-     * @param activity host activity
+     *
+     * @param activity       host activity
      * @param straalResponse response returned from init 3ds operation
-     * @param requestCode request code to start activity for result
+     * @param requestCode    request code to start activity for result
      */
     public static void startForResult(Activity activity, StraalEncrypted3dsResponse straalResponse, int requestCode) {
         Intent startingIntent = new Intent(activity, Auth3dsActivity.class);
