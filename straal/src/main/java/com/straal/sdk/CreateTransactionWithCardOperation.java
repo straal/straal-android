@@ -60,8 +60,7 @@ public class CreateTransactionWithCardOperation extends StraalEncryptedBaseOpera
     protected Map<String, Object> getCryptKeyPayload() {
         Map<String, Object> map = new HashMap<>();
         map.put("permission", permission);
-        map.put("transaction", DataMapper.mapTransaction(transaction));
-        map.put("authentication_3ds", DataMapper.map3DSecure2(redirectUrls));
+        map.put("transaction", DataMapper.map3DSecure2Transaction(transaction, redirectUrls));
         return map;
     }
 
