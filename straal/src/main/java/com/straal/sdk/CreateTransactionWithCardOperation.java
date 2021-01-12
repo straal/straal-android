@@ -29,10 +29,10 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
- * A Straal encrypted operation, which will perform a transaction using a credit card that will be registered in Straal.
+ * A Straal encrypted operation, which will initialize 3D-Secure v2 process for a transaction using a credit card that will be registered in Straal.
  *
  * @see StraalOperation
- * @see <a href="https://api-reference.straal.com/#resources-transactions-create-a-transaction-with-a-card-using-cryptkey">'Create transaction' with card in Straal API docs</a>
+ * @see <a href="https://api-reference.straal.com/#resources-transactions-create-a-3ds-transaction-with-a-card-using-cryptkey">'Create transaction' with card in Straal API docs</a>
  */
 public class CreateTransactionWithCardOperation extends StraalEncryptedBaseOperation<StraalEncrypted3ds2Response> {
     public final Transaction transaction;
@@ -44,7 +44,7 @@ public class CreateTransactionWithCardOperation extends StraalEncryptedBaseOpera
      * @param transaction  transaction you want to perform
      * @param creditCard   data (usually typed by the user) of the credit card to be created
      * @param redirectUrls after the 3D-Secure verification is finished, user will be redirected back to one of the speficied URLs (successUrl or failureUrl) depending on the outcome of the 3D-Secure verification
-     * @param params       additional device data required to execute 3D-Secure transaction
+     * @param params       additional device data required to carry 3D-Secure transaction
      */
     public CreateTransactionWithCardOperation(Transaction transaction, CreditCard creditCard, RedirectUrls redirectUrls, Straal3DSecure2Params params) {
         super(StraalPermissions.CREATE_TRANSACTION_WITH_CARD);

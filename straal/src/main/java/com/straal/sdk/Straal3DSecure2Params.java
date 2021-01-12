@@ -23,7 +23,11 @@ package com.straal.sdk;
 import com.straal.sdk.params.LanguageTag;
 import com.straal.sdk.params.Timezone;
 
-
+/**
+ * Class for device specific data required to carry 3D-Secure verification
+ *
+ * @see <a href="https://api-reference.straal.com/#resources-transactions-3ds-v2-request-parameters">'Create transaction' with card in Straal API docs</a>
+ */
 public class Straal3DSecure2Params {
 
     final LanguageTag languageTag;
@@ -31,6 +35,9 @@ public class Straal3DSecure2Params {
     final Timezone timezone;
     private static final String USER_AGENT_PROPERTY = "http.agent";
 
+    /**
+     * @param languageTag device language tag in IETF BCP 47 format
+     */
     public Straal3DSecure2Params(LanguageTag languageTag) {
         this.languageTag = languageTag;
         this.timezone = Timezone.getCurrent();
