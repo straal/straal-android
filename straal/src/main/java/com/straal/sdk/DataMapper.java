@@ -22,9 +22,6 @@ package com.straal.sdk;
 import com.straal.sdk.card.CreditCard;
 import com.straal.sdk.data.RedirectUrls;
 import com.straal.sdk.data.Transaction;
-import com.straal.sdk.device.Language;
-import com.straal.sdk.device.Timezone;
-import com.straal.sdk.device.Web;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,17 +30,14 @@ class DataMapper {
 
     static Map<String, Object> map3DSecure2Transaction(Transaction transaction, RedirectUrls redirectUrls) {
         Map<String, Object> result = mapTransaction(transaction);
-        result.put("authentication_3ds", map3DSecure2Authentication(redirectUrls));
+        result.put("authentication_3ds", mapRedirectUrls(redirectUrls));
         return result;
     }
 
-    static Map<String, Object> map3DSecure2Authentication(RedirectUrls redirectUrls) {
+    static Map<String, Object> mapRedirectUrls(RedirectUrls redirectUrls) {
         Map<String, Object> result = new HashMap<>();
         result.put("success_url", redirectUrls.successUrl);
         result.put("failure_url", redirectUrls.failureUrl);
-        HashMap<Object, Object> threeds_v2 = new HashMap<>();
-        threeds_v2.put("browser", mapBrowser(Language.getDefault(), Web.getUserAgent(), Timezone.getDefault()));
-        result.put("threeds_v2", threeds_v2);
         return result;
     }
 
@@ -65,20 +59,20 @@ class DataMapper {
         return result;
     }
 
-    static Map<String, Object> map3DSecure2CreditCard(CreditCard card) {
+    static Map<String, Object> map3DSecure2CreditCard(CreditCard card, Straal3DSecure2Params params) {
         Map<String, Object> result = mapCreditCard(card);
-        result.put("browser", mapBrowser(Language.getDefault(), Web.getUserAgent(), Timezone.getDefault()));
+        result.put("browser", map3DSecure2Browser(params));
         return result;
     }
 
-    private static Map<String, Object> mapBrowser(Language language, String userAgent, Timezone timezone) {
+    private static Map<String, Object> map3DSecure2Browser(Straal3DSecure2Params params) {
         Map<String, Object> browser = new HashMap<>();
         browser.put("accept_header", "*/*");
-        browser.put("language", language.tag);
-        browser.put("user_agent", userAgent);
+        browser.put("language", params.languageTag.value);
+        browser.put("user_agent", params.userAgent);
         browser.put("java_enabled", true);
         browser.put("javascript_enabled", true);
-        browser.put("timezone", timezone.offset);
+        browser.put("timezone", params.timezone.minutesOffset);
         return browser;
     }
 

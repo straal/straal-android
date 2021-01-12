@@ -1,6 +1,6 @@
 /*
- * Web.java
- * Created by Kamil Czanik on 11.01.2021
+ * Straal3DSecure2Params.java
+ * Created by Kamil Czanik on 12.01.2021
  * Straal SDK for Android
  * Copyright 2021 Straal Sp. z o. o.
  *
@@ -18,11 +18,22 @@
  *
  */
 
-package com.straal.sdk.device;
+package com.straal.sdk;
 
-public class Web {
+import com.straal.sdk.params.LanguageTag;
+import com.straal.sdk.params.Timezone;
 
-    public static String getUserAgent() {
-        return System.getProperty("http.agent");
+
+public class Straal3DSecure2Params {
+
+    final LanguageTag languageTag;
+    final String userAgent;
+    final Timezone timezone;
+    private static final String USER_AGENT_PROPERTY = "http.agent";
+
+    public Straal3DSecure2Params(LanguageTag languageTag) {
+        this.languageTag = languageTag;
+        this.timezone = Timezone.getCurrent();
+        this.userAgent = System.getProperty(USER_AGENT_PROPERTY);
     }
 }

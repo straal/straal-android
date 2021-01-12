@@ -29,10 +29,11 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
+ * A Straal encrypted operation, which will initialize 3D-Secure process for a transaction using a credit card that will be registered in Straal.
+ *
  * @see StraalOperation
  * @see <a href="https://api-reference.straal.com/#resources-3d-secure-authentications-initialize-3d-secure-process-with-a-cryptkey">'Initialize 3D-Secure' with transaction and card in Straal API docs</a>
  * @deprecated use {@link CreateTransactionWithCardOperation } instead
- * A Straal encrypted operation, which will initialize 3D-Secure process for a transaction using a credit card that will be registered in Straal.
  */
 @Deprecated
 public class Init3dsOperation extends StraalEncryptedBaseOperation<StraalEncrypted3dsResponse> {

@@ -1,5 +1,5 @@
 /*
- * Language.java
+ * Timezone.java
  * Created by Kamil Czanik on 11.01.2021
  * Straal SDK for Android
  * Copyright 2021 Straal Sp. z o. o.
@@ -18,19 +18,20 @@
  *
  */
 
-package com.straal.sdk.device;
+package com.straal.sdk.params;
 
-import java.util.Locale;
+import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
-public class Language {
+public class Timezone {
 
-    public final String tag;
+    public final long minutesOffset;
 
-    private Language(Locale locale) {
-        this.tag = "pl-PL";
+    private Timezone(long offsetInMillis) {
+        this.minutesOffset = TimeUnit.MILLISECONDS.toMinutes(offsetInMillis);
     }
 
-    public static Language getDefault() {
-        return new Language(Locale.getDefault());
+    public static Timezone getCurrent() {
+        return new Timezone(new GregorianCalendar().getTimeZone().getRawOffset());
     }
 }
