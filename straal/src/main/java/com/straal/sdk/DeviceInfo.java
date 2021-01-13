@@ -28,7 +28,7 @@ import com.straal.sdk.params.Timezone;
  *
  * @see <a href="https://api-reference.straal.com/#resources-transactions-3ds-v2-request-parameters">'Create transaction' with card in Straal API docs</a>
  */
-public class Straal3DSecure2Params {
+public class DeviceInfo {
 
     final LanguageTag languageTag;
     final String userAgent;
@@ -38,7 +38,7 @@ public class Straal3DSecure2Params {
     /**
      * @param languageTag device language tag in IETF BCP 47 format
      */
-    public Straal3DSecure2Params(LanguageTag languageTag) {
+    public DeviceInfo(LanguageTag languageTag) {
         this.languageTag = languageTag;
         this.timezone = Timezone.getCurrent();
         this.userAgent = System.getProperty(USER_AGENT_PROPERTY);

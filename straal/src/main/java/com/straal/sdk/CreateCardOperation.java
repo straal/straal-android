@@ -44,7 +44,7 @@ public class CreateCardOperation extends StraalEncryptedBaseOperation<StraalEncr
     }
 
     @Override
-    protected Map<String, Object> getStraalRequestPayload() {
+    protected Map<String, Object> getStraalRequestPayload(Straal.Config config) {
         return DataMapper.mapCreditCard(card);
     }
 

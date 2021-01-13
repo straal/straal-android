@@ -38,25 +38,22 @@ public class CreateTransactionWithCardOperation extends StraalEncryptedBaseOpera
     public final Transaction transaction;
     public final CreditCard card;
     public final RedirectUrls redirectUrls;
-    public final Straal3DSecure2Params params;
 
     /**
      * @param transaction  transaction you want to perform
      * @param creditCard   data (usually typed by the user) of the credit card to be created
      * @param redirectUrls after the 3D-Secure verification is finished, user will be redirected back to one of the speficied URLs (successUrl or failureUrl) depending on the outcome of the 3D-Secure verification
-     * @param params       additional device data required to carry 3D-Secure transaction
      */
-    public CreateTransactionWithCardOperation(Transaction transaction, CreditCard creditCard, RedirectUrls redirectUrls, Straal3DSecure2Params params) {
+    public CreateTransactionWithCardOperation(Transaction transaction, CreditCard creditCard, RedirectUrls redirectUrls) {
         super(StraalPermissions.CREATE_TRANSACTION_WITH_CARD);
         this.transaction = transaction;
         this.card = creditCard;
         this.redirectUrls = redirectUrls;
-        this.params = params;
     }
 
     @Override
-    protected Map<String, Object> getStraalRequestPayload() {
-        return DataMapper.map3DSecure2CreditCard(card, params);
+    protected Map<String, Object> getStraalRequestPayload(Straal.Config config) {
+        return DataMapper.map3DSecure2CreditCard(card, config.deviceInfo);
     }
 
     @Override

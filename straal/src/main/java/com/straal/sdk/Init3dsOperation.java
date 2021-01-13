@@ -54,7 +54,7 @@ public class Init3dsOperation extends StraalEncryptedBaseOperation<StraalEncrypt
     }
 
     @Override
-    protected Map<String, Object> getStraalRequestPayload() {
+    protected Map<String, Object> getStraalRequestPayload(Straal.Config config) {
         return DataMapper.mapCreditCard(card);
     }
 

@@ -20,7 +20,7 @@
 
 package com.straal.sdk.params;
 
-import java.util.GregorianCalendar;
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 public class Timezone {
@@ -32,6 +32,6 @@ public class Timezone {
     }
 
     public static Timezone getCurrent() {
-        return new Timezone(new GregorianCalendar().getTimeZone().getRawOffset());
+        return new Timezone(Calendar.getInstance().getTimeZone().getRawOffset());
     }
 }

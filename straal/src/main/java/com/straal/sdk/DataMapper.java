@@ -59,13 +59,13 @@ class DataMapper {
         return result;
     }
 
-    static Map<String, Object> map3DSecure2CreditCard(CreditCard card, Straal3DSecure2Params params) {
+    static Map<String, Object> map3DSecure2CreditCard(CreditCard card, DeviceInfo params) {
         Map<String, Object> result = mapCreditCard(card);
         result.put("browser", map3DSecure2Browser(params));
         return result;
     }
 
-    private static Map<String, Object> map3DSecure2Browser(Straal3DSecure2Params params) {
+    private static Map<String, Object> map3DSecure2Browser(DeviceInfo params) {
         Map<String, Object> browser = new HashMap<>();
         browser.put("accept_header", "*/*");
         browser.put("language", params.languageTag.value);

@@ -81,7 +81,7 @@ public final class Straal {
 
     /**
      * Used to initialize Straal SDK with parameters defining backend service of your application.
-     * See {@link #Config(String, Map) constructor} for details.
+     * See {@link #Config(String, Map, DeviceInfo) constructor} for details.
      *
      * @see Straal#Straal(Config config)
      */
@@ -93,25 +93,29 @@ public final class Straal {
         public final String merchantBaseUrl;
         public final String cryptKeyEndpoint;
         public final Map<String, String> merchantApiHeaders;
+        public final DeviceInfo deviceInfo;
 
         /**
          * @param merchantBaseUrl        base URL (without trailing slash) of your backend service that uses Straal SDK and provides crypt key endpoint
          * @param merchantRequestHeaders map of key-value pairs that will be added as headers to every HTTP request to your backend service
+         * @param deviceInfo             device data required to carry 3D-Secure transaction
          */
-        public Config(String merchantBaseUrl, Map<String, String> merchantRequestHeaders) {
-            this(merchantBaseUrl, DEFAULT_CRYPT_KEY_ENDPOINT, merchantRequestHeaders);
+        public Config(String merchantBaseUrl, Map<String, String> merchantRequestHeaders, DeviceInfo deviceInfo) {
+            this(merchantBaseUrl, DEFAULT_CRYPT_KEY_ENDPOINT, merchantRequestHeaders, deviceInfo);
         }
 
         /**
          * @param merchantBaseUrl        base URL (without trailing slash) of your backend service that uses Straal SDK and provides crypt key endpoint
          * @param cryptKeyEndpoint       crypt key endpoint (with initial slash) of your backend service that uses Straal SDK
          * @param merchantRequestHeaders map of key-value pairs that will be added as headers to every HTTP request to your backend service
+         * @param deviceInfo             device data required to carry 3D-Secure transaction
          */
-        public Config(String merchantBaseUrl, String cryptKeyEndpoint, Map<String, String> merchantRequestHeaders) {
+        public Config(String merchantBaseUrl, String cryptKeyEndpoint, Map<String, String> merchantRequestHeaders, DeviceInfo deviceInfo) {
             this.merchantBaseUrl = trimTrailingSlashes(merchantBaseUrl);
             this.merchantApiHeaders = new HashMap<>(merchantRequestHeaders);
             this.merchantApiHeaders.putAll(versioningHeaders());
             this.cryptKeyEndpoint = cryptKeyEndpoint;
+            this.deviceInfo = deviceInfo;
         }
 
         private static String trimTrailingSlashes(String text) {
