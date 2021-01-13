@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.webkit.WebView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -90,7 +91,7 @@ public class Auth3dsActivity extends AppCompatActivity implements OnAuth3dsCompl
      * @param straalResponse response returned from init 3ds operation
      * @param requestCode    request code to start activity for result
      */
-    public static void startForResult(Activity activity, StraalEncrypted3dsResponse straalResponse, int requestCode) {
+    public static void startForResult(@NonNull Activity activity, @NonNull StraalEncrypted3dsResponse straalResponse, int requestCode) {
         Intent startingIntent = new Intent(activity, Auth3dsActivity.class);
         startingIntent.putExtra(AUTH_3DS_LOCATION_URL_KEY, straalResponse.locationUrl);
         startingIntent.putExtra(AUTH_3DS_SUCCESS_URL_KEY, straalResponse.redirectUrls.successUrl);

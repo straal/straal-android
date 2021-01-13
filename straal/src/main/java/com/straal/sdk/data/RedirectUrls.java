@@ -19,6 +19,8 @@
 
 package com.straal.sdk.data;
 
+import androidx.annotation.NonNull;
+
 /**
  * Data class for urls to redirect back to one of the speficied URLs depending on the outcome of the 3D-Secure verification
  */
@@ -30,7 +32,7 @@ public class RedirectUrls {
      * @param successUrl redirect url used when 3D-Secure verification process finishes with success
      * @param failureUrl redirect url used when 3D-Secure verification process finishes with failure
      */
-    public RedirectUrls(String successUrl, String failureUrl) {
+    public RedirectUrls(@NonNull String successUrl, @NonNull String failureUrl) {
         this.successUrl = successUrl;
         this.failureUrl = failureUrl;
     }

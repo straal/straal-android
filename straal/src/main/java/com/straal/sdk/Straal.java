@@ -19,6 +19,8 @@
 
 package com.straal.sdk;
 
+import androidx.annotation.NonNull;
+
 import com.straal.sdk.exceptions.StraalException;
 import com.straal.sdk.response.StraalResponse;
 
@@ -41,7 +43,7 @@ public final class Straal {
      *
      * @param config {@link Config} containing your application backend parameters
      */
-    public Straal(Config config) {
+    public Straal(@NonNull Config config) {
         this.config = config;
     }
 
@@ -100,7 +102,7 @@ public final class Straal {
          * @param merchantRequestHeaders map of key-value pairs that will be added as headers to every HTTP request to your backend service
          * @param deviceInfo             device data required to carry 3D-Secure transaction
          */
-        public Config(String merchantBaseUrl, Map<String, String> merchantRequestHeaders, DeviceInfo deviceInfo) {
+        public Config(String merchantBaseUrl, Map<String, String> merchantRequestHeaders, @NonNull DeviceInfo deviceInfo) {
             this(merchantBaseUrl, DEFAULT_CRYPT_KEY_ENDPOINT, merchantRequestHeaders, deviceInfo);
         }
 
@@ -110,7 +112,7 @@ public final class Straal {
          * @param merchantRequestHeaders map of key-value pairs that will be added as headers to every HTTP request to your backend service
          * @param deviceInfo             device data required to carry 3D-Secure transaction
          */
-        public Config(String merchantBaseUrl, String cryptKeyEndpoint, Map<String, String> merchantRequestHeaders, DeviceInfo deviceInfo) {
+        public Config(String merchantBaseUrl, String cryptKeyEndpoint, Map<String, String> merchantRequestHeaders, @NonNull DeviceInfo deviceInfo) {
             this.merchantBaseUrl = trimTrailingSlashes(merchantBaseUrl);
             this.merchantApiHeaders = new HashMap<>(merchantRequestHeaders);
             this.merchantApiHeaders.putAll(versioningHeaders());
