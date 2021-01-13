@@ -23,10 +23,8 @@ import com.straal.sdk.data.RedirectUrls;
 
 /**
  * @see com.straal.sdk.response.StraalEncryptedResponse
- * @deprecated use {@link StraalEncrypted3ds2Response} instead
  * This response is returned from init 3ds operation.
  */
-@Deprecated
 public class StraalEncrypted3dsResponse extends StraalEncryptedResponse {
     /**
      * User will be redirected back to one of the speficied URLs (successUrl or failureUrl) depending on the outcome of the 3D-Secure verification.

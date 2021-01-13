@@ -28,7 +28,6 @@ import android.webkit.WebView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.straal.sdk.response.StraalEncrypted3ds2Response;
 import com.straal.sdk.response.StraalEncrypted3dsResponse;
 
 /**
@@ -46,6 +45,7 @@ public class Auth3dsActivity extends AppCompatActivity implements OnAuth3dsCompl
         String successUrl = getIntent().getStringExtra(AUTH_3DS_SUCCESS_URL_KEY);
         String failureUrl = getIntent().getStringExtra(AUTH_3DS_FAILURE_URL_KEY);
         if (locationUrl.equals(successUrl)) onSuccess();
+        if (locationUrl.equals(failureUrl)) onFailure();
         super.onCreate(savedInstanceState);
         WebView webView = new WebView(this);
         setContentView(webView);
@@ -91,14 +91,6 @@ public class Auth3dsActivity extends AppCompatActivity implements OnAuth3dsCompl
      * @param requestCode    request code to start activity for result
      */
     public static void startForResult(Activity activity, StraalEncrypted3dsResponse straalResponse, int requestCode) {
-        Intent startingIntent = new Intent(activity, Auth3dsActivity.class);
-        startingIntent.putExtra(AUTH_3DS_LOCATION_URL_KEY, straalResponse.locationUrl);
-        startingIntent.putExtra(AUTH_3DS_SUCCESS_URL_KEY, straalResponse.redirectUrls.successUrl);
-        startingIntent.putExtra(AUTH_3DS_FAILURE_URL_KEY, straalResponse.redirectUrls.failureUrl);
-        activity.startActivityForResult(startingIntent, requestCode);
-    }
-
-    public static void startForResult(Activity activity, StraalEncrypted3ds2Response straalResponse, int requestCode) {
         Intent startingIntent = new Intent(activity, Auth3dsActivity.class);
         startingIntent.putExtra(AUTH_3DS_LOCATION_URL_KEY, straalResponse.locationUrl);
         startingIntent.putExtra(AUTH_3DS_SUCCESS_URL_KEY, straalResponse.redirectUrls.successUrl);

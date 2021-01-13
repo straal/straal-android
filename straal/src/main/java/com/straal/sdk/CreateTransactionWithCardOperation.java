@@ -22,7 +22,7 @@ package com.straal.sdk;
 import com.straal.sdk.card.CreditCard;
 import com.straal.sdk.data.RedirectUrls;
 import com.straal.sdk.data.Transaction;
-import com.straal.sdk.response.StraalEncrypted3ds2Response;
+import com.straal.sdk.response.StraalEncrypted3dsResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +34,7 @@ import java.util.concurrent.Callable;
  * @see StraalOperation
  * @see <a href="https://api-reference.straal.com/#resources-transactions-create-a-3ds-transaction-with-a-card-using-cryptkey">'Create transaction' with card in Straal API docs</a>
  */
-public class CreateTransactionWithCardOperation extends StraalEncryptedBaseOperation<StraalEncrypted3ds2Response> {
+public class CreateTransactionWithCardOperation extends StraalEncryptedBaseOperation<StraalEncrypted3dsResponse> {
     public final Transaction transaction;
     public final CreditCard card;
     public final RedirectUrls redirectUrls;
@@ -65,7 +65,7 @@ public class CreateTransactionWithCardOperation extends StraalEncryptedBaseOpera
     }
 
     @Override
-    protected Callable<StraalEncrypted3ds2Response> getStraalResponseCallable(HttpCallable httpCallable) {
-        return new Straal3ds2ResponseCallable(httpCallable, redirectUrls);
+    protected Callable<StraalEncrypted3dsResponse> getStraalResponseCallable(HttpCallable httpCallable) {
+        return new Straal3dsResponseCallable(httpCallable, redirectUrls);
     }
 }

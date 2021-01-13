@@ -27,7 +27,6 @@ import com.straal.sdk.response.StraalEncrypted3dsResponse;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-@Deprecated
 class Straal3dsResponseCallable implements Callable<StraalEncrypted3dsResponse> {
     private final Callable<HttpResponse> responseCallable;
     private final RedirectUrls redirectUrls;
@@ -41,12 +40,19 @@ class Straal3dsResponseCallable implements Callable<StraalEncrypted3dsResponse> 
     public StraalEncrypted3dsResponse call() throws Exception {
         HttpResponse response = responseCallable.call();
         try {
-            List<String> locations = response.headerFields.get("Location");
-            String locationUrl = (locations != null) ? locations.get(0) : "";
-            String requestId = new JsonResponseCallable(response).call().getString("request_id");
-            return new StraalEncrypted3dsResponse(requestId, redirectUrls, locationUrl);
+            return new StraalEncrypted3dsResponse(getRequestId(response), redirectUrls, getLocation(response));
         } catch (Exception e) {
             throw new ResponseParseException("Response from Straal API didn't contain expected data", e);
         }
+    }
+
+    private String getLocation(HttpResponse response) {
+        List<String> locations = response.headerFields.get("Location");
+        if (locations != null) return locations.get(0);
+        return (HttpResponse.isSuccessful(response.code)) ? redirectUrls.successUrl : redirectUrls.failureUrl;
+    }
+
+    private String getRequestId(HttpResponse response) throws Exception {
+        return new JsonResponseCallable(response).call().getString("request_id");
     }
 }
