@@ -29,32 +29,32 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class StraalConfigTest {
     @Test
     void shouldTrimSlashesFromBaseUrl() {
-        Straal.Config config = new Straal.Config("/url/url///", Collections.emptyMap());
+        Straal.Config config = new Straal.Config("/url/url///", Collections.emptyMap(), new DeviceInfo("pl-PL"));
         assertEquals("/url/url", config.merchantBaseUrl);
     }
 
     @Test
     void shouldNotTrimWhenBaseUrlOk() {
-        Straal.Config config = new Straal.Config("/url/url", Collections.emptyMap());
+        Straal.Config config = new Straal.Config("/url/url", Collections.emptyMap(), new DeviceInfo("pl-PL"));
         assertEquals("/url/url", config.merchantBaseUrl);
     }
 
     @Test
     void shouldAddVersioningHeadersToMerchantHeaders() {
-        Straal.Config config = new Straal.Config("/url/url", Collections.emptyMap());
+        Straal.Config config = new Straal.Config("/url/url", Collections.emptyMap(), new DeviceInfo("pl-PL"));
         assertTrue(config.merchantApiHeaders.containsKey("x-straal-sdk-version"));
         assertTrue(config.merchantApiHeaders.containsKey("x-straal-sdk-platform"));
     }
 
     @Test
     void shouldInitConfigWithDefaultCryptKeyEndpoint() {
-        Straal.Config config = new Straal.Config("/url", Collections.emptyMap());
+        Straal.Config config = new Straal.Config("/url", Collections.emptyMap(), new DeviceInfo("pl-PL"));
         assertEquals(Straal.Config.DEFAULT_CRYPT_KEY_ENDPOINT, config.cryptKeyEndpoint);
     }
 
     @Test
     void shouldInitConfigWithProvidedCryptKeyEndpoint() {
-        Straal.Config config = new Straal.Config("/url", "/cryptkeys", Collections.emptyMap());
+        Straal.Config config = new Straal.Config("/url", "/cryptkeys", Collections.emptyMap(), new DeviceInfo("pl-PL"));
         assertEquals("/cryptkeys", config.cryptKeyEndpoint);
     }
 }
