@@ -20,6 +20,7 @@
 package com.straal.sdk;
 
 import com.straal.sdk.card.CreditCard;
+import com.straal.sdk.mappers.CardMapper;
 import com.straal.sdk.response.StraalEncryptedResponse;
 
 import java.util.HashMap;
@@ -45,7 +46,7 @@ public class CreateCardOperation extends StraalEncryptedBaseOperation<StraalEncr
 
     @Override
     protected Map<String, Object> getStraalRequestPayload(Straal.Config config) {
-        return DataMapper.mapCreditCard(card);
+        return CardMapper.map(card);
     }
 
     @Override

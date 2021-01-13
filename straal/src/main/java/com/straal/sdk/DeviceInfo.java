@@ -30,9 +30,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class DeviceInfo {
 
-    final String languageTag;
-    final String userAgent;
-    final long timezoneOffset;
+    public final String languageTag;
+    public final String userAgent;
+    public final long timezoneOffset;
     private static final String USER_AGENT_PROPERTY = "http.agent";
 
     /**

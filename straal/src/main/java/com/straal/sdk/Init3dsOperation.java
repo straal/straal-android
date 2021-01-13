@@ -22,6 +22,8 @@ package com.straal.sdk;
 import com.straal.sdk.card.CreditCard;
 import com.straal.sdk.data.RedirectUrls;
 import com.straal.sdk.data.Transaction;
+import com.straal.sdk.mappers.CardMapper;
+import com.straal.sdk.mappers.TransactionMapper;
 import com.straal.sdk.response.StraalEncrypted3dsResponse;
 
 import java.util.HashMap;
@@ -55,14 +57,14 @@ public class Init3dsOperation extends StraalEncryptedBaseOperation<StraalEncrypt
 
     @Override
     protected Map<String, Object> getStraalRequestPayload(Straal.Config config) {
-        return DataMapper.mapCreditCard(card);
+        return CardMapper.map(card);
     }
 
     @Override
     protected Map<String, Object> getCryptKeyPayload() {
         Map<String, Object> map = new HashMap<>();
         map.put("permission", permission);
-        map.put("transaction", DataMapper.map3DSecureTransaction(transaction, redirectUrls));
+        map.put("transaction", TransactionMapper.map3DSecure(transaction, redirectUrls));
         return map;
     }
 
