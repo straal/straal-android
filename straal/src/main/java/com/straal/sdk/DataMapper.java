@@ -65,14 +65,14 @@ class DataMapper {
         return result;
     }
 
-    private static Map<String, Object> map3DSecure2Browser(DeviceInfo params) {
+    private static Map<String, Object> map3DSecure2Browser(DeviceInfo deviceInfo) {
         Map<String, Object> browser = new HashMap<>();
         browser.put("accept_header", "*/*");
-        browser.put("language", params.languageTag.value);
-        browser.put("user_agent", params.userAgent);
+        browser.put("language", deviceInfo.languageTag);
+        browser.put("user_agent", deviceInfo.userAgent);
         browser.put("java_enabled", true);
         browser.put("javascript_enabled", true);
-        browser.put("timezone", params.timezone.minutesOffset);
+        browser.put("timezone", deviceInfo.timezoneOffset);
         return browser;
     }
 

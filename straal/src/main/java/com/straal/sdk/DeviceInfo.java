@@ -20,8 +20,8 @@
 
 package com.straal.sdk;
 
-import com.straal.sdk.params.LanguageTag;
-import com.straal.sdk.params.Timezone;
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Class for device specific data required to carry 3D-Secure verification
@@ -30,17 +30,21 @@ import com.straal.sdk.params.Timezone;
  */
 public class DeviceInfo {
 
-    final LanguageTag languageTag;
+    final String languageTag;
     final String userAgent;
-    final Timezone timezone;
+    final long timezoneOffset;
     private static final String USER_AGENT_PROPERTY = "http.agent";
 
     /**
      * @param languageTag device language tag in IETF BCP 47 format
      */
-    public DeviceInfo(LanguageTag languageTag) {
+    public DeviceInfo(String languageTag) {
         this.languageTag = languageTag;
-        this.timezone = Timezone.getCurrent();
+        this.timezoneOffset = timezoneOffset();
         this.userAgent = System.getProperty(USER_AGENT_PROPERTY);
+    }
+
+    private long timezoneOffset() {
+        return TimeUnit.MILLISECONDS.toMinutes(Calendar.getInstance().getTimeZone().getRawOffset());
     }
 }
