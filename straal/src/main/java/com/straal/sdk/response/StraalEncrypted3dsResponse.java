@@ -34,10 +34,15 @@ public class StraalEncrypted3dsResponse extends StraalEncryptedResponse {
      * Redirect url used to complete the 3D-Secure verification process
      */
     public final String locationUrl;
+    /**
+     * Transaction status determining whenever further action is needed to complete transaction
+     */
+    public final TransactionStatus status;
 
-    public StraalEncrypted3dsResponse(String requestId, RedirectUrls redirectUrls, String locationUrl) {
+    public StraalEncrypted3dsResponse(String requestId, RedirectUrls redirectUrls, String locationUrl, TransactionStatus status) {
         super(requestId);
         this.redirectUrls = redirectUrls;
         this.locationUrl = locationUrl;
+        this.status = status;
     }
 }

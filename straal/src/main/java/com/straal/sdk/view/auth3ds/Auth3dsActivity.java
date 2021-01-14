@@ -45,8 +45,6 @@ public class Auth3dsActivity extends AppCompatActivity implements OnAuth3dsCompl
         String locationUrl = getIntent().getStringExtra(AUTH_3DS_LOCATION_URL_KEY);
         String successUrl = getIntent().getStringExtra(AUTH_3DS_SUCCESS_URL_KEY);
         String failureUrl = getIntent().getStringExtra(AUTH_3DS_FAILURE_URL_KEY);
-        if (locationUrl.equals(successUrl)) onSuccess();
-        if (locationUrl.equals(failureUrl)) onFailure();
         super.onCreate(savedInstanceState);
         WebView webView = new WebView(this);
         setContentView(webView);
