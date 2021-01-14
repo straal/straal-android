@@ -20,9 +20,6 @@
 
 package com.straal.sdk;
 
-import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
-
 /**
  * Class for device specific data required to carry 3D-Secure verification
  *
@@ -32,7 +29,6 @@ public class DeviceInfo {
 
     public final String languageTag;
     public final String userAgent;
-    public final long timezoneOffset;
     private static final String USER_AGENT_PROPERTY = "http.agent";
 
     /**
@@ -40,11 +36,6 @@ public class DeviceInfo {
      */
     public DeviceInfo(String languageTag) {
         this.languageTag = languageTag;
-        this.timezoneOffset = timezoneOffset();
         this.userAgent = System.getProperty(USER_AGENT_PROPERTY);
-    }
-
-    private long timezoneOffset() {
-        return TimeUnit.MILLISECONDS.toMinutes(Calendar.getInstance().getTimeZone().getRawOffset());
     }
 }
