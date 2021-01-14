@@ -18,17 +18,16 @@
  *
  */
 
-package com.straal.sdk.mappers;
+package com.straal.sdk;
 
-import com.straal.sdk.DeviceInfo;
 import com.straal.sdk.card.CreditCard;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CardMapper {
+class CardMapper {
 
-    public static Map<String, Object> map(CreditCard cardWithName) {
+    static Map<String, Object> map(CreditCard cardWithName) {
         Map<String, Object> result = new HashMap<>();
         result.put("name", cardWithName.cardholderName.getFullName());
         result.put("number", cardWithName.number.sanitized());
@@ -38,7 +37,7 @@ public class CardMapper {
         return result;
     }
 
-    public static Map<String, Object> mapSecure(CreditCard card, DeviceInfo deviceInfo) {
+    static Map<String, Object> mapSecure(CreditCard card, DeviceInfo deviceInfo) {
         Map<String, Object> result = map(card);
         result.put("browser", BrowserMapper.map(deviceInfo));
         return result;

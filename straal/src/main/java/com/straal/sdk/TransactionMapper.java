@@ -18,7 +18,7 @@
  *
  */
 
-package com.straal.sdk.mappers;
+package com.straal.sdk;
 
 import com.straal.sdk.data.RedirectUrls;
 import com.straal.sdk.data.Transaction;
@@ -26,16 +26,16 @@ import com.straal.sdk.data.Transaction;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TransactionMapper {
+class TransactionMapper {
 
-    public static Map<String, Object> mapSecure(Transaction transaction, RedirectUrls redirectUrls) {
+    static Map<String, Object> mapSecure(Transaction transaction, RedirectUrls redirectUrls) {
         Map<String, Object> result = TransactionMapper.map(transaction);
         result.put("authentication_3ds", mapRedirectUrls(redirectUrls));
         return result;
     }
 
     @Deprecated
-    public static Map<String, Object> map3DSecure(Transaction transaction, RedirectUrls redirectUrls) {
+    static Map<String, Object> map3DSecure(Transaction transaction, RedirectUrls redirectUrls) {
         Map<String, Object> result = TransactionMapper.map(transaction);
         result.put("success_url", redirectUrls.successUrl);
         result.put("failure_url", redirectUrls.failureUrl);

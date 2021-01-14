@@ -22,8 +22,6 @@ package com.straal.sdk;
 import com.straal.sdk.card.CreditCard;
 import com.straal.sdk.data.RedirectUrls;
 import com.straal.sdk.data.Transaction;
-import com.straal.sdk.mappers.CardMapper;
-import com.straal.sdk.mappers.TransactionMapper;
 import com.straal.sdk.response.StraalEncrypted3dsResponse;
 
 import java.util.HashMap;

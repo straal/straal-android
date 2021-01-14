@@ -20,7 +20,6 @@
 package com.straal.sdk;
 
 import com.straal.sdk.card.CreditCard;
-import com.straal.sdk.mappers.CardMapper;
 import com.straal.sdk.response.StraalEncryptedResponse;
 
 import java.util.HashMap;

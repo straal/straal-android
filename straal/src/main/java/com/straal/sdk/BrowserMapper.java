@@ -18,9 +18,7 @@
  *
  */
 
-package com.straal.sdk.mappers;
-
-import com.straal.sdk.DeviceInfo;
+package com.straal.sdk;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +31,6 @@ class BrowserMapper {
         browser.put("language", deviceInfo.languageTag);
         browser.put("user_agent", deviceInfo.userAgent);
         browser.put("java_enabled", true);
-        browser.put("javascript_enabled", true);
-        browser.put("timezone", deviceInfo.timezoneOffset);
         return browser;
     }
 }
