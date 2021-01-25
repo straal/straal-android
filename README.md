@@ -75,7 +75,8 @@ First, create a `Straal.Config` object (which contains your Merchant URL and **a
 class StraalPayment {
     private static final String MERCHANT_API_URL = "https://my-merchant-back-end-url.com";
     private Map<String, String> headers;  // You have to authorize your user on cryptkeys endpoint using these headers!
-    private Straal.Config config = new Straal.Config(MERCHANT_API_URL, headers);
+    private DeviceInfo deviceInfo; // You have to create device info with necessary daya
+    private Straal.Config config = new Straal.Config(MERCHANT_API_URL, headers, deviceInfo);
     private Straal straal = new Straal(config);
 
     // ...
@@ -137,7 +138,8 @@ class StraalPayment {
         CreditCard card = new CreditCard(cardholderName, cardNumber, cvv, expiryDate);
         // create transaction object with your order's details
         Transaction transaction = new Transaction(999, CurrencyCode.USD, "order:bI124dP2an");
-        CreateTransactionWithCardOperation operation = new CreateTransactionWithCardOperation(transaction, card);
+        RedirectUrls redirectUrls = RedirectUrls("https://sdk.straal.com/success", "https://sdk.straal.com/failure");
+        CreateTransactionWithCardOperation operation = new CreateTransactionWithCardOperation(transaction, card, redirectUrls);
         straal.performAsync(
                 operation,
                 straalResponse -> handleSuccess(straalResponse),
@@ -145,44 +147,13 @@ class StraalPayment {
         );
     }
 
-    // ...
-}
-```
-
-> Again, we first fetch your `cryptkeys` endpoint to fetch a `CryptKey`. This time with JSON:
-
-```json
-{
-  "permission": "v1.transactions.create_with_card",
-  "transaction": {
-    "amount": 999,
-    "currency": "usd",
-    "reference": "order:bI124dP2an"
-  }
-}
-```
-
-> It is your back end's responsibility to verify the transaction's amount (possibly pairing it with an order using `reference`) and to authorize the user using request headers.
-
-#### Init 3D-Secure
-
-```java
-class StraalPayment extends AppCompatActivity {
-    // ...
-
-    private void makePayment() {
-        // first, create credit card as before...
-        CreditCard card = new CreditCard(cardholderName, cardNumber, cvv, expiryDate);
-        // create transaction object with your order's details
-        Transaction transaction = new Transaction(999, CurrencyCode.USD, "order:bI124dP2an");
-        RedirectUrls redirectUrls = RedirectUrls("https://sdk.straal.com/success", "https://sdk.straal.com/failure")
-        Init3dsOperation operation = new Init3dsOperation(transaction, card, redirectUrls);
-        straal.performAsync(
-                operation,
-                //open auth 3ds activity to handle 3D-Secure verification process
-                straalResponse -> Auth3dsActivity.startForResult(this, straalResponse, AUTH_3DS_REQUEST_CODE),
-                straalException -> handleError(straalException)
-        );
+    private void handleSuccess(StraalEncrypted3dsResponse response) {
+        if(response.status == TransactionStatus.SUCCESS) {
+            //transaction finished successfully without additional authorization
+        } else if(response.status = TransactionStatus.CHALLENGE_3DS) {
+            //transaction must be authorized
+            Auth3dsActivity.startForResult(this, straalResponse, AUTH_3DS_REQUEST_CODE)
+        }
     }
 
     @Override
@@ -203,7 +174,7 @@ class StraalPayment extends AppCompatActivity {
         }
     }
 
-    static int AUTH_3DS_REQUEST_CODE = 123
+    static int AUTH_3DS_REQUEST_CODE = 123;
 
     // ...
 }
@@ -213,16 +184,20 @@ class StraalPayment extends AppCompatActivity {
 
 ```json
 {
-  "permission": "v1.customers.authentications_3ds.init_3ds",
+  "permission": "v1.transactions.create_with_card",
   "transaction": {
     "amount": 999,
     "currency": "usd",
     "reference": "order:bI124dP2an",
-    "success_url": "https://your.website.url/success",
-    "failure_url": "https://your.website.url/failure",
+    "authentication_3ds": {
+        "success_url": "https://sdk.straal.com/successs",
+        "failure_url": "https://sdk.straal.com/failure"
+     }
   }
 }
 ```
+
+> It is your back end's responsibility to verify the transaction's amount (possibly pairing it with an order using `reference`) and to authorize the user using request headers.
 
 ## Validation
 
