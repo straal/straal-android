@@ -22,7 +22,6 @@
     - [Operations](#operations)
         - [Create card](#create-a-card)
         - [Create a transaction with a card](#create-a-transaction-with-a-card)
-        - [Init 3D-Secure](#init-3d-secure)
 - [Validation](#validation)
 - [Support](#support)
 - [License](#license)
@@ -89,7 +88,7 @@ Once you have your `Straal` object, you can submit objects of type `StraalOperat
 ### Operations
 
 #### Create a card
-
+> :warning: **This operation is deprecated and may result with unpredictable behavior.** Use [Create a transaction with a card](#create-a-transaction-with-a-card) instead
 ```java
 class StraalPayment {
     // ...
@@ -152,13 +151,13 @@ class StraalPayment {
             //transaction finished successfully without additional authorization
         } else if(response.status = TransactionStatus.CHALLENGE_3DS) {
             //transaction must be authorized
-            Auth3dsActivity.startForResult(this, straalResponse, AUTH_3DS_REQUEST_CODE)
+            Auth3dsActivity.startForResult(this, straalResponse, AUTH_3DS_REQUEST_CODE);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AUTH_3DS_REQUEST_CODE) {
             switch (resultCode) {
                 case Auth3dsActivity.AUTH_3DS_SUCCESS: { 
