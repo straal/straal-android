@@ -21,6 +21,7 @@ package com.straal.sdk.view.auth3ds;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.webkit.WebView;
@@ -90,11 +91,17 @@ public class Auth3dsActivity extends AppCompatActivity implements OnAuth3dsCompl
      * @param requestCode    request code to start activity for result
      */
     public static void startForResult(@NonNull Activity activity, @NonNull StraalEncrypted3dsResponse straalResponse, int requestCode) {
-        Intent startingIntent = new Intent(activity, Auth3dsActivity.class);
+        Intent startingIntent = getIntent(activity, straalResponse);
+        activity.startActivityForResult(startingIntent, requestCode);
+    }
+
+    @NonNull
+    public static Intent getIntent(@NonNull Context context, @NonNull StraalEncrypted3dsResponse straalResponse) {
+        Intent startingIntent = new Intent(context, Auth3dsActivity.class);
         startingIntent.putExtra(AUTH_3DS_LOCATION_URL_KEY, straalResponse.locationUrl);
         startingIntent.putExtra(AUTH_3DS_SUCCESS_URL_KEY, straalResponse.redirectUrls.successUrl);
         startingIntent.putExtra(AUTH_3DS_FAILURE_URL_KEY, straalResponse.redirectUrls.failureUrl);
-        activity.startActivityForResult(startingIntent, requestCode);
+        return startingIntent;
     }
 
     /**
