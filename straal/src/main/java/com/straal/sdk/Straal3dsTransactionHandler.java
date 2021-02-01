@@ -35,21 +35,33 @@ import com.straal.sdk.response.StraalEncrypted3dsResponse;
 import com.straal.sdk.response.TransactionStatus;
 import com.straal.sdk.view.auth3ds.Auth3dsActivity;
 
+/***
+ * Handler which will carry 3DS authentication for you and return final result.
+ */
 public class Straal3dsTransactionHandler implements Consumer<StraalEncrypted3dsResponse> {
 
     private ActivityResultLauncher<Intent> resultLauncher;
     private final Context context;
-    private final Consumer<Integer> resultConsumer;
+    private final Consumer<Integer> onResult;
     private final ActivityResultRegistry resultRegistry;
     private static final String AUTH_RESULT_KEY = "com.straal.sdk.AUTH_RESULT_KEY";
 
-    public Straal3dsTransactionHandler(@NonNull Context context, @NonNull ActivityResultRegistry resultRegistry, @NonNull Consumer<Integer> resultConsumer) {
+    /***
+     * @param context        context required to start {@link Auth3dsActivity}
+     * @param resultRegistry registry to listen for 3DS authentication results
+     * @param onResult       callback which will be invoked with response when operation succeeds
+     */
+    public Straal3dsTransactionHandler(@NonNull Context context, @NonNull ActivityResultRegistry resultRegistry, @NonNull Consumer<Integer> onResult) {
         this.context = context;
         this.resultRegistry = resultRegistry;
-        this.resultConsumer = resultConsumer;
+        this.onResult = onResult;
     }
 
-    public void attachTo(@NonNull LifecycleOwner owner) {
+    /***
+     * Call this method when {@link LifecycleOwner} reaches ON_CREATE state
+     * @param owner {@link LifecycleOwner} that handler is attached to
+     */
+    public void onCreate(@NonNull LifecycleOwner owner) {
         registerForResult(owner, resultRegistry);
     }
 
@@ -67,7 +79,7 @@ public class Straal3dsTransactionHandler implements Consumer<StraalEncrypted3dsR
     }
 
     private void notify(int resultCode) {
-        resultConsumer.accept(resultCode);
+        onResult.accept(resultCode);
     }
 
     private void start3dsChallenge(StraalEncrypted3dsResponse response) {
