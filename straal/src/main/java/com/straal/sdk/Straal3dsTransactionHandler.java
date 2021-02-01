@@ -22,8 +22,6 @@ package com.straal.sdk;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.activity.ComponentActivity;
 import androidx.activity.result.ActivityResult;
@@ -89,11 +87,7 @@ public class Straal3dsTransactionHandler implements Consumer<StraalEncrypted3dsR
     }
 
     private void start3dsChallenge(StraalEncrypted3dsResponse response) {
-        runOnMainThread(() -> resultLauncher.launch(response));
-    }
-
-    private void runOnMainThread(Runnable runnable) {
-        new Handler(Looper.getMainLooper()).post(runnable);
+        resultLauncher.launch(response);
     }
 
     private static class Perform3dsAuthentication extends ActivityResultContract<StraalEncrypted3dsResponse, ActivityResult> {
