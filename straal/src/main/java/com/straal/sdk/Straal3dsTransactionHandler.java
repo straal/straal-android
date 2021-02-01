@@ -25,14 +25,16 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.activity.ComponentActivity;
+import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.ActivityResultRegistry;
-import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.straal.sdk.response.StraalEncrypted3dsResponse;
-import com.straal.sdk.response.TransactionStatus;
 import com.straal.sdk.view.auth3ds.Auth3dsActivity;
 
 /***
@@ -40,42 +42,46 @@ import com.straal.sdk.view.auth3ds.Auth3dsActivity;
  */
 public class Straal3dsTransactionHandler implements Consumer<StraalEncrypted3dsResponse> {
 
-    private ActivityResultLauncher<Intent> resultLauncher;
-    private final Context context;
+    private ActivityResultLauncher<StraalEncrypted3dsResponse> resultLauncher;
     private final Consumer<Integer> onResult;
-    private final ActivityResultRegistry resultRegistry;
     private static final String AUTH_RESULT_KEY = "com.straal.sdk.AUTH_RESULT_KEY";
 
     /***
-     * @param context        context required to start {@link Auth3dsActivity}
+     * @param lifecycleOwner lifecycleOwner that holds {@link Straal3dsTransactionHandler}
      * @param resultRegistry registry to listen for 3DS authentication results
-     * @param onResult       callback which will be invoked with response when operation succeeds
+     * @param onResult       callback which will be invoked with response when operation finishes
      */
-    public Straal3dsTransactionHandler(@NonNull Context context, @NonNull ActivityResultRegistry resultRegistry, @NonNull Consumer<Integer> onResult) {
-        this.context = context;
-        this.resultRegistry = resultRegistry;
+    public Straal3dsTransactionHandler(@NonNull LifecycleOwner lifecycleOwner, @NonNull ActivityResultRegistry resultRegistry, @NonNull Consumer<Integer> onResult) {
         this.onResult = onResult;
+        registerForResult(lifecycleOwner, resultRegistry);
     }
 
     /***
-     * Call this method when {@link LifecycleOwner} reaches ON_CREATE state
-     * @param owner {@link LifecycleOwner} that handler is attached to
+     * @see Straal3dsTransactionHandler#Straal3dsTransactionHandler(LifecycleOwner, ActivityResultRegistry, Consumer)
+     * @param activity activity that holds {@link Straal3dsTransactionHandler}
+     * @param onResult callback which will be invoked with response when operation finishes
      */
-    public void onCreate(@NonNull LifecycleOwner owner) {
-        registerForResult(owner, resultRegistry);
-    }
-
-    @NonNull
-    private void registerForResult(LifecycleOwner lifecycleOwner, ActivityResultRegistry resultRegistry) {
-        resultLauncher = resultRegistry.register(AUTH_RESULT_KEY, lifecycleOwner, new ActivityResultContracts.StartActivityForResult(), result -> {
-            notify(result.getResultCode());
-        });
+    public Straal3dsTransactionHandler(@NonNull ComponentActivity activity, @NonNull Consumer<Integer> onResult) {
+        this(activity, activity.getActivityResultRegistry(), onResult);
     }
 
     @Override
     public void accept(StraalEncrypted3dsResponse response) {
-        if (response.status == TransactionStatus.SUCCESS) notify(Auth3dsActivity.RESULT_OK);
-        else if (response.status == TransactionStatus.CHALLENGE_3DS) start3dsChallenge(response);
+        switch (response.status) {
+            case SUCCESS:
+                notify(Auth3dsActivity.AUTH_3DS_SUCCESS);
+                break;
+            case CHALLENGE_3DS:
+                start3dsChallenge(response);
+                break;
+        }
+    }
+
+    @NonNull
+    private void registerForResult(LifecycleOwner lifecycleOwner, ActivityResultRegistry resultRegistry) {
+        resultLauncher = resultRegistry.register(AUTH_RESULT_KEY, lifecycleOwner, new Perform3dsAuthentication(), result -> {
+            notify(result.getResultCode());
+        });
     }
 
     private void notify(int resultCode) {
@@ -83,10 +89,24 @@ public class Straal3dsTransactionHandler implements Consumer<StraalEncrypted3dsR
     }
 
     private void start3dsChallenge(StraalEncrypted3dsResponse response) {
-        runOnMainThread(() -> resultLauncher.launch(Auth3dsActivity.getIntent(context, response)));
+        runOnMainThread(() -> resultLauncher.launch(response));
     }
 
     private void runOnMainThread(Runnable runnable) {
         new Handler(Looper.getMainLooper()).post(runnable);
+    }
+
+    private static class Perform3dsAuthentication extends ActivityResultContract<StraalEncrypted3dsResponse, ActivityResult> {
+
+        @NonNull
+        @Override
+        public Intent createIntent(@NonNull Context context, StraalEncrypted3dsResponse input) {
+            return Auth3dsActivity.startingIntent(context, input);
+        }
+
+        @Override
+        public ActivityResult parseResult(int resultCode, @Nullable Intent intent) {
+            return new ActivityResult(resultCode, intent);
+        }
     }
 }
