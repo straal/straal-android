@@ -131,6 +131,9 @@ Then, the credit card data is encrypted, sent to Straal directly, processed by S
 ```java
 class StraalPayment {
     // ...
+    
+    //initialize authenticationHandler as soon as possible
+    private Straal3dsTransactionHandler authenticationHandler = new Straal3dsTransactionHandler(lifecycleOwner, activityResultRegistry, this::handleAuthenticationResult);
 
     private void makePayment() {
         // first, create credit card as before...
@@ -141,24 +144,13 @@ class StraalPayment {
         CreateTransactionWithCardOperation operation = new CreateTransactionWithCardOperation(transaction, card, redirectUrls);
         straal.performAsync(
                 operation,
-                straalResponse -> handleSuccess(straalResponse),
+                authenticationHandler, //pass authenticationHandler as onSuccess consumer
                 straalException -> handleError(straalException)
         );
     }
 
-    private void handleSuccess(StraalEncrypted3dsResponse response) {
-        if(response.status == TransactionStatus.SUCCESS) {
-            //transaction finished successfully without additional authorization
-        } else if(response.status = TransactionStatus.CHALLENGE_3DS) {
-            //transaction must be authorized
-            Auth3dsActivity.startForResult(this, straalResponse, AUTH_3DS_REQUEST_CODE);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AUTH_3DS_REQUEST_CODE) {
+    public void handleAuthenticationResult(int resultCode) {
+            //handle final authentication result
             switch (resultCode) {
                 case Auth3dsActivity.AUTH_3DS_SUCCESS: { 
                     //handle success 
@@ -170,10 +162,7 @@ class StraalPayment {
                     //handle cancel 
                 }
             }
-        }
     }
-
-    static int AUTH_3DS_REQUEST_CODE = 123;
 
     // ...
 }
