@@ -44,7 +44,7 @@ public abstract class StraalEncryptedBaseOperation<T extends StraalEncryptedResp
 
     protected abstract Map<String, Object> getCryptKeyPayload();
 
-    protected abstract Map<String, Object> getStraalRequestPayload();
+    protected abstract Map<String, Object> getStraalRequestPayload(Straal.Config config);
 
     protected abstract Callable<T> getStraalResponseCallable(HttpCallable httpCallable) throws Exception;
 
@@ -53,7 +53,7 @@ public abstract class StraalEncryptedBaseOperation<T extends StraalEncryptedResp
         MapToJsonCallable cryptKeyRequest = new MapToJsonCallable(getCryptKeyPayload());
         KeyResponseCallable cryptKeyResponse = new KeyResponseCallable(new JsonResponseCallable(new HttpCallable(cryptKeyRequest, createMerchantHttpClient(config), config.cryptKeyEndpoint)));
         StraalCrypterCallable straalCrypterCallable = new StraalCrypterCallable(cryptKeyResponse);
-        EncryptCallable encryptCallable = new EncryptCallable(straalCrypterCallable, new MapToJsonCallable(getStraalRequestPayload()));
+        EncryptCallable encryptCallable = new EncryptCallable(straalCrypterCallable, new MapToJsonCallable(getStraalRequestPayload(config)));
         Callable<T> straalRequest = getStraalResponseCallable(new HttpCallable(encryptCallable, createStraalHttpClient(), STRAAL_ENCRYPTED_ENDPOINT));
         return straalRequest.call();
     }

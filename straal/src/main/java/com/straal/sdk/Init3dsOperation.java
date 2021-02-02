@@ -33,7 +33,9 @@ import java.util.concurrent.Callable;
  *
  * @see StraalOperation
  * @see <a href="https://api-reference.straal.com/#resources-3d-secure-authentications-initialize-3d-secure-process-with-a-cryptkey">'Initialize 3D-Secure' with transaction and card in Straal API docs</a>
+ * @deprecated use {@link CreateTransactionWithCardOperation } instead
  */
+@Deprecated
 public class Init3dsOperation extends StraalEncryptedBaseOperation<StraalEncrypted3dsResponse> {
     public final Transaction transaction;
     public final CreditCard card;
@@ -52,15 +54,15 @@ public class Init3dsOperation extends StraalEncryptedBaseOperation<StraalEncrypt
     }
 
     @Override
-    protected Map<String, Object> getStraalRequestPayload() {
-        return DataMapper.mapCreditCard(card);
+    protected Map<String, Object> getStraalRequestPayload(Straal.Config config) {
+        return CardMapper.map(card);
     }
 
     @Override
     protected Map<String, Object> getCryptKeyPayload() {
         Map<String, Object> map = new HashMap<>();
         map.put("permission", permission);
-        map.put("transaction", DataMapper.map3DSecureTransaction(transaction, redirectUrls));
+        map.put("transaction", TransactionMapper.map3DSecure(transaction, redirectUrls));
         return map;
     }
 

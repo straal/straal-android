@@ -31,7 +31,9 @@ import java.util.concurrent.Callable;
  *
  * @see StraalOperation
  * @see <a href="https://api-reference.straal.com/#resources-cards-create-a-card-using-cryptkey">'Create card' in Straal API docs</a>
+ * @deprecated use {@link CreateTransactionWithCardOperation } instead
  */
+@Deprecated
 public class CreateCardOperation extends StraalEncryptedBaseOperation<StraalEncryptedResponse> {
     public final CreditCard card;
 
@@ -44,8 +46,8 @@ public class CreateCardOperation extends StraalEncryptedBaseOperation<StraalEncr
     }
 
     @Override
-    protected Map<String, Object> getStraalRequestPayload() {
-        return DataMapper.mapCreditCard(card);
+    protected Map<String, Object> getStraalRequestPayload(Straal.Config config) {
+        return CardMapper.map(card);
     }
 
     @Override

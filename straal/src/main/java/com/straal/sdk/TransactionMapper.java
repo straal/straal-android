@@ -1,8 +1,8 @@
 /*
- * DataMapper.java
- * Created by Arkadiusz Różalski on 26.01.18
+ * TransactionMapper.java
+ * Created by Kamil Czanik on 13.01.2021
  * Straal SDK for Android
- * Copyright 2018 Straal Sp. z o. o.
+ * Copyright 2021 Straal Sp. z o. o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,27 +15,34 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package com.straal.sdk;
 
-import com.straal.sdk.card.CreditCard;
 import com.straal.sdk.data.RedirectUrls;
 import com.straal.sdk.data.Transaction;
 
 import java.util.HashMap;
 import java.util.Map;
 
-class DataMapper {
+class TransactionMapper {
 
-    static Map<String, Object> map3DSecureTransaction(Transaction transaction, RedirectUrls redirectUrls) {
-        Map<String, Object> result = mapTransaction(transaction);
+    static Map<String, Object> mapSecure(Transaction transaction, RedirectUrls redirectUrls) {
+        Map<String, Object> result = TransactionMapper.map(transaction);
+        result.put("authentication_3ds", mapRedirectUrls(redirectUrls));
+        return result;
+    }
+
+    @Deprecated
+    static Map<String, Object> map3DSecure(Transaction transaction, RedirectUrls redirectUrls) {
+        Map<String, Object> result = TransactionMapper.map(transaction);
         result.put("success_url", redirectUrls.successUrl);
         result.put("failure_url", redirectUrls.failureUrl);
         return result;
     }
 
-    static Map<String, Object> mapTransaction(Transaction transaction) {
+    private static Map<String, Object> map(Transaction transaction) {
         Map<String, Object> result = new HashMap<>();
         result.put("amount", transaction.amount);
         result.put("currency", transaction.currencyCode.name().toLowerCase());
@@ -43,13 +50,10 @@ class DataMapper {
         return result;
     }
 
-    static Map<String, Object> mapCreditCard(CreditCard cardWithName) {
+    private static Map<String, Object> mapRedirectUrls(RedirectUrls redirectUrls) {
         Map<String, Object> result = new HashMap<>();
-        result.put("name", cardWithName.cardholderName.getFullName());
-        result.put("number", cardWithName.number.sanitized());
-        result.put("cvv", cardWithName.cvv.value);
-        result.put("expiry_month", cardWithName.expiryDate.month);
-        result.put("expiry_year", cardWithName.expiryDate.year);
+        result.put("success_url", redirectUrls.successUrl);
+        result.put("failure_url", redirectUrls.failureUrl);
         return result;
     }
 }
