@@ -35,7 +35,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.straal.sdk.response.StraalEncrypted3dsResponse;
 import com.straal.sdk.view.auth3ds.Auth3dsActivity;
 
-/***
+/**
  * Handler which will carry 3DS authentication for you and return final result.
  */
 public class Straal3dsTransactionHandler implements Consumer<StraalEncrypted3dsResponse> {
@@ -44,7 +44,7 @@ public class Straal3dsTransactionHandler implements Consumer<StraalEncrypted3dsR
     private final Consumer<Integer> onResult;
     private static final String AUTH_RESULT_KEY = "com.straal.sdk.AUTH_RESULT_KEY";
 
-    /***
+    /**
      * @param lifecycleOwner lifecycleOwner that holds {@link Straal3dsTransactionHandler}
      * @param resultRegistry registry to listen for 3DS authentication results
      * @param onResult       callback which will be invoked with response when operation finishes
@@ -54,7 +54,7 @@ public class Straal3dsTransactionHandler implements Consumer<StraalEncrypted3dsR
         registerForResult(lifecycleOwner, resultRegistry);
     }
 
-    /***
+    /**
      * @see Straal3dsTransactionHandler#Straal3dsTransactionHandler(LifecycleOwner, ActivityResultRegistry, Consumer)
      * @param activity activity that holds {@link Straal3dsTransactionHandler}
      * @param onResult callback which will be invoked with response when operation finishes
