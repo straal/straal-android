@@ -141,7 +141,7 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
     }
 
     /**
-     * Creates new starting intent for {@link Auth3dsActivity}
+     * Creates new starting intent for {@link Auth3dsBrowserActivity}
      *
      * @param context  context required to create intent
      * @param response response returned from 3ds operation
