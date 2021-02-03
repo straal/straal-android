@@ -30,6 +30,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.straal.sdk.response.StraalEncrypted3dsResponse;
 
+/**
+ * Activity that handles 3D-Secure authentication outside application e.g. browser or bank application
+ */
 public class Auth3dsBrowserActivity extends AppCompatActivity {
 
     /**
