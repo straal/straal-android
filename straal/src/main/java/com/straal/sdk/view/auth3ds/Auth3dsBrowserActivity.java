@@ -105,9 +105,10 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
 
     private void capture3dsAuthenticationResult(Intent resultIntent) {
         String data = resultIntent.getDataString();
-        if (isSuccess(data)) onSuccess();
+        if (data == null) malformedDataException();
+        else if (isSuccess(data)) onSuccess();
         else if (isFailure(data)) onFailure();
-        else throw new IllegalArgumentException("Could not recognize captured callback url");
+        else malformedDataException();
     }
 
     private boolean isSuccess(String data) {
@@ -116,6 +117,10 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
 
     private boolean isFailure(String data) {
         return data.equals(auth3dsParams.failureUrl);
+    }
+
+    private void malformedDataException() {
+        throw new IllegalArgumentException("Malformed callback url");
     }
 
     private void onSuccess() {
@@ -139,7 +144,7 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
      * Creates new starting intent for {@link Auth3dsActivity}
      *
      * @param context  context required to create intent
-     * @param response response returned from init 3ds operation
+     * @param response response returned from 3ds operation
      */
     @NonNull
     public static Intent startingIntent(@NonNull Context context, @NonNull StraalEncrypted3dsResponse response) {
