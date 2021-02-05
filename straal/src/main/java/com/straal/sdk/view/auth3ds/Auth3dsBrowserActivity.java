@@ -26,6 +26,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.straal.sdk.response.StraalEncrypted3dsResponse;
@@ -68,8 +69,14 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
         super.onSaveInstanceState(auth3dsParams.writeTo(outState));
     }
 
+    /**
+     * Method visible ony for testing purposes.
+     *
+     * @see android.app.Activity#onNewIntent(Intent)
+     */
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     @Override
-    protected void onNewIntent(Intent intent) {
+    public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         capture3dsAuthenticationResult(intent);
     }
