@@ -29,6 +29,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.straal.sdk.R;
 import com.straal.sdk.response.StraalEncrypted3dsResponse;
 
 /**
@@ -57,6 +58,7 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.Theme_AppCompat_Light);
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         auth3dsParams = createAuth3dsParams(savedInstanceState, intent);
