@@ -50,7 +50,6 @@ import static org.junit.Assert.assertEquals;
 
 public class Auth3dsBrowserActivityTest {
 
-    private final Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
     private final RedirectUrls redirectUrls = new RedirectUrls("com.daftmobile.straal//sdk.straal.com/x-callback-url/android/success", "com.daftmobile.straal//sdk.straal.com/x-callback-url/android/failure");
     private final String locationUrl = "https://domain.com/challenge_3ds";
     private final StraalEncrypted3dsResponse response = new StraalEncrypted3dsResponse("stub_id", redirectUrls, locationUrl, TransactionStatus.CHALLENGE_3DS);
@@ -60,6 +59,7 @@ public class Auth3dsBrowserActivityTest {
     public void setUp() {
         init();
         intending(hasData(locationUrl)).respondWith(new Instrumentation.ActivityResult(RESULT_OK, null));
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         scenario = ActivityScenario.launch(Auth3dsBrowserActivity.startingIntent(context, response));
     }
 
@@ -69,7 +69,9 @@ public class Auth3dsBrowserActivityTest {
     }
 
     @Test
-    public void testActivityDoesNotSendIntentWithLocationUrlOnRecreate() {
+    public void testActivitySendsIntentWithLocationUrlOnlyOnce() {
+        scenario.recreate();
+        scenario.recreate();
         scenario.recreate();
         intended(allOf(hasAction(Intent.ACTION_VIEW), hasData(locationUrl)), times(1));
     }
