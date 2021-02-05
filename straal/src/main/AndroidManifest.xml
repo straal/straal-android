@@ -5,7 +5,7 @@
     <application>
         <activity
             android:name=".view.auth3ds.Auth3dsBrowserActivity"
-            android:theme="@style/Theme.AppCompat"
+            android:theme="@style/StraalTheme.Auth3dsBrowserActivity"
             />
     </application>
 
