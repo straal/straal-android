@@ -62,9 +62,22 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        auth3dsParams = createAuth3dsParams(savedInstanceState, intent);
-        if (hasLocationUrl(intent) && !isRecreated(savedInstanceState)) perform3dsAuthentication(getLocationUrl(intent));
-        else if (hasResult(intent)) captureAuthenticationResult(intent);
+        boolean isRecreated = isRecreated(savedInstanceState);
+        if (isRecreated) {
+            initParamsAndCheckResult(savedInstanceState, intent);
+        } else {
+            initParamsAndCheckLocationUrl(intent);
+        }
+    }
+
+    private void initParamsAndCheckResult(Bundle savedInstanceState, Intent intent) {
+        auth3dsParams = new Auth3dsParams(savedInstanceState);
+        if (hasResult(intent)) captureAuthenticationResult(intent);
+    }
+
+    private void initParamsAndCheckLocationUrl(Intent intent) {
+        auth3dsParams = new Auth3dsParams(intent);
+        if (hasLocationUrl(intent)) perform3dsAuthentication(getLocationUrl(intent));
     }
 
     @Override
@@ -81,13 +94,6 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         onCancel();
-    }
-
-    private Auth3dsParams createAuth3dsParams(Bundle savedState, Intent intent) {
-        if (isRecreated(savedState))
-            return new Auth3dsParams(savedState);
-        else
-            return new Auth3dsParams(intent);
     }
 
     private String getLocationUrl(Intent intent) {
