@@ -102,17 +102,17 @@ public class Auth3dsBrowserActivityTest {
         assertResult(Auth3dsBrowserActivity.AUTH_3DS_RESULT_FAILURE);
     }
 
-    @Test(expected = Exception.class)
-    public void testActivityThrowsExceptionWhenWaitingForResultAndNewIntentWithMalformedUrlIsProvided() {
+    @Test
+    public void testActivityFinishesWithResultUnknownWhenWaitingForResultAndNewIntentWithMalformedUrlIsProvided() {
         String malformedUrl = "com.daftmobile.straal//sdk.straal.com/malformed-callback-url/android/steal_money";
         deliverIntent(malformedUrl);
+        assertResult(Auth3dsBrowserActivity.AUTH_3DS_RESULT_UNKNOWN);
     }
 
-    @Test(expected = Exception.class)
-    public void testActivityThrowsExceptionWhenWaitingForResultAndNewIntentWithEmptyDataIsProvided() {
-        scenario.onActivity(activity -> {
-            activity.onNewIntent(new Intent());
-        });
+    @Test
+    public void testActivityFinishesWithResultUnknownWhenWaitingForResultAndNewIntentWithEmptyDataIsProvided() {
+        deliverIntent("");
+        assertResult(Auth3dsBrowserActivity.AUTH_3DS_RESULT_UNKNOWN);
     }
 
     @Test

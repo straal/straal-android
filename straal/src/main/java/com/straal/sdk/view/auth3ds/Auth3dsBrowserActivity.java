@@ -47,6 +47,10 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
      * Authentication 3D-Secure cancel result (e.g. pressed back button)
      */
     public static final int AUTH_3DS_RESULT_CANCEL = 102;
+    /**
+     * Authentication 3D-Secure unknown result (e.g. when final url is malformed)
+     */
+    public static final int AUTH_3DS_RESULT_UNKNOWN = 103;
 
     private final static String AUTH_3DS_LOCATION_URL_KEY = "com.straal.sdk.AUTH_3DS_LOCATION_URL_KEY";
     private final static String AUTH_3DS_SUCCESS_URL_KEY = "com.straal.sdk.AUTH_3DS_SUCCESS_URL_KEY";
@@ -59,8 +63,8 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         auth3dsParams = createAuth3dsParams(savedInstanceState, intent);
-        if (hasLocation(intent) && !isRecreated(savedInstanceState)) perform3dsAuthentication(getLocationUrl(intent));
-        else if (hasResult(intent)) capture3dsAuthenticationResult(intent);
+        if (hasLocationUrl(intent) && !isRecreated(savedInstanceState)) perform3dsAuthentication(getLocationUrl(intent));
+        else if (hasResult(intent)) captureAuthenticationResult(intent);
     }
 
     @Override
@@ -71,7 +75,7 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        capture3dsAuthenticationResult(intent);
+        captureAuthenticationResult(intent);
     }
 
     @Override
@@ -94,7 +98,7 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
         return bundle != null;
     }
 
-    private boolean hasLocation(Intent intent) {
+    private boolean hasLocationUrl(Intent intent) {
         return intent.hasExtra(AUTH_3DS_LOCATION_URL_KEY);
     }
 
@@ -106,32 +110,8 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(locationUrl)));
     }
 
-    private void capture3dsAuthenticationResult(Intent resultIntent) {
-        String data = resultIntent.getDataString();
-        if (data == null) malformedDataException();
-        else if (isSuccess(data)) onSuccess();
-        else if (isFailure(data)) onFailure();
-        else malformedDataException();
-    }
-
-    private boolean isSuccess(String data) {
-        return data.equals(auth3dsParams.successUrl);
-    }
-
-    private boolean isFailure(String data) {
-        return data.equals(auth3dsParams.failureUrl);
-    }
-
-    private void malformedDataException() {
-        throw new IllegalArgumentException("Malformed callback url");
-    }
-
-    private void onSuccess() {
-        finish(AUTH_3DS_RESULT_SUCCESS);
-    }
-
-    private void onFailure() {
-        finish(AUTH_3DS_RESULT_FAILURE);
+    private void captureAuthenticationResult(Intent resultIntent) {
+        finish(auth3dsParams.captureResult(resultIntent.getDataString()));
     }
 
     private void onCancel() {
@@ -174,6 +154,21 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
 
         public Auth3dsParams(Intent intent) {
             this(intent.getStringExtra(AUTH_3DS_SUCCESS_URL_KEY), intent.getStringExtra(AUTH_3DS_FAILURE_URL_KEY));
+        }
+
+        public int captureResult(String data) {
+            if (data == null) return AUTH_3DS_RESULT_UNKNOWN;
+            else if (isSuccessUrl(data)) return AUTH_3DS_RESULT_SUCCESS;
+            else if (isFailureUrl(data)) return AUTH_3DS_RESULT_FAILURE;
+            else return AUTH_3DS_RESULT_UNKNOWN;
+        }
+
+        private boolean isSuccessUrl(String data) {
+            return data.equals(successUrl);
+        }
+
+        private boolean isFailureUrl(String data) {
+            return data.equals(failureUrl);
         }
 
         private Bundle writeTo(Bundle bundle) {
