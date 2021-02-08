@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 28
-    resourcePrefix "strl_"
+    resourcePrefix "straal"
 
     defaultConfig {
         minSdkVersion 17
