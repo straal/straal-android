@@ -30,27 +30,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.straal.sdk.response.StraalEncrypted3dsResponse;
 
+import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_CANCEL;
+import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_FAILURE;
+import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_SUCCESS;
+import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_UNKNOWN;
+
 /**
  * Activity that handles 3D-Secure authentication outside application e.g. browser or bank application
  */
 public class Auth3dsBrowserActivity extends AppCompatActivity {
-
-    /**
-     * Authentication 3D-Secure success result
-     */
-    public static final int AUTH_3DS_RESULT_SUCCESS = 100;
-    /**
-     * Authentication 3D-Secure failure result
-     */
-    public static final int AUTH_3DS_RESULT_FAILURE = 101;
-    /**
-     * Authentication 3D-Secure cancel result (e.g. pressed back button)
-     */
-    public static final int AUTH_3DS_RESULT_CANCEL = 102;
-    /**
-     * Authentication 3D-Secure unknown result (e.g. when final url is malformed)
-     */
-    public static final int AUTH_3DS_RESULT_UNKNOWN = 103;
 
     private final static String AUTH_3DS_LOCATION_URL_KEY = "com.straal.sdk.AUTH_3DS_LOCATION_URL_KEY";
     private final static String AUTH_3DS_SUCCESS_URL_KEY = "com.straal.sdk.AUTH_3DS_SUCCESS_URL_KEY";
@@ -70,7 +58,7 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
 
     private void initParamsAndCheckResult(Bundle savedInstanceState, Intent intent) {
         auth3dsParams = new Auth3dsParams(savedInstanceState);
-        if (hasResult(intent)) finish(AUTH_3DS_RESULT_UNKNOWN);
+        if (hasResult(intent)) finish(AUTH_3DS_UNKNOWN);
     }
 
     private void initParamsAndCheckLocationUrl(Intent intent) {
@@ -119,7 +107,7 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
     }
 
     private void onCancel() {
-        finish(AUTH_3DS_RESULT_CANCEL);
+        finish(AUTH_3DS_CANCEL);
     }
 
     private void finish(int resultCode) {
@@ -160,10 +148,10 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
         }
 
         public int captureResult(String data) {
-            if (data == null) return AUTH_3DS_RESULT_UNKNOWN;
-            else if (isSuccessUrl(data)) return AUTH_3DS_RESULT_SUCCESS;
-            else if (isFailureUrl(data)) return AUTH_3DS_RESULT_FAILURE;
-            else return AUTH_3DS_RESULT_UNKNOWN;
+            if (data == null) return AUTH_3DS_UNKNOWN;
+            else if (isSuccessUrl(data)) return AUTH_3DS_SUCCESS;
+            else if (isFailureUrl(data)) return AUTH_3DS_FAILURE;
+            else return AUTH_3DS_UNKNOWN;
         }
 
         private boolean isSuccessUrl(String data) {

@@ -35,6 +35,8 @@ import androidx.lifecycle.LifecycleOwner;
 import com.straal.sdk.response.StraalEncrypted3dsResponse;
 import com.straal.sdk.view.auth3ds.Auth3dsBrowserActivity;
 
+import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_SUCCESS;
+
 /**
  * Handler which will carry 3DS authentication for you and return final result.
  */
@@ -67,7 +69,7 @@ public class Straal3dsTransactionHandler implements Consumer<StraalEncrypted3dsR
     public void accept(StraalEncrypted3dsResponse response) {
         switch (response.status) {
             case SUCCESS:
-                notify(Auth3dsBrowserActivity.AUTH_3DS_RESULT_SUCCESS);
+                notify(AUTH_3DS_SUCCESS);
                 break;
             case CHALLENGE_3DS:
                 perform3dsAuthentication(response);

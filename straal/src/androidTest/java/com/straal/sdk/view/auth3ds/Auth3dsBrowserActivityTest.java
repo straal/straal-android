@@ -45,6 +45,10 @@ import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.Intents.times;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
+import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_CANCEL;
+import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_FAILURE;
+import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_SUCCESS;
+import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_UNKNOWN;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.assertEquals;
 
@@ -79,46 +83,46 @@ public class Auth3dsBrowserActivityTest {
     @Test
     public void testActivityFinishesWithResultSuccessWhenNewIntentWithSuccessUrlIsProvided() {
         deliverIntent(redirectUrls.successUrl);
-        assertResult(Auth3dsBrowserActivity.AUTH_3DS_RESULT_SUCCESS);
+        assertResult(AUTH_3DS_SUCCESS);
     }
 
     @Test
     public void testActivityFinishesWithResultFailureWhenNewIntentWithFailureUrlIsProvided() {
         deliverIntent(redirectUrls.failureUrl);
-        assertResult(Auth3dsBrowserActivity.AUTH_3DS_RESULT_FAILURE);
+        assertResult(AUTH_3DS_FAILURE);
     }
 
     @Test
     public void testActivityFinishesWithResultSuccessWhenNewIntentWithSuccessUrlIsProvidedAfterBeingRecreated() {
         scenario.recreate();
         deliverIntent(redirectUrls.successUrl);
-        assertResult(Auth3dsBrowserActivity.AUTH_3DS_RESULT_SUCCESS);
+        assertResult(AUTH_3DS_SUCCESS);
     }
 
     @Test
     public void testActivityFinishesWithResultFailureWhenNewIntentWithFailureUrlIsProvidedAfterBeingRecreated() {
         scenario.recreate();
         deliverIntent(redirectUrls.failureUrl);
-        assertResult(Auth3dsBrowserActivity.AUTH_3DS_RESULT_FAILURE);
+        assertResult(AUTH_3DS_FAILURE);
     }
 
     @Test
     public void testActivityFinishesWithResultUnknownWhenWaitingForResultAndNewIntentWithMalformedUrlIsProvided() {
         String malformedUrl = "com.daftmobile.straal//sdk.straal.com/malformed-callback-url/android/steal_money";
         deliverIntent(malformedUrl);
-        assertResult(Auth3dsBrowserActivity.AUTH_3DS_RESULT_UNKNOWN);
+        assertResult(AUTH_3DS_UNKNOWN);
     }
 
     @Test
     public void testActivityFinishesWithResultUnknownWhenWaitingForResultAndNewIntentWithEmptyDataIsProvided() {
         deliverIntent("");
-        assertResult(Auth3dsBrowserActivity.AUTH_3DS_RESULT_UNKNOWN);
+        assertResult(AUTH_3DS_UNKNOWN);
     }
 
     @Test
     public void testActivityFinishesWithResultCanceledOnBackPressed() {
         scenario.onActivity(Auth3dsBrowserActivity::onBackPressed);
-        assertResult(Auth3dsBrowserActivity.AUTH_3DS_RESULT_CANCEL);
+        assertResult(AUTH_3DS_CANCEL);
     }
 
     @After
