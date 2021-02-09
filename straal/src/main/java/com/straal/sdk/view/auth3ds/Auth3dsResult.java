@@ -38,7 +38,7 @@ public class Auth3dsResult {
      */
     public static final int AUTH_3DS_CANCEL = RESULT_CANCELED;
     /**
-     * Authentication 3D-Secure unknown result (e.g. when final url is malformed)
+     * Authentication 3D-Secure unknown result (e.g. when final url is malformed or user closed application before finishing 3D-Secure authentication)
      */
     public static final int AUTH_3DS_RESULT_NOT_CAPTURED = 103;
 }
