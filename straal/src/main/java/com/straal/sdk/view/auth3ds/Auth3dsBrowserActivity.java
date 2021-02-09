@@ -49,20 +49,17 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        if (hasResult(intent)) finish(AUTH_3DS_RESULT_NOT_CAPTURED);
         if (isRecreated(savedInstanceState)) {
-            initParamsAndCheckResult(savedInstanceState, getIntent());
+            auth3dsParams = new Auth3dsParams(savedInstanceState);
         } else {
-            initParamsAndCheckLocationUrl(getIntent());
+            auth3dsParams = new Auth3dsParams(intent);
+            checkLocationUrl(intent);
         }
     }
 
-    private void initParamsAndCheckResult(Bundle savedInstanceState, Intent intent) {
-        auth3dsParams = new Auth3dsParams(savedInstanceState);
-        if (hasResult(intent)) finish(AUTH_3DS_UNKNOWN);
-    }
-
-    private void initParamsAndCheckLocationUrl(Intent intent) {
-        auth3dsParams = new Auth3dsParams(intent);
+    private void checkLocationUrl(Intent intent) {
         if (hasLocationUrl(intent)) perform3dsAuthentication(getLocationUrl(intent));
     }
 
