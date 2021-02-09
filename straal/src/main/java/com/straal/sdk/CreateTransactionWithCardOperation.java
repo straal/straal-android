@@ -19,6 +19,8 @@
 
 package com.straal.sdk;
 
+import androidx.annotation.NonNull;
+
 import com.straal.sdk.card.CreditCard;
 import com.straal.sdk.data.RedirectUrls;
 import com.straal.sdk.data.Transaction;
@@ -41,14 +43,23 @@ public class CreateTransactionWithCardOperation extends StraalEncryptedBaseOpera
 
     /**
      * @param transaction  transaction you want to perform
-     * @param creditCard   data (usually typed by the user) of the credit card to be created
+     * @param creditCard   data (usually typed by the user) of the credit card to be used
      * @param redirectUrls after the 3D-Secure verification is finished, user will be redirected back to one of the speficied URLs (successUrl or failureUrl) depending on the outcome of the 3D-Secure verification
      */
-    public CreateTransactionWithCardOperation(Transaction transaction, CreditCard creditCard, RedirectUrls redirectUrls) {
+    public CreateTransactionWithCardOperation(@NonNull Transaction transaction, @NonNull CreditCard creditCard, @NonNull RedirectUrls redirectUrls) {
         super(StraalPermissions.CREATE_TRANSACTION_WITH_CARD);
         this.transaction = transaction;
         this.card = creditCard;
         this.redirectUrls = redirectUrls;
+    }
+
+    /**
+     * @param transaction   transaction you want to perform
+     * @param creditCard    data (usually typed by the user) of the credit card to be used
+     * @param applicationId your application identifier used to create {@link RedirectUrls}
+     */
+    public CreateTransactionWithCardOperation(@NonNull Transaction transaction, @NonNull CreditCard creditCard, @NonNull String applicationId) {
+        this(transaction, creditCard, RedirectUrlsCreator.createWith(applicationId));
     }
 
     @Override
