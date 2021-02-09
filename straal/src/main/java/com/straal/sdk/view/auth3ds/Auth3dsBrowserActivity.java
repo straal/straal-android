@@ -61,18 +61,16 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = getIntent();
-        boolean isRecreated = isRecreated(savedInstanceState);
-        if (isRecreated) {
-            initParamsAndCheckResult(savedInstanceState, intent);
+        if (isRecreated(savedInstanceState)) {
+            initParamsAndCheckResult(savedInstanceState, getIntent());
         } else {
-            initParamsAndCheckLocationUrl(intent);
+            initParamsAndCheckLocationUrl(getIntent());
         }
     }
 
     private void initParamsAndCheckResult(Bundle savedInstanceState, Intent intent) {
         auth3dsParams = new Auth3dsParams(savedInstanceState);
-        if (hasResult(intent)) captureAuthenticationResult(intent);
+        if (hasResult(intent)) finish(AUTH_3DS_RESULT_UNKNOWN);
     }
 
     private void initParamsAndCheckLocationUrl(Intent intent) {
@@ -137,11 +135,10 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
      */
     @NonNull
     public static Intent startingIntent(@NonNull Context context, @NonNull StraalEncrypted3dsResponse response) {
-        Intent startingIntent = new Intent(context, Auth3dsBrowserActivity.class);
-        startingIntent.putExtra(AUTH_3DS_LOCATION_URL_KEY, response.locationUrl);
-        startingIntent.putExtra(AUTH_3DS_SUCCESS_URL_KEY, response.redirectUrls.successUrl);
-        startingIntent.putExtra(AUTH_3DS_FAILURE_URL_KEY, response.redirectUrls.failureUrl);
-        return startingIntent;
+        return new Intent(context, Auth3dsBrowserActivity.class)
+                .putExtra(AUTH_3DS_LOCATION_URL_KEY, response.locationUrl)
+                .putExtra(AUTH_3DS_SUCCESS_URL_KEY, response.redirectUrls.successUrl)
+                .putExtra(AUTH_3DS_FAILURE_URL_KEY, response.redirectUrls.failureUrl);
     }
 
     private static class Auth3dsParams {
