@@ -32,8 +32,8 @@ import com.straal.sdk.response.StraalEncrypted3dsResponse;
 
 import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_CANCEL;
 import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_FAILURE;
+import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_RESULT_NOT_CAPTURED;
 import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_SUCCESS;
-import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_UNKNOWN;
 
 /**
  * Activity that handles 3D-Secure authentication outside application e.g. browser or bank application
@@ -148,10 +148,10 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
         }
 
         public int captureResult(String data) {
-            if (data == null) return AUTH_3DS_UNKNOWN;
+            if (data == null) return AUTH_3DS_RESULT_NOT_CAPTURED;
             else if (isSuccessUrl(data)) return AUTH_3DS_SUCCESS;
             else if (isFailureUrl(data)) return AUTH_3DS_FAILURE;
-            else return AUTH_3DS_UNKNOWN;
+            else return AUTH_3DS_RESULT_NOT_CAPTURED;
         }
 
         private boolean isSuccessUrl(String data) {

@@ -47,8 +47,8 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
 import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_CANCEL;
 import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_FAILURE;
+import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_RESULT_NOT_CAPTURED;
 import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_SUCCESS;
-import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_UNKNOWN;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.assertEquals;
 
@@ -110,13 +110,13 @@ public class Auth3dsBrowserActivityTest {
     public void testActivityFinishesWithResultUnknownWhenWaitingForResultAndNewIntentWithMalformedUrlIsProvided() {
         String malformedUrl = "com.daftmobile.straal//sdk.straal.com/malformed-callback-url/android/steal_money";
         deliverIntent(malformedUrl);
-        assertResult(AUTH_3DS_UNKNOWN);
+        assertResult(AUTH_3DS_RESULT_NOT_CAPTURED);
     }
 
     @Test
     public void testActivityFinishesWithResultUnknownWhenWaitingForResultAndNewIntentWithEmptyDataIsProvided() {
         deliverIntent("");
-        assertResult(AUTH_3DS_UNKNOWN);
+        assertResult(AUTH_3DS_RESULT_NOT_CAPTURED);
     }
 
     @Test

@@ -40,5 +40,5 @@ public class Auth3dsResult {
     /**
      * Authentication 3D-Secure unknown result (e.g. when final url is malformed)
      */
-    public static final int AUTH_3DS_UNKNOWN = 103; //Todo find new name
+    public static final int AUTH_3DS_RESULT_NOT_CAPTURED = 103;
 }
