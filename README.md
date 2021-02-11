@@ -90,6 +90,8 @@ Once you have your `Straal` object, you can submit objects of type `StraalOperat
 ##### Add required Manifest.xml entries
 `CreateTransactionWithCardOperation` requires 3DS authentication in external browser.  A URL scheme must be defined to return to your app from the browser.
 Edit your AndroidManifest.xml to include Auth3dsBrowserActivity and set the `android:scheme`and` android:host`.
+
+
 ---
 You can use built in `StraalTheme.Activity.Invisible` for `Auth3dsBrowserActivity` or create your own with custom atributes values such as `android:windowBackground` to display your placeholder.
 
