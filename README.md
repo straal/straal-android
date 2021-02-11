@@ -20,7 +20,6 @@
 - [Usage](#usage)
     - [Initial configuration](#initial-configuration)
     - [Operations](#operations)
-        - [Create card](#create-a-card)
         - [Create a transaction with a card](#create-a-transaction-with-a-card)
 - [Validation](#validation)
 - [Support](#support)
@@ -87,51 +86,44 @@ Once you have your `Straal` object, you can submit objects of type `StraalOperat
 
 ### Operations
 
-#### Create a card
-> :warning: **This operation is deprecated and may result with unpredictable behavior.** Use [Create a transaction with a card](#create-a-transaction-with-a-card) instead
-```java
-class StraalPayment {
-    // ...
-
-    private void addCard() {
-        // get card data from your UI
-        String cardholderName = "John Smith";
-        String cardNumber = "4111111111111111";
-        String cvv = "123";
-        ExpiryDate expiryDate = new ExpiryDate("01", "21");
-        // now create a CreditCard object...
-        CreditCard card = new CreditCard(cardholderName, cardNumber, cvv, expiryDate);
-        // ...pass it to CreateCardOperation...
-        CreateCardOperation operation = new CreateCardOperation(card);
-        // ...and submit operation to Straal object for execution
-        straal.performAsync(
-                operation,
-                straalResponse -> handleSuccess(straalResponse),
-                straalException -> handleError(straalException)
-        );
-    }
-
-    // ...
-}
-```
-> Note what happens under the hood when you call this last method. First, your merchant back end is fetched on `cryptkeys` endpoint with this `POST` request:
-
-```json
-{
-  "permission": "v1.cards.create"
-}
-```
-
-Your back end's job is to authenticate this request (using headers passed to `Straal.Config`), append this JSON with `customer_uuid` key-value pair and forward it to Straal using [this method](https://api-reference.straal.com/#resources-cryptkeys-create-a-cryptkey).
-
-Then, the credit card data is encrypted, sent to Straal directly, processed by Straal, and responded to.
-
 #### Create a transaction with a card
+##### Add required Manifest.xml entries
+`CreateTransactionWithCardOperation` requires 3DS authentication in external browser.  A URL scheme must be defined to return to your app from the browser.
+Edit your AndroidManifest.xml to include Auth3dsBrowserActivity and set the `android:scheme`and` android:host`.
+---
+You can use built in `StraalTheme.Activity.Invisible` for `Auth3dsBrowserActivity` or create your own with custom atributes values such as `android:windowBackground` to display your placeholder.
+
+---
+```xml
+<manifest>
+    <application>
+    	...
+        <activity
+            android:name="com.straal.sdk.view.auth3ds.Auth3dsBrowserActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/StraalTheme.Activity.Invisible"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="${applicationId}" android:host="sdk.straal.com"/>
+            </intent-filter>
+        </activity>
+        ...
+    </application>
+</manifest>
+```
+##### Make payment
+To make payment you have to create instance of `Straal3dsTransactionHandler` in your `Activity` or `Fragment` as soon as possible and pass it as success consumer to `Straal.performAsync(...)` method.
+`Straal3dsTransactionHandler` will handle response from Straal backend, perform 3D-Secure authentication using `Auth3dsBrowserActivity` and at the end inform you about the final result.
+
+> :warning: **Application id passed to `CreateTransactionWithCardOperation` must be the same as declared in your application Manifest.xml**
+
 
 ```java
 class StraalPayment {
     // ...
-    
     //initialize authenticationHandler as soon as possible
     private Straal3dsTransactionHandler authenticationHandler = new Straal3dsTransactionHandler(lifecycleOwner, activityResultRegistry, this::handleAuthenticationResult);
 
@@ -140,8 +132,7 @@ class StraalPayment {
         CreditCard card = new CreditCard(cardholderName, cardNumber, cvv, expiryDate);
         // create transaction object with your order's details
         Transaction transaction = new Transaction(999, CurrencyCode.USD, "order:bI124dP2an");
-        RedirectUrls redirectUrls = RedirectUrls("https://sdk.straal.com/success", "https://sdk.straal.com/failure");
-        CreateTransactionWithCardOperation operation = new CreateTransactionWithCardOperation(transaction, card, redirectUrls);
+        CreateTransactionWithCardOperation operation = new CreateTransactionWithCardOperation(transaction, card, BuildConfig.APPLICATION_ID);
         straal.performAsync(
                 operation,
                 authenticationHandler, //pass authenticationHandler as onSuccess consumer
@@ -152,14 +143,17 @@ class StraalPayment {
     public void handleAuthenticationResult(int resultCode) {
             //handle final authentication result
             switch (resultCode) {
-                case Auth3dsActivity.AUTH_3DS_SUCCESS: { 
-                    //handle success 
+                case Auth3dsResult.AUTH_3DS_SUCCESS: {
+                    //handle success
                 }
-                case Auth3dsActivity.AUTH_3DS_FAILURE: { 
-                    //handle failure 
+                case Auth3dsResult.AUTH_3DS_FAILURE: {
+                    //handle failure
                 }
-                case Auth3dsActivity.AUTH_3DS_CANCEL: { 
-                    //handle cancel 
+                case Auth3dsResult.AUTH_3DS_CANCEL: {
+                    //handle cancel
+                }
+                case Auth3dsResult.AUTH_3DS_RESULT_NOT_CAPTURED: {
+                    //handle result not delivered
                 }
             }
     }
@@ -168,7 +162,7 @@ class StraalPayment {
 }
 ```
 
-> Again, we first fetch your `cryptkeys` endpoint to fetch a `CryptKey`. This time with JSON:
+> We first fetch your `cryptkeys` endpoint to fetch a `CryptKey`. This time with JSON:
 
 ```json
 {
@@ -186,6 +180,8 @@ class StraalPayment {
 ```
 
 > It is your back end's responsibility to verify the transaction's amount (possibly pairing it with an order using `reference`) and to authorize the user using request headers.
+
+After that our SDK will use fetched `cryptkey` to encrypt payment request send to Straal backend.
 
 ## Validation
 
