@@ -17,6 +17,7 @@
 - [Requirements](#requirements)
     - [Back end](#back-end)
 - [Installation](#installation)
+	- [Add gradle dependency](#add-gradle-dependency)
 - [Usage](#usage)
     - [Initial configuration](#initial-configuration)
     - [Operations](#operations)
@@ -27,10 +28,8 @@
 
 ## Features
 
-> Straal for Android is a helper library to make it easier
-  to make API requests directly from merchant's mobile Android app.
-  It utilises client-side encryption and sends data
-  over HTTPS to make secure requests creating transactions and adding cards.
+> Straal for Android is a helper library to make it easier to make API requests directly from merchant's mobile Android app and perform 3D-Secure authentication in system browser. It utilises client-side encryption and sends data over HTTPS to make secure requests creating transactions and adding cards.
+
 
 ## Requirements
 
@@ -56,6 +55,25 @@ Currently, you can integrate Straal into your Android project by:
 
 - adding this repository as a git submodule into your project
 - downloading this repository, building an AAR file and adding it to the `libs` folder in your project
+- addind dependency to gradle
+### Add gradle dependency
+
+Add [Jitpack](#https://jitpack.io) dependency to your top level `build.gradle` file
+```groovy
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+
+Add dependency to Straal SDK to your android module level `build.gradle` file
+```groovy
+	dependencies {
+    	implementation 'com.github.straal:straal-android:$straal_version'
+	}
+```
 
 ## Usage
 
