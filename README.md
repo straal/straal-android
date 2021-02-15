@@ -17,7 +17,7 @@
 - [Requirements](#requirements)
     - [Back end](#back-end)
 - [Installation](#installation)
-	- [Add gradle dependency](#add-gradle-dependency)
+    - [Add gradle dependency](#add-gradle-dependency)
 - [Usage](#usage)
     - [Initial configuration](#initial-configuration)
     - [Operations](#operations)
@@ -60,19 +60,19 @@ Currently, you can integrate Straal into your Android project by:
 
 Add [Jitpack](#https://jitpack.io) dependency to your top level `build.gradle` file
 ```groovy
-	allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
-	}
+    allprojects {
+        repositories {
+            ...
+            maven { url 'https://jitpack.io' }
+        }
+    }
 ```
 
 Add dependency to Straal SDK to your android module level `build.gradle` file
 ```groovy
-	dependencies {
-    	implementation 'com.github.straal:straal-android:$straal_version'
-	}
+    dependencies {
+        implementation 'com.github.straal:straal-android:$straal_version'
+    }
 ```
 
 ## Usage
