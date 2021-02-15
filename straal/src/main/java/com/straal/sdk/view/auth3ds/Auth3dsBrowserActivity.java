@@ -30,7 +30,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.straal.sdk.response.StraalEncrypted3dsResponse;
 
-import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_CANCEL;
 import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_FAILURE;
 import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_RESULT_NOT_CAPTURED;
 import static com.straal.sdk.view.auth3ds.Auth3dsResult.AUTH_3DS_SUCCESS;
@@ -74,11 +73,6 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
         captureAuthenticationResult(intent);
     }
 
-    @Override
-    public void onBackPressed() {
-        onCancel();
-    }
-
     private String getLocationUrl(Intent intent) {
         return intent.getStringExtra(AUTH_3DS_LOCATION_URL_KEY);
     }
@@ -101,10 +95,6 @@ public class Auth3dsBrowserActivity extends AppCompatActivity {
 
     private void captureAuthenticationResult(Intent resultIntent) {
         finish(auth3dsParams.captureResult(resultIntent.getDataString()));
-    }
-
-    private void onCancel() {
-        finish(AUTH_3DS_CANCEL);
     }
 
     private void finish(int resultCode) {

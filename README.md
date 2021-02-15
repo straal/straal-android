@@ -5,7 +5,7 @@
 ---
 
 ![Platform](https://img.shields.io/badge/platform-Android-green.svg?style=flat)
-![Version](https://img.shields.io/badge/version-0.4.0-orange.svg?style=flat)
+![Version](https://img.shields.io/badge/version-1.0.0-orange.svg?style=flat)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat)](LICENSE)
 [![Build Status](https://travis-ci.org/straal/straal-android.svg?branch=master&style=flat)](https://travis-ci.org/straal/straal-android)
 [![codebeat badge](https://codebeat.co/badges/37b43d1a-4be0-40f7-b774-d26f077d9fdf?style=flat)](https://codebeat.co/projects/github-com-straal-straal-android-master)
@@ -17,6 +17,7 @@
 - [Requirements](#requirements)
     - [Back end](#back-end)
 - [Installation](#installation)
+	- [Add gradle dependency](#add-gradle-dependency)
 - [Usage](#usage)
     - [Initial configuration](#initial-configuration)
     - [Operations](#operations)
@@ -27,10 +28,8 @@
 
 ## Features
 
-> Straal for Android is a helper library to make it easier
-  to make API requests directly from merchant's mobile Android app.
-  It utilises client-side encryption and sends data
-  over HTTPS to make secure requests creating transactions and adding cards.
+> Straal for Android is a helper library to make it easier to make API requests directly from merchant's mobile Android app and perform 3D-Secure authentication in system browser. It utilises client-side encryption and sends data over HTTPS to make secure requests creating transactions and adding cards.
+
 
 ## Requirements
 
@@ -56,6 +55,25 @@ Currently, you can integrate Straal into your Android project by:
 
 - adding this repository as a git submodule into your project
 - downloading this repository, building an AAR file and adding it to the `libs` folder in your project
+- addind dependency to gradle
+### Add gradle dependency
+
+Add [Jitpack](#https://jitpack.io) dependency to your top level `build.gradle` file
+```groovy
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+
+Add dependency to Straal SDK to your android module level `build.gradle` file
+```groovy
+	dependencies {
+    	implementation 'com.github.straal:straal-android:$straal_version'
+	}
+```
 
 ## Usage
 
@@ -90,6 +108,8 @@ Once you have your `Straal` object, you can submit objects of type `StraalOperat
 ##### Add required Manifest.xml entries
 `CreateTransactionWithCardOperation` requires 3DS authentication in external browser.  A URL scheme must be defined to return to your app from the browser.
 Edit your AndroidManifest.xml to include Auth3dsBrowserActivity and set the `android:scheme`and` android:host`.
+
+
 ---
 You can use built in `StraalTheme.Activity.Invisible` for `Auth3dsBrowserActivity` or create your own with custom atributes values such as `android:windowBackground` to display your placeholder.
 
