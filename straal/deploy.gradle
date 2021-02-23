@@ -1,0 +1,56 @@
+
+def getReleaseRepositoryUsername() {
+    return hasProperty('RELEASE_REPOSITORY_USERNAME') ? RELEASE_REPOSITORY_USERNAME : ""
+}
+
+def getReleaseRepositoryPassword() {
+    return hasProperty('RELEASE_REPOSITORY_PASSWORD') ? RELEASE_REPOSITORY_PASSWORD : ""
+}
+
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId = GROUP
+                artifactId = POM_ARTIFACT_ID
+                version = VERSION_NAME
+                from components.release
+
+                pom {
+                    name = POM_NAME
+                    description = "Straal helper library for mobile payments"
+                    url = POM_URL
+
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+
+                    scm {
+                        connection = POM_SCM_CONNECTION
+                        developerConnection = POM_SCM_DEV_CONNECTION
+                        url = POM_SCM_URL
+                    }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                url = RELEASE_REPOSITORY_URL
+                credentials {
+                    username getReleaseRepositoryUsername()
+                    password getReleaseRepositoryPassword()
+                }
+            }
+        }
+
+        signing {
+            useGpgCmd() //https://github.com/gradle/gradle/issues/8657
+            sign publishing.publications.release
+        }
+    }
+}

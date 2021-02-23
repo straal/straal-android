@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.library'
+    id 'maven'
     id 'maven-publish'
     id 'signing'
 }
@@ -10,8 +11,8 @@ android {
     defaultConfig {
         minSdkVersion 17
         targetSdkVersion 30
-        versionCode 6
-        versionName "1.0.0"
+        versionCode 7
+        versionName VERSION_NAME
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
@@ -27,53 +28,6 @@ android {
     testOptions {
         unitTests.all {
             useJUnitPlatform()
-        }
-    }
-}
-
-afterEvaluate {
-    publishing {
-        publications {
-            straalSdk(MavenPublication) {
-                groupId = 'com.straal.android.sdk'
-                artifactId = 'StraalSdk'
-                from components.release
-
-                pom {
-                    name = "StraalSdk"
-                    description = "Straal helper library for mobile payments"
-                    url = "https://straal.com"
-
-                    licenses {
-                        license {
-                            name = 'The Apache License, Version 2.0'
-                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        }
-                    }
-
-                    scm {
-                        connection = 'scm:git:github.com/straal/straal-android.git'
-                        developerConnection = 'scm:git:ssh://github.com/straal/straal-android.git'
-                        url = 'https://github.com/straal/straal-android'
-                    }
-                }
-            }
-        }
-
-        repositories {
-            maven {
-                name = "sonatype"
-                url = "sonatype url"
-                credentials {
-                    username "username"
-                    password "password"
-                }
-            }
-        }
-
-        signing {
-            useGpgCmd() //https://github.com/gradle/gradle/issues/8657
-            sign publishing.publications.straalSdk
         }
     }
 }
@@ -94,3 +48,5 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:3.3.0"
     androidTestImplementation "androidx.test.espresso:espresso-intents:3.3.0"
 }
+
+apply from: 'deploy.gradle'
