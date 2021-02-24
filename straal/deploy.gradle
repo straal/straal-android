@@ -1,4 +1,3 @@
-
 def getReleaseRepositoryUsername() {
     return hasProperty('RELEASE_REPOSITORY_USERNAME') ? RELEASE_REPOSITORY_USERNAME : ""
 }
@@ -16,6 +15,9 @@ afterEvaluate {
                 artifactId = POM_ARTIFACT_ID
                 version = VERSION_NAME
                 from components.release
+
+                artifact androidJavadocsJar
+                artifact androidSourcesJar
 
                 pom {
                     name = POM_NAME
@@ -61,4 +63,23 @@ afterEvaluate {
             sign publishing.publications.release
         }
     }
+}
+
+task androidJavadocs(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    afterEvaluate {
+        owner.classpath += android.libraryVariants.find { variant -> variant.name == 'release' }.javaCompileProvider.get().classpath
+    }
+    exclude '**/R.html', '**/R.*.html', '**/index.html'
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+    getArchiveClassifier().set('javadoc')
+    from androidJavadocs.destinationDir
+}
+
+task androidSourcesJar(type: Jar) {
+    getArchiveClassifier().set('sources')
+    from android.sourceSets.main.java.srcDirs
 }
