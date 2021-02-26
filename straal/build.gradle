@@ -1,5 +1,9 @@
-apply plugin: 'com.android.library'
-
+plugins {
+    id 'com.android.library'
+    id 'maven'
+    id 'maven-publish'
+    id 'signing'
+}
 android {
     compileSdkVersion 30
     resourcePrefix "straal"
@@ -7,8 +11,8 @@ android {
     defaultConfig {
         minSdkVersion 17
         targetSdkVersion 30
-        versionCode 6
-        versionName "1.0.0"
+        versionCode 7
+        versionName VERSION_NAME
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
@@ -44,3 +48,5 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:3.3.0"
     androidTestImplementation "androidx.test.espresso:espresso-intents:3.3.0"
 }
+
+apply from: 'deploy.gradle'
