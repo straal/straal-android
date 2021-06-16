@@ -20,17 +20,9 @@
 package com.straal.sdk.response;
 
 public class KeyResponse {
-    public final String id;
-    public final String permission;
     public final String key;
-    public final int ttl;
-    public final long createdAt;
 
-    public KeyResponse(String id, String permission, String key, int ttl, long createdAt) {
-        this.createdAt = createdAt;
-        this.ttl = ttl;
-        this.id = id;
+    public KeyResponse(String key) {
         this.key = key;
-        this.permission = permission;
     }
 }
