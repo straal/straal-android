@@ -37,5 +37,6 @@ unitTest:
 
 integrationTest:
   stage: test
-  script:
-    - "curl -X POST -F token=$TESTS_TRIGGER_TOKEN -F ref=$REF_NAME -F variables[commit_hash]=$CI_COMMIT_SHA $TESTS_URL"
+  variables:
+    STRAAL_COMMIT_HASH: $CI_COMMIT_SHA
+  trigger: android/straal-tests
