@@ -38,13 +38,7 @@ class KeyResponseCallable implements Callable<KeyResponse> {
     public KeyResponse call() throws Exception {
         JSONObject jsonObject = jsonCallable.call();
         try {
-            return new KeyResponse(
-                    jsonObject.getString("id"),
-                    jsonObject.getString("permission"),
-                    jsonObject.getString("key"),
-                    jsonObject.getInt("ttl"),
-                    jsonObject.getLong("created_at")
-            );
+            return new KeyResponse(jsonObject.getString("key"));
         } catch (JSONException e) {
             throw new ResponseParseException("Crypt key response didn't contain expected data", e);
         }

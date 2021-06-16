@@ -39,11 +39,11 @@ import static org.mockito.Mockito.when;
 @DisplayName("KeyResponseCallable")
 class KeyResponseCallableTest {
     private KeyResponseCallable keyResponseCallable;
-    private HttpCallable httpResponseCallable = mock(HttpCallable.class);
+    private final HttpCallable httpResponseCallable = mock(HttpCallable.class);
 
-    @DisplayName("should return key response")
+    @DisplayName("should return key response given key with metadata")
     @Test
-    void returnResponse() throws Exception {
+    void returnResponseGivenKeyWithMetadata() throws Exception {
         String id = "sample id";
         String permission = "sample permission";
         String key = "sample key";
@@ -53,11 +53,18 @@ class KeyResponseCallableTest {
         when(httpResponseCallable.call()).thenReturn(new HttpResponse(200, responseBody, Collections.emptyMap()));
         keyResponseCallable = createKeyResponseCallable();
         KeyResponse response = keyResponseCallable.call();
-        assertEquals(id, response.id);
-        assertEquals(permission, response.permission);
         assertEquals(key, response.key);
-        assertEquals(ttl, response.ttl);
-        assertEquals(createdAt, response.createdAt);
+    }
+
+    @DisplayName("should return key response given only key")
+    @Test
+    void returnResponseGivenOnlyKey() throws Exception {
+        String key = "sample key";
+        String responseBody = "{\"key\":" + key + "}";
+        when(httpResponseCallable.call()).thenReturn(new HttpResponse(200, responseBody, Collections.emptyMap()));
+        keyResponseCallable = createKeyResponseCallable();
+        KeyResponse response = keyResponseCallable.call();
+        assertEquals(key, response.key);
     }
 
     @DisplayName("should throw exception when")

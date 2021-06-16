@@ -34,7 +34,7 @@ class StraalCrypterCallableTest {
     @DisplayName("should return crypter")
     @Test
     void createCrypter() throws Exception {
-        KeyResponse response = new KeyResponse("sample id", "sample permission", "0c18967928000123dc8f501fac235c60507b7217d143d11e22b2e59668f0e1872b7830d91531be885d4ff45bbb5e3ecae3389b36b9c93c128de34f81e797a71bdc933262d09a421e", 1, 1);
+        KeyResponse response = new KeyResponse("0c18967928000123dc8f501fac235c60507b7217d143d11e22b2e59668f0e1872b7830d91531be885d4ff45bbb5e3ecae3389b36b9c93c128de34f81e797a71bdc933262d09a421e");
         KeyResponseCallable keyResponseCallable = mock(KeyResponseCallable.class);
         when(keyResponseCallable.call()).thenReturn(response);
         assertTrue(new StraalCrypterCallable(keyResponseCallable).call() != null);
